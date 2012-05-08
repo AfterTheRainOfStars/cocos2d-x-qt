@@ -1,0 +1,13 @@
+
+[Desktop Entry]
+Encoding=UTF-8
+Version=1.0
+Type=Application
+Name=HelloWorld
+Exec=invoker --single-instance --type=e /opt/helloworld/bin/helloworld
+Icon=helloworld
+StartupWMClass=
+X-Window-Icon=helloworld
+X-HildonDesk-ShowInToolbar=true
+X-Osso-Type=application/x-executable
+Terminal=false

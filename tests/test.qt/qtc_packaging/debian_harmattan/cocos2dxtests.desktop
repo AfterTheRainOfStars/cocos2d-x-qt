@@ -1,0 +1,13 @@
+
+[Desktop Entry]
+Encoding=UTF-8
+Version=1.0
+Type=Application
+Name=Tests
+Exec=invoker --single-instance --type=e /opt/cocos2dxtests/bin/cocos2dxtests
+Icon=cocos2dxtests
+StartupWMClass=
+X-Window-Icon=cocos2dxtests
+X-HildonDesk-ShowInToolbar=true
+X-Osso-Type=application/x-executable
+Terminal=false
