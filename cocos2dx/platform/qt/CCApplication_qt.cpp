@@ -54,11 +54,9 @@ int CCApplication::run()
         return 0;
     }
 
-    if (!m_timer)
-    {
-        setAnimationInterval((double)m_nAnimationInterval / 1000.0f);
-    }
-
+    m_timer = new QTimer(this);
+    connect(m_timer, SIGNAL(timeout()), this, SLOT(timerUpdate()));
+    m_timer->start(m_nAnimationInterval);
     return exec();
 }
 
@@ -85,12 +83,10 @@ void CCApplication::statusBarFrame(cocos2d::CCRect * rect)
 void CCApplication::setAnimationInterval(double interval)
 {
     m_nAnimationInterval = interval * 1000.0f;
-
-    CC_SAFE_DELETE(m_timer);
-
-    m_timer = new QTimer(this);
-    connect(m_timer, SIGNAL(timeout()), this, SLOT(timerUpdate()));
-    m_timer->start(m_nAnimationInterval);
+    if (m_timer)
+    {
+        m_timer->start(m_nAnimationInterval);
+    }
 }
 
 //////////////////////////////////////////////////////////////////////////
