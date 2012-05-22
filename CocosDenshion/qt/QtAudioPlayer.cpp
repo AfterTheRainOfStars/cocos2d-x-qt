@@ -299,8 +299,8 @@ unsigned int QtAudioPlayer::playEffect(const char* pszFilePath, bool bLoop)
         buffer = m_effects.value(hash);
     }
 
-    // Not loaded successfully, or already playing
-    if (!buffer || m_effectInstances.contains(hash))
+    // Not loaded successfully
+    if (!buffer)
         return 0;
 
     AudioBufferPlayInstance *inst = buffer->playWithMixer(*m_mixer);
@@ -314,7 +314,7 @@ unsigned int QtAudioPlayer::playEffect(const char* pszFilePath, bool bLoop)
     if (bLoop)
         inst->setLoopCount(1<<30);
 
-    m_effectInstances.insert(hash, QPointer<AudioBufferPlayInstance>(inst));
+    m_effectInstances.insertMulti(hash, QPointer<AudioBufferPlayInstance>(inst));
 
     return hash;
 }
@@ -324,7 +324,7 @@ void QtAudioPlayer::stopEffect(unsigned int nSoundId)
     checkFinishedEffects();
     QHash<unsigned int, QPointer<AudioBufferPlayInstance> >::const_iterator i =
              m_effectInstances.find(nSoundId);
-    while (i != m_effectInstances.end())
+    while (i != m_effectInstances.end() && i.key() == nSoundId)
     {
         i.value()->stop();
         ++i;
@@ -337,7 +337,7 @@ void QtAudioPlayer::pauseEffect(unsigned int uSoundId)
     checkFinishedEffects();
     QHash<unsigned int, QPointer<AudioBufferPlayInstance> >::const_iterator i =
              m_effectInstances.find(uSoundId);
-    while (i != m_effectInstances.end())
+    while (i != m_effectInstances.end() && i.key() == uSoundId)
     {
        i.value()->pause();
        ++i;
@@ -358,7 +358,7 @@ void QtAudioPlayer::resumeEffect(unsigned int uSoundId)
     checkFinishedEffects();
     QHash<unsigned int, QPointer<AudioBufferPlayInstance> >::const_iterator i =
              m_effectInstances.find(uSoundId);
-    while (i != m_effectInstances.end())
+    while (i != m_effectInstances.end() && i.key() == uSoundId)
     {
         i.value()->resume();
         ++i;
