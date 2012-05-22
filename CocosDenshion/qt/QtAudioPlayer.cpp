@@ -162,6 +162,7 @@ void QtAudioPlayer::playBackgroundMusic(const char* pszFilePath, bool bLoop)
         CCLOG("preloadBackgroundMusic failed!");
         return;
     }
+    m_music->seek(0);
     m_music->play();
 #else
     if (!m_musicBuffer || m_musicId != hash)
