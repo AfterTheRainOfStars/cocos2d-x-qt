@@ -153,6 +153,7 @@ int VorbisSource::pullAudio(AUDIO_SAMPLE_TYPE *target, int bufferLength)
 void VorbisSource::play()
 {
     m_finished = false;
+	m_paused = false;
 }
 
 /*!
@@ -162,6 +163,7 @@ void VorbisSource::play()
 void VorbisSource::stop()
 {
     m_finished = true;
+	m_paused = false;
 }
 
 /*!
