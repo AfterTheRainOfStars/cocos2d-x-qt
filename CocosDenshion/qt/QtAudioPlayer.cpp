@@ -10,6 +10,7 @@
 #include "pullaudioout.h"
 #include "pushaudioout.h"
 #include "CCFileUtils.h"
+#include "CCApplication.h"
 #include <QDebug>
 
 using namespace GE;
@@ -72,6 +73,7 @@ QtAudioPlayer::QtAudioPlayer() :
 
 void QtAudioPlayer::init()
 {
+    CCApplication::sharedApplication().lock();
     m_mixer = new AudioMixer(this);
 
 #ifdef Q_OS_SYMBIAN
@@ -79,6 +81,7 @@ void QtAudioPlayer::init()
 #else
     m_audioOut = new PushAudioOut(m_mixer, this);
 #endif
+    CCApplication::sharedApplication().unlock();
 }
 
 void QtAudioPlayer::close()

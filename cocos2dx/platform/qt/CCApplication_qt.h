@@ -97,11 +97,15 @@ public:
 	 */
 	static ccLanguageType getCurrentLanguage();
 
+    void lock();
+    void unlock();
+
 public slots:
     void timerUpdate();
 
 public:
     QTimer *m_timer;
+    int m_refCount;
 
 protected:
     long m_nAnimationInterval;

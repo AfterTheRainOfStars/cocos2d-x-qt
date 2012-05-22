@@ -22,7 +22,8 @@ CCApplication * CCApplication::sm_pSharedApplication = 0;
 
 CCApplication::CCApplication(int &argc, char **argv)
     : QApplication(argc, argv),
-      m_timer(NULL)
+      m_timer(NULL),
+      m_refCount(0)
 {
 	CC_ASSERT(! sm_pSharedApplication);
 	sm_pSharedApplication = this;
@@ -35,7 +36,11 @@ CCApplication::CCApplication(int &argc, char **argv)
 
 void CCApplication::timerUpdate()
 {
-    CCDirector::sharedDirector()->mainLoop();
+    // m_refCount is here to prevent calling the mainloop from nested event loops
+    if (!m_refCount)
+    {
+        CCDirector::sharedDirector()->mainLoop();
+    }
 }
 
 CCApplication::~CCApplication()
@@ -44,6 +49,20 @@ CCApplication::~CCApplication()
 	sm_pSharedApplication = NULL;
 
     CC_SAFE_DELETE(m_timer);
+}
+
+void CCApplication::lock()
+{
+    m_refCount++;
+}
+
+void CCApplication::unlock()
+{
+    CC_ASSERT(m_refCount > 0);
+    if (m_refCount > 0)
+    {
+        m_refCount--;
+    }
 }
 
 int CCApplication::run()
