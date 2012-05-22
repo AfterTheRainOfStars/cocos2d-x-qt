@@ -86,26 +86,21 @@ void QtAudioPlayer::init()
 
 void QtAudioPlayer::close()
 {
-    int i;
-
     delete m_mixer;
     m_mixer = NULL;
 
     delete m_audioOut;
     m_audioOut = NULL;
 
-    QList<QPointer<AudioBufferPlayInstance> > instances =
-            m_effectInstances.values();
-    for (i = 0; i < instances.count(); i++)
+    foreach (QPointer<AudioBufferPlayInstance> i, m_effectInstances)
     {
-        delete instances[i];
+        delete i;
     }
     m_effectInstances.clear();
 
-    QList<AudioBuffer*> buffers = m_effects.values();
-    for (i = 0; i < buffers.count(); i++)
+    foreach (AudioBuffer *i, m_effects)
     {
-        delete buffers[i];
+        delete i;
     }
     m_effects.clear();
 }
@@ -285,12 +280,10 @@ void QtAudioPlayer::setEffectsVolume(float volume)
     m_effectsVolume = volume;
 
     checkFinishedEffects();
-    QList<QPointer<AudioBufferPlayInstance> > instances =
-            m_effectInstances.values();
-    for (int i = 0; i < instances.count(); i++)
+    foreach (QPointer<AudioBufferPlayInstance> i, m_effectInstances)
     {
-        instances[i]->setLeftVolume(m_effectsVolume);
-        instances[i]->setRightVolume(m_effectsVolume);
+        i->setLeftVolume(m_effectsVolume);
+        i->setRightVolume(m_effectsVolume);
     }
 }
 
@@ -354,11 +347,9 @@ void QtAudioPlayer::pauseEffect(unsigned int uSoundId)
 void QtAudioPlayer::pauseAllEffects()
 {
     checkFinishedEffects();
-    QList<QPointer<AudioBufferPlayInstance> > instances =
-            m_effectInstances.values();
-    for (int i = 0; i < instances.count(); i++)
+    foreach (QPointer<AudioBufferPlayInstance> i, m_effectInstances)
     {
-        instances[i]->pause();
+        i->pause();
     }
 }
 
@@ -377,22 +368,18 @@ void QtAudioPlayer::resumeEffect(unsigned int uSoundId)
 void QtAudioPlayer::resumeAllEffects()
 {
     checkFinishedEffects();
-    QList<QPointer<AudioBufferPlayInstance> > instances =
-            m_effectInstances.values();
-    for (int i = 0; i < instances.count(); i++)
+    foreach (QPointer<AudioBufferPlayInstance> i, m_effectInstances)
     {
-        instances[i]->resume();
+        i->resume();
     }
 }
 
 void QtAudioPlayer::stopAllEffects()
 {
     checkFinishedEffects();
-    QList<QPointer<AudioBufferPlayInstance> > instances =
-            m_effectInstances.values();
-    for (int i = 0; i < instances.count(); i++)
+    foreach (QPointer<AudioBufferPlayInstance> i, m_effectInstances)
     {
-        instances[i]->stop();
+        i->stop();
     }
 
     m_effectInstances.clear();
