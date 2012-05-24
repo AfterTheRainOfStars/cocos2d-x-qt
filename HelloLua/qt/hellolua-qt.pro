@@ -23,7 +23,6 @@ COCOSMODULES += cocosdenshion lua
 include(../../cocos2d-qt.pri)
 
 CCRESOURCES += \
-    ../Resources/app.icf \
     ../Resources/background.ogg \
     ../Resources/crop.png \
     ../Resources/dog.png \
