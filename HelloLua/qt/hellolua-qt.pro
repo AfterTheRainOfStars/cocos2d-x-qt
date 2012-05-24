@@ -9,7 +9,7 @@
 TARGET = hellolua
 TEMPLATE = app
 
-VERSION = 0.5
+VERSION = 0.6
 
 INCLUDEPATH += \
     ../Classes
