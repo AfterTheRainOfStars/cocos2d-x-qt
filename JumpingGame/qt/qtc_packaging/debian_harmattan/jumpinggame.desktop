@@ -1,0 +1,13 @@
+
+[Desktop Entry]
+Encoding=UTF-8
+Version=1.0
+Type=Application
+Name=jumpinggame
+Exec=invoker --single-instance --type=e /opt/jumpinggame/bin/jumpinggame
+Icon=jumpinggame
+StartupWMClass=
+X-Window-Icon=jumpinggame
+X-HildonDesk-ShowInToolbar=true
+X-Osso-Type=application/x-executable
+Terminal=false

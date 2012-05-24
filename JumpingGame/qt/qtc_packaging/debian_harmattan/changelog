@@ -1,0 +1,6 @@
+jumpinggame (0.6.0) unstable; urgency=low
+
+  * Refactored the codes in tutorial style
+  * Compiled with latest cocos2dx-qt
+
+ -- Kimmo Myllyvirta <ktmyllyv@unknown>  Wed, 16 Apr 2012 7:21:13 +0200
