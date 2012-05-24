@@ -1,5 +1,5 @@
-test (0.5.0) unstable; urgency=low
+test (0.6.0) unstable; urgency=low
 
   * Compiled with latest cocos2dx-qt
 
- -- Kimmo Myllyvirta <ktmyllyv@unknown>  Mon, 7 May 2012 12:16:32 +0200
+ -- Kimmo Myllyvirta <ktmyllyv@unknown>  Thu, 24 May 2012 12:16:32 +0200
