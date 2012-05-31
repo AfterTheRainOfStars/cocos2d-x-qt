@@ -18,9 +18,6 @@
 #include "CCIMEDispatcher.h"
 #include "CCApplication.h"
 
-// TODO: ...
-#include "CCFileUtils.h"
-
 #ifdef Q_OS_LINUX
 #include <QX11Info>
 #endif
@@ -179,10 +176,10 @@ bool CCEGLView::isOpenGLReady()
 
 void CCEGLView::swapBuffers()
 {
-    //if(bIsInit)
-    //{
+    if(bIsInit)
+    {
         eglSwapBuffers(m_eglDisplay, m_eglSurface);
-    //}
+    }
 }
 
 void CCEGLView::setIMEKeyboardState(bool bOpen)
@@ -222,10 +219,7 @@ bool CCEGLView::Create()
 
     CCLOG("Create: width = %d height = %d", width(), height());
 
-    //s_pMainWindow = this;
-
-    //m_rcViewPort.size.width = width();
-    //m_rcViewPort.size.height = height();
+    s_pMainWindow = this;
 
     setFrameSize(width(), height());
 
@@ -241,9 +235,6 @@ bool CCEGLView::Create()
     activateWindow();
     setFocus();
     grabKeyboard();
-
-    CCFileUtils::setResourcePath("/private/E8AA3F79/resources");
-    //std::string fullpath = CCFileUtils::fullPathFromRelativePath(controlFile);
 
     return true;
 }
@@ -294,11 +285,6 @@ CCEGLView& CCEGLView::sharedOpenGLView()
         }
     }
     return *s_pEglView;
-
-    /*
-    CC_ASSERT(s_pMainWindow);
-    return *s_pMainWindow;
-    */
 }
 
 void CCEGLView::inputMethodEvent(QInputMethodEvent *event)
