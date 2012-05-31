@@ -45,8 +45,6 @@ CCApplication::~CCApplication()
 
 void CCApplication::setAnimationInterval(double interval)
 {
-    qDebug() << "setAnimationInterval";
-
     m_nAnimationInterval = interval * 1000.0f;
     if (m_timer)
     {
@@ -89,25 +87,16 @@ ccLanguageType CCApplication::getCurrentLanguage()
 
 int CCApplication::run()
 {
-    // Initialize instance and cocos2d.
-    //if (! initInstance() || ! applicationDidFinishLaunching())
+    CCEGLView& view = CCEGLView::sharedOpenGLView();
+
     if (!applicationDidFinishLaunching())
     {
         return 0;
     }
 
-    CCEGLView& view = CCEGLView::sharedOpenGLView();
-
     m_timer = new QTimer(this);
     connect(m_timer, SIGNAL(timeout()), this, SLOT(timerUpdate()));
     m_timer->start(m_nAnimationInterval);
-
-    /*
-    if (!m_timer)
-    {
-        setAnimationInterval((double)m_nAnimationInterval / 1000.0f);
-    }
-    */
 
     return exec();
 }
