@@ -32,9 +32,13 @@ THE SOFTWARE.
 #if (CC_TARGET_PLATFORM != CC_PLATFORM_IOS)
 
 #include <stack>
+
+#if (CC_TARGET_PLATFORM != CC_PLATFORM_QT)
 #include <libxml/parser.h>
 #include <libxml/tree.h>
 #include <libxml/xmlmemory.h>
+#endif
+
 #include "CCString.h"
 #include "CCSAXParser.h"
 #include "support/zip_support/unzip.h"

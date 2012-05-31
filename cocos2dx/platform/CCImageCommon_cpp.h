@@ -30,15 +30,23 @@ THE SOFTWARE.
 #include "CCCommon.h"
 #include "CCStdC.h"
 #include "CCFileUtils.h"
+
+#if (CC_TARGET_PLATFORM != CC_PLATFORM_QT)
+// with Qt we use the QImage for loading and saving images
 #include "png.h"
 #include "jpeglib.h"
 #include "tiffio.h"
+#endif
+
 #include <string>
 #include <ctype.h>
 
-#if (CC_TARGET_PLATFORM != CC_PLATFORM_IOS) 
+#if (CC_TARGET_PLATFORM != CC_PLATFORM_IOS)
 
 NS_CC_BEGIN
+
+#if (CC_TARGET_PLATFORM != CC_PLATFORM_QT)
+// with Qt we use the QImage for loading and saving images
 
 // premultiply alpha, or the effect will wrong when want to use other pixel format in CCTexture2D,
 // such as RGB888, RGB5A1
@@ -50,7 +58,7 @@ NS_CC_BEGIN
 
 // on ios, we should use platform/ios/CCImage_ios.mm instead
 
-typedef struct 
+typedef struct
 {
     unsigned char* data;
     int size;
@@ -71,6 +79,8 @@ static void pngReadCallback(png_structp png_ptr, png_bytep data, png_size_t leng
         png_error(png_ptr, "pngReaderCallback failed");
     }
 }
+
+#endif
 
 //////////////////////////////////////////////////////////////////////////
 // Impliment CCImage
@@ -106,15 +116,15 @@ bool CCImage::initWithImageFileThreadSafe(const char *fullpath, EImageFormat ima
     return initWithImageData(data.getBuffer(), data.getSize(), imageType);
 }
 
-bool CCImage::initWithImageData(void * pData, 
-                                int nDataLen, 
-                                EImageFormat eFmt/* = eSrcFmtPng*/, 
+bool CCImage::initWithImageData(void * pData,
+                                int nDataLen,
+                                EImageFormat eFmt/* = eSrcFmtPng*/,
                                 int nWidth/* = 0*/,
                                 int nHeight/* = 0*/,
                                 int nBitsPerComponent/* = 8*/)
 {
     bool bRet = false;
-    do 
+    do
     {
         CC_BREAK_IF(! pData || nDataLen <= 0);
 
@@ -187,6 +197,9 @@ bool CCImage::initWithImageData(void * pData,
     return bRet;
 }
 
+#if (CC_TARGET_PLATFORM != CC_PLATFORM_QT)
+// with Qt we use the QImage for loading and saving images
+
 bool CCImage::_initWithJpgData(void * data, int nSize)
 {
     /* these are standard libjpeg structures for reading(decompression) */
@@ -198,7 +211,7 @@ bool CCImage::_initWithJpgData(void * data, int nSize)
     unsigned int i = 0;
 
     bool bRet = false;
-    do 
+    do
     {
         /* here we set up the standard libjpeg error handler */
         cinfo.err = jpeg_std_error( &jerr );
@@ -244,15 +257,13 @@ bool CCImage::_initWithJpgData(void * data, int nSize)
         while( cinfo.output_scanline < cinfo.image_height )
         {
             jpeg_read_scanlines( &cinfo, row_pointer, 1 );
-            for( i=0; i<cinfo.image_width*cinfo.output_components;i++) 
-            {
+            for( i=0; i<cinfo.image_width*cinfo.num_components;i++)
                 m_pData[location++] = row_pointer[0][i];
-            }
         }
 
         jpeg_finish_decompress( &cinfo );
         jpeg_destroy_decompress( &cinfo );
-        /* wrap up decompression, destroy objects, free pointers and close open files */        
+        /* wrap up decompression, destroy objects, free pointers and close open files */
         bRet = true;
     } while (0);
 
@@ -265,11 +276,11 @@ bool CCImage::_initWithPngData(void * pData, int nDatalen)
 // length of bytes to check if it is a valid png file
 #define PNGSIGSIZE  8
     bool bRet = false;
-    png_byte        header[PNGSIGSIZE]   = {0}; 
+    png_byte        header[PNGSIGSIZE]   = {0};
     png_structp     png_ptr     =   0;
     png_infop       info_ptr    = 0;
 
-    do 
+    do
     {
         // png header len is 8 bytes
         CC_BREAK_IF(nDatalen < PNGSIGSIZE);
@@ -298,10 +309,10 @@ bool CCImage::_initWithPngData(void * pData, int nDatalen)
         png_set_read_fn(png_ptr, &imageSource, pngReadCallback);
 
         // read png header info
-        
+
         // read png file info
         png_read_info(png_ptr, info_ptr);
-        
+
         m_nWidth = png_get_image_width(png_ptr, info_ptr);
         m_nHeight = png_get_image_height(png_ptr, info_ptr);
         m_nBitsPerComponent = png_get_bit_depth(png_ptr, info_ptr);
@@ -315,12 +326,12 @@ bool CCImage::_initWithPngData(void * pData, int nDatalen)
             case PNG_COLOR_TYPE_RGB:
             case PNG_COLOR_TYPE_RGB_ALPHA:
                 // do nothing
-                
+
                 break;
             case PNG_COLOR_TYPE_PALETTE:
                 png_set_palette_to_rgb(png_ptr);
                 channels = 3;
-                
+
                 break;
             case PNG_COLOR_TYPE_GRAY:
             case PNG_COLOR_TYPE_GRAY_ALPHA:
@@ -330,9 +341,9 @@ bool CCImage::_initWithPngData(void * pData, int nDatalen)
                 }
                 png_set_gray_to_rgb(png_ptr);
                 channels = 3;
-                
+
                 break;
-                
+
             default:
                 CCLog("unsopprted color type %u", color_type);
                 goto out;
@@ -341,8 +352,8 @@ bool CCImage::_initWithPngData(void * pData, int nDatalen)
         {
             png_set_strip_16(png_ptr);
             m_nBitsPerComponent = 8;
-        } 
-        
+        }
+
         m_bHasAlpha = (color_type & PNG_COLOR_MASK_ALPHA) ? true : false;
         if (m_bHasAlpha)
         {
@@ -356,25 +367,25 @@ bool CCImage::_initWithPngData(void * pData, int nDatalen)
         if (row_pointers)
         {
             const unsigned int stride = m_nWidth * channels;
-            for (unsigned short i = 0; i < m_nHeight; ++i)
+            for (size_t i = 0; i < m_nHeight; ++i)
             {
                 png_uint_32 q = i * stride;
                 row_pointers[i] = (png_bytep)m_pData + q;
             }
             png_read_image(png_ptr, row_pointers);
-            
+
             if (m_bHasAlpha)
             {
                 unsigned int *tmp = (unsigned int *)m_pData;
-                for(unsigned short i = 0; i < m_nHeight; i++)
+                for(unsigned int i = 0; i < m_nHeight; i++)
                 {
-                    for(unsigned int j = 0; j < m_nWidth * channels; j += 4)
+                    for(int j = 0; j < m_nWidth * channels; j += 4)
                     {
-                        *tmp++ = CC_RGB_PREMULTIPLY_APLHA( row_pointers[i][j], row_pointers[i][j + 1], 
+                        *tmp++ = CC_RGB_PREMULTIPLY_APLHA( row_pointers[i][j], row_pointers[i][j + 1],
                                                           row_pointers[i][j + 2], row_pointers[i][j + 3] );
                     }
                 }
-                
+
                 m_bPreMulti = true;
             }
 
@@ -444,7 +455,7 @@ static uint64 _tiffSeekProc(thandle_t fd, uint64 off, int whence)
 {
     tImageSource* isource = (tImageSource*)fd;
     uint64 ret = -1;
-    do 
+    do
     {
         if (whence == SEEK_SET)
         {
@@ -501,7 +512,7 @@ static void _tiffUnmapProc(thandle_t fd, void* base, toff_t size)
 bool CCImage::_initWithTiffData(void* pData, int nDataLen)
 {
     bool bRet = false;
-    do 
+    do
     {
         // set the read call back function
         tImageSource imageSource;
@@ -509,7 +520,7 @@ bool CCImage::_initWithTiffData(void* pData, int nDataLen)
         imageSource.size    = nDataLen;
         imageSource.offset  = 0;
 
-        TIFF* tif = TIFFClientOpen("file.tif", "r", (thandle_t)&imageSource, 
+        TIFF* tif = TIFFClientOpen("file.tif", "r", (thandle_t)&imageSource,
             _tiffReadProc, _tiffWriteProc,
             _tiffSeekProc, _tiffCloseProc, _tiffSizeProc,
             _tiffMapProc,
@@ -517,10 +528,10 @@ bool CCImage::_initWithTiffData(void* pData, int nDataLen)
 
         CC_BREAK_IF(NULL == tif);
 
-        uint32 w = 0, h = 0;
-        uint16 bitsPerSample = 0, samplePerPixel = 0, planarConfig = 0;
-        size_t npixels = 0;
-        
+        uint32 w, h;
+        uint16 bitsPerSample, samplePerPixel, planarConfig, extraSample;
+        size_t npixels;
+
         TIFFGetField(tif, TIFFTAG_IMAGEWIDTH, &w);
         TIFFGetField(tif, TIFFTAG_IMAGELENGTH, &h);
         TIFFGetField(tif, TIFFTAG_BITSPERSAMPLE, &bitsPerSample);
@@ -528,7 +539,7 @@ bool CCImage::_initWithTiffData(void* pData, int nDataLen)
         TIFFGetField(tif, TIFFTAG_PLANARCONFIG, &planarConfig);
 
         npixels = w * h;
-        
+
         m_bHasAlpha = true;
         m_nWidth = w;
         m_nHeight = h;
@@ -537,18 +548,18 @@ bool CCImage::_initWithTiffData(void* pData, int nDataLen)
         m_pData = new unsigned char[npixels * sizeof (uint32)];
 
         uint32* raster = (uint32*) _TIFFmalloc(npixels * sizeof (uint32));
-        if (raster != NULL) 
+        if (raster != NULL)
         {
            if (TIFFReadRGBAImageOriented(tif, w, h, raster, ORIENTATION_TOPLEFT, 0))
            {
                 unsigned char* src = (unsigned char*)raster;
                 unsigned int* tmp = (unsigned int*)m_pData;
 
-                /* the raster data is pre-multiplied by the alpha component 
+                /* the raster data is pre-multiplied by the alpha component
                    after invoking TIFFReadRGBAImageOriented
                 for(int j = 0; j < m_nWidth * m_nHeight * 4; j += 4)
                 {
-                    *tmp++ = CC_RGB_PREMULTIPLY_APLHA( src[j], src[j + 1], 
+                    *tmp++ = CC_RGB_PREMULTIPLY_APLHA( src[j], src[j + 1],
                         src[j + 2], src[j + 3] );
                 }
                 */
@@ -559,7 +570,7 @@ bool CCImage::_initWithTiffData(void* pData, int nDataLen)
 
           _TIFFfree(raster);
         }
-        
+
 
         TIFFClose(tif);
 
@@ -568,10 +579,13 @@ bool CCImage::_initWithTiffData(void* pData, int nDataLen)
     return bRet;
 }
 
+#endif // (CC_TARGET_PLATFORM != TARGET_OS_QT)
+// with Qt we use the QImage for loading and saving images
+
 bool CCImage::_initWithRawData(void * pData, int nDatalen, int nWidth, int nHeight, int nBitsPerComponent)
 {
     bool bRet = false;
-    do 
+    do
     {
         CC_BREAK_IF(0 == nWidth || 0 == nHeight);
 
@@ -596,7 +610,7 @@ bool CCImage::saveToFile(const char *pszFilePath, bool bIsToRGB)
 {
     bool bRet = false;
 
-    do 
+    do
     {
         CC_BREAK_IF(NULL == pszFilePath);
 
@@ -628,10 +642,13 @@ bool CCImage::saveToFile(const char *pszFilePath, bool bIsToRGB)
     return bRet;
 }
 
+#if (CC_TARGET_PLATFORM != CC_PLATFORM_QT)
+// with Qt we use the QImage for loading and saving images
+
 bool CCImage::_saveImageToPNG(const char * pszFilePath, bool bIsToRGB)
 {
     bool bRet = false;
-    do 
+    do
     {
         CC_BREAK_IF(NULL == pszFilePath);
 
@@ -673,7 +690,7 @@ bool CCImage::_saveImageToPNG(const char * pszFilePath, bool bIsToRGB)
         {
             png_set_IHDR(png_ptr, info_ptr, m_nWidth, m_nHeight, 8, PNG_COLOR_TYPE_RGB_ALPHA,
                 PNG_INTERLACE_NONE, PNG_COMPRESSION_TYPE_BASE, PNG_FILTER_TYPE_BASE);
-        } 
+        }
         else
         {
             png_set_IHDR(png_ptr, info_ptr, m_nWidth, m_nHeight, 8, PNG_COLOR_TYPE_RGB,
@@ -740,7 +757,7 @@ bool CCImage::_saveImageToPNG(const char * pszFilePath, bool bIsToRGB)
                 row_pointers = NULL;
 
                 CC_SAFE_DELETE_ARRAY(pTempData);
-            } 
+            }
             else
             {
                 for (int i = 0; i < (int)m_nHeight; i++)
@@ -771,7 +788,7 @@ bool CCImage::_saveImageToPNG(const char * pszFilePath, bool bIsToRGB)
 bool CCImage::_saveImageToJPG(const char * pszFilePath)
 {
     bool bRet = false;
-    do 
+    do
     {
         CC_BREAK_IF(NULL == pszFilePath);
 
@@ -786,7 +803,7 @@ bool CCImage::_saveImageToJPG(const char * pszFilePath)
         jpeg_create_compress(&cinfo);
 
         CC_BREAK_IF((outfile = fopen(pszFilePath, "wb")) == NULL);
-        
+
         jpeg_stdio_dest(&cinfo, outfile);
 
         cinfo.image_width = m_nWidth;    /* image width and height, in pixels */
@@ -828,7 +845,7 @@ bool CCImage::_saveImageToJPG(const char * pszFilePath)
             }
 
             CC_SAFE_DELETE_ARRAY(pTempData);
-        } 
+        }
         else
         {
             while (cinfo.next_scanline < cinfo.image_height) {
@@ -840,15 +857,18 @@ bool CCImage::_saveImageToJPG(const char * pszFilePath)
         jpeg_finish_compress(&cinfo);
         fclose(outfile);
         jpeg_destroy_compress(&cinfo);
-        
+
         bRet = true;
     } while (0);
     return bRet;
 }
 
+#endif // (CC_TARGET_PLATFORM != TARGET_OS_QT)
+// with Qt we use the QImage for loading and saving images
+
 NS_CC_END
 
 #endif // (CC_TARGET_PLATFORM != TARGET_OS_IPHONE)
-/* ios/CCImage_ios.mm uses "mm" as the extension, 
+/* ios/CCImage_ios.mm uses "mm" as the extension,
    so we cannot inclue it in this CCImage.cpp.
    It makes a little difference on ios */

@@ -44,7 +44,8 @@ build for which target platform
 #define CC_PLATFORM_MARMALADE          4
 #define CC_PLATFORM_LINUX              5
 #define CC_PLATFORM_BADA               6
-#define CC_PLATFORM_QNX                   7
+#define CC_PLATFORM_QNX                7
+#define CC_PLATFORM_QT				   8
 
 // Determine tartet platform by compile environment macro.
 #define CC_TARGET_PLATFORM             CC_PLATFORM_UNKNOWN
@@ -90,6 +91,12 @@ build for which target platform
 #if ! CC_TARGET_PLATFORM && defined(__QNX__)
     #undef  CC_TARGET_PLATFORM
     #define CC_TARGET_PLATFORM     CC_PLATFORM_QNX
+#endif
+
+// qt
+#if ! CC_TARGET_PLATFORM && (defined(MEEGO_EDITION_HARMATTAN) || defined(Q_OS_SYMBIAN))
+    #undef  CC_TARGET_PLATFORM
+    #define CC_TARGET_PLATFORM     CC_PLATFORM_QT
 #endif
 
 //////////////////////////////////////////////////////////////////////////

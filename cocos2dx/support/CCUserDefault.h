@@ -25,7 +25,12 @@ THE SOFTWARE.
 #define __SUPPORT_CCUSERDEFAULT_H__
 
 #include "CCPlatformMacros.h"
+
 #include <string>
+
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_QT)
+#include <QSettings>
+#endif
 
 NS_CC_BEGIN
 
@@ -33,7 +38,7 @@ NS_CC_BEGIN
  * CCUserDefault acts as a tiny database. You can save and get base type values by it.
  * For example, setBoolForKey("played", true) will add a bool value true into the database.
  * Its key is "played". You can get the value of the key by getBoolForKey("played").
- * 
+ *
  * It supports the following base types:
  * bool, int, float, double, string
  */
@@ -48,17 +53,17 @@ public:
     @brief Get bool value by key, if the key doesn't exist, a default value will return.
      You can set the default value, or it is false.
     */
-    bool    getBoolForKey(const char* pKey, bool defaultValue = false);
+    bool	getBoolForKey(const char* pKey, bool defaultValue = false);
     /**
     @brief Get integer value by key, if the key doesn't exist, a default value will return.
      You can set the default value, or it is 0.
     */
-    int        getIntegerForKey(const char* pKey, int defaultValue = 0);
+    int		getIntegerForKey(const char* pKey, int defaultValue = 0);
     /**
     @brief Get float value by key, if the key doesn't exist, a default value will return.
      You can set the default value, or it is 0.0f.
     */
-    float    getFloatForKey(const char* pKey, float defaultValue=0.0f);
+    float	getFloatForKey(const char* pKey, float defaultValue=0.0f);
     /**
     @brief Get double value by key, if the key doesn't exist, a default value will return.
      You can set the default value, or it is 0.0.
@@ -75,23 +80,23 @@ public:
     /**
     @brief Set bool value by key.
     */
-    void    setBoolForKey(const char* pKey, bool value);
+    void	setBoolForKey(const char* pKey, bool value);
     /**
     @brief Set integer value by key.
     */
-    void    setIntegerForKey(const char* pKey, int value);
+    void	setIntegerForKey(const char* pKey, int value);
     /**
     @brief Set float value by key.
     */
-    void    setFloatForKey(const char* pKey, float value);
+    void	setFloatForKey(const char* pKey, float value);
     /**
     @brief Set double value by key.
     */
-    void    setDoubleForKey(const char* pKey, double value);
+    void	setDoubleForKey(const char* pKey, double value);
     /**
     @brief Set string value by key.
     */
-    void    setStringForKey(const char* pKey, const std::string & value);
+    void	setStringForKey(const char* pKey, const std::string & value);
     /**
      @brief Save content to xml file
      */
@@ -103,15 +108,22 @@ public:
 
 private:
     CCUserDefault();
+
+    static CCUserDefault* m_spUserDefault;
+
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_QT)
+    static QSettings* m_settings;
+#else
     static bool createXMLFile();
     static bool isXMLFileExist();
     static void initXMLFilePath();
-    
-    static CCUserDefault* m_spUserDefault;
+
     static std::string m_sFilePath;
     static bool m_sbIsFilePathInitialized;
+#endif
 };
 
 NS_CC_END
 
 #endif // __SUPPORT_CCUSERDEFAULT_H__
+

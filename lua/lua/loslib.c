@@ -19,6 +19,8 @@
 #include "lauxlib.h"
 #include "lualib.h"
 
+// NOTE: Hack for Qt (where this should come from?)
+#define CLOCKS_PER_SEC 1.0
 
 static int os_pushresult (lua_State *L, int i, const char *filename) {
   int en = errno;  /* calls to Lua API may change this value */

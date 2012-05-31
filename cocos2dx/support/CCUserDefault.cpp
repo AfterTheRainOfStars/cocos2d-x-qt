@@ -24,8 +24,12 @@ THE SOFTWARE.
 #include "CCUserDefault.h"
 #include "CCCommon.h"
 #include "platform/CCFileUtils.h"
+
+#ifdef Q_OS_SYMBIAN
+#else
 #include <libxml/parser.h>
 #include <libxml/tree.h>
+#endif
 
 // root name of xml
 #define USERDEFAULT_ROOT_NAME    "userDefaultRoot"
@@ -36,6 +40,7 @@ using namespace std;
 
 NS_CC_BEGIN
 
+#if (CC_TARGET_PLATFORM != CC_PLATFORM_QT)
 static xmlDocPtr g_sharedDoc = NULL;
 
 /**
@@ -53,7 +58,7 @@ static xmlNodePtr getXMLNodeForKey(const char* pKey, xmlNodePtr *rootNode)
         return NULL;
     }
 
-    do 
+    do
     {
         // get root node
         *rootNode = xmlDocGetRootElement(g_sharedDoc);
@@ -123,17 +128,23 @@ static void setValueForKey(const char* pKey, const char* pValue)
             xmlNodePtr content = xmlNewText(BAD_CAST pValue);
             xmlAddChild(rootNode, tmpNode);
             xmlAddChild(tmpNode, content);
-        }    
+        }
     }
 }
+#endif
 
 /**
  * implements of CCUserDefault
  */
 
 CCUserDefault* CCUserDefault::m_spUserDefault = 0;
+
+#if (CC_TARGET_PLATFORM != CC_PLATFORM_QT)
 string CCUserDefault::m_sFilePath = string("");
 bool CCUserDefault::m_sbIsFilePathInitialized = false;
+#else
+QSettings* CCUserDefault::m_settings = NULL;
+#endif
 
 /**
  * If the user invoke delete CCUserDefault::sharedUserDefault(), should set m_spUserDefault
@@ -142,6 +153,7 @@ bool CCUserDefault::m_sbIsFilePathInitialized = false;
 CCUserDefault::~CCUserDefault()
 {
     flush();
+#if (CC_TARGET_PLATFORM != CC_PLATFORM_QT)
     if (g_sharedDoc)
     {
         xmlFreeDoc(g_sharedDoc);
@@ -149,21 +161,33 @@ CCUserDefault::~CCUserDefault()
     }
 
     m_spUserDefault = NULL;
+#endif
 }
 
 CCUserDefault::CCUserDefault()
 {
+#if (CC_TARGET_PLATFORM != CC_PLATFORM_QT)
     g_sharedDoc = xmlReadFile(getXMLFilePath().c_str(), "utf-8", XML_PARSE_RECOVER);
+#else
+    m_settings = new QSettings();
+#endif
 }
 
 void CCUserDefault::purgeSharedUserDefault()
 {
+#if (CC_TARGET_PLATFORM != CC_PLATFORM_QT)
+
     CC_SAFE_DELETE(m_spUserDefault);
     m_spUserDefault = NULL;
+#else
+    if(m_settings)
+        delete m_settings;
+#endif
 }
 
 bool CCUserDefault::getBoolForKey(const char* pKey, bool defaultValue)
 {
+#if (CC_TARGET_PLATFORM != CC_PLATFORM_QT)
     const char* value = getValueForKey(pKey);
     bool ret = defaultValue;
 
@@ -174,10 +198,14 @@ bool CCUserDefault::getBoolForKey(const char* pKey, bool defaultValue)
     }
 
     return ret;
+#else
+    return m_settings->value(pKey, defaultValue).toBool();
+#endif
 }
 
 int CCUserDefault::getIntegerForKey(const char* pKey, int defaultValue)
 {
+#if (CC_TARGET_PLATFORM != CC_PLATFORM_QT)
     const char* value = getValueForKey(pKey);
     int ret = defaultValue;
 
@@ -188,17 +216,25 @@ int CCUserDefault::getIntegerForKey(const char* pKey, int defaultValue)
     }
 
     return ret;
+#else
+    return m_settings->value(pKey, defaultValue).toInt();
+#endif
 }
 
 float CCUserDefault::getFloatForKey(const char* pKey, float defaultValue)
 {
+#if (CC_TARGET_PLATFORM != CC_PLATFORM_QT)
     float ret = (float)getDoubleForKey(pKey, (double)defaultValue);
- 
+
     return ret;
+#else
+    return m_settings->value(pKey, defaultValue).toFloat();
+#endif
 }
 
 double CCUserDefault::getDoubleForKey(const char* pKey, double defaultValue)
 {
+#if (CC_TARGET_PLATFORM != CC_PLATFORM_QT)
     const char* value = getValueForKey(pKey);
     double ret = defaultValue;
 
@@ -209,10 +245,14 @@ double CCUserDefault::getDoubleForKey(const char* pKey, double defaultValue)
     }
 
     return ret;
+#else
+    return m_settings->value(pKey, defaultValue).toDouble();
+#endif
 }
 
 string CCUserDefault::getStringForKey(const char* pKey, const std::string & defaultValue)
 {
+#if (CC_TARGET_PLATFORM != CC_PLATFORM_QT)
     const char* value = getValueForKey(pKey);
     string ret = defaultValue;
 
@@ -223,10 +263,17 @@ string CCUserDefault::getStringForKey(const char* pKey, const std::string & defa
     }
 
     return ret;
+#else
+    QString str = m_settings->value(pKey, defaultValue.c_str()).toString();
+    QByteArray ba = str.toAscii();
+    string ret(ba.constData());
+    return ret;
+#endif
 }
 
 void CCUserDefault::setBoolForKey(const char* pKey, bool value)
 {
+#if (CC_TARGET_PLATFORM != CC_PLATFORM_QT)
     // save bool value as sring
 
     if (true == value)
@@ -237,6 +284,9 @@ void CCUserDefault::setBoolForKey(const char* pKey, bool value)
     {
         setStringForKey(pKey, "false");
     }
+#else
+    m_settings->setValue(pKey, value);
+#endif
 }
 
 void CCUserDefault::setIntegerForKey(const char* pKey, int value)
@@ -247,17 +297,25 @@ void CCUserDefault::setIntegerForKey(const char* pKey, int value)
         return;
     }
 
+#if (CC_TARGET_PLATFORM != CC_PLATFORM_QT)
     // format the value
     char tmp[50];
     memset(tmp, 0, 50);
     sprintf(tmp, "%d", value);
 
     setValueForKey(pKey, tmp);
+#else
+    m_settings->setValue(pKey, value);
+#endif
 }
 
 void CCUserDefault::setFloatForKey(const char* pKey, float value)
 {
+#if (CC_TARGET_PLATFORM != CC_PLATFORM_QT)
     setDoubleForKey(pKey, value);
+#else
+    m_settings->setValue(pKey, value);
+#endif
 }
 
 void CCUserDefault::setDoubleForKey(const char* pKey, double value)
@@ -268,12 +326,16 @@ void CCUserDefault::setDoubleForKey(const char* pKey, double value)
         return;
     }
 
+#if (CC_TARGET_PLATFORM != CC_PLATFORM_QT)
     // format the value
     char tmp[50];
     memset(tmp, 0, 50);
     sprintf(tmp, "%f", value);
 
     setValueForKey(pKey, tmp);
+#else
+    m_settings->setValue(pKey, value);
+#endif
 }
 
 void CCUserDefault::setStringForKey(const char* pKey, const std::string & value)
@@ -284,11 +346,16 @@ void CCUserDefault::setStringForKey(const char* pKey, const std::string & value)
         return;
     }
 
+#if (CC_TARGET_PLATFORM != CC_PLATFORM_QT)
     setValueForKey(pKey, value.c_str());
+#else
+    m_settings->setValue(pKey, value.c_str());
+#endif
 }
 
 CCUserDefault* CCUserDefault::sharedUserDefault()
 {
+#if (CC_TARGET_PLATFORM != CC_PLATFORM_QT)
     initXMLFilePath();
 
     // only create xml file one time
@@ -297,6 +364,7 @@ CCUserDefault* CCUserDefault::sharedUserDefault()
     {
         return NULL;
     }
+#endif
 
     if (! m_spUserDefault)
     {
@@ -306,6 +374,7 @@ CCUserDefault* CCUserDefault::sharedUserDefault()
     return m_spUserDefault;
 }
 
+#if (CC_TARGET_PLATFORM != CC_PLATFORM_QT)
 bool CCUserDefault::isXMLFileExist()
 {
     FILE *fp = fopen(m_sFilePath.c_str(), "r");
@@ -326,7 +395,7 @@ void CCUserDefault::initXMLFilePath()
     {
         m_sFilePath += CCFileUtils::getWriteablePath() + XML_FILE_NAME;
         m_sbIsFilePathInitialized = true;
-    }    
+    }
 }
 
 // create new xml file
@@ -335,7 +404,7 @@ bool CCUserDefault::createXMLFile()
     bool bRet = false;
     xmlDocPtr doc = NULL;
 
-    do 
+    do
     {
         // new doc
         doc = xmlNewDoc(BAD_CAST"1.0");
@@ -370,19 +439,31 @@ bool CCUserDefault::createXMLFile()
 
     return bRet;
 }
+#endif
 
 const string& CCUserDefault::getXMLFilePath()
 {
+#if (CC_TARGET_PLATFORM != CC_PLATFORM_QT)
     return m_sFilePath;
+#else
+    // TODO: ...
+    static string tmp("");
+    return tmp;
+#endif
 }
 
 void CCUserDefault::flush()
 {
+#if (CC_TARGET_PLATFORM != CC_PLATFORM_QT)
     // save to file
     if (g_sharedDoc)
     {
         xmlSaveFile(CCUserDefault::sharedUserDefault()->getXMLFilePath().c_str(), g_sharedDoc);
     }
+#else
+    // TODO: ...
+    m_settings->sync();
+#endif
 }
 
 NS_CC_END
