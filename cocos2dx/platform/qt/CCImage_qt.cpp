@@ -229,7 +229,24 @@ bool CCImage::_initWithPngData(void * pData, int nDatalen)
 
 bool CCImage::_initWithTiffData(void* pData, int nDataLen)
 {
-    bool bRet = false;
+    QImage image;
+
+    bool bRet = image.loadFromData((const uchar*)pData, nDatalen, "TIFF");
+    if (!bRet)
+        return false;
+
+    // TODO: Better/faster conversion
+    QImage convertedImg = image.convertToFormat(
+                QImage::Format_ARGB32_Premultiplied);
+    convertedImg = convertedImg.rgbSwapped();
+
+    m_bPreMulti = true;
+    m_bHasAlpha = convertedImg.hasAlphaChannel();
+    m_nBitsPerComponent = cocos2d::getBitsPerComponent(convertedImg.format());
+    m_nHeight = (short)convertedImg.height();
+    m_nWidth = (short)convertedImg.width();
+    m_pData  = new unsigned char[convertedImg.byteCount()];
+    memcpy(m_pData, convertedImg.bits(), convertedImg.byteCount());
 
     return bRet;
 }
