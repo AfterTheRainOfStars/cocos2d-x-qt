@@ -227,7 +227,7 @@ bool CCImage::_initWithPngData(void * pData, int nDatalen)
     return bRet;
 }
 
-bool CCImage::_initWithTiffData(void* pData, int nDataLen)
+bool CCImage::_initWithTiffData(void* pData, int nDatalen)
 {
     QImage image;
 
