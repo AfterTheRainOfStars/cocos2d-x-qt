@@ -266,18 +266,18 @@ Test5::Test5()
 
     CCRotateBy* rot = CCRotateBy::actionWithDuration(2, 360);
     CCActionInterval* rot_back = rot->reverse();
-    CCAction* forever = CCRepeatForever::actionWithAction(
+    CCAction* f = CCRepeatForever::actionWithAction(
                                                     (CCActionInterval*)(CCSequence::actions(rot, rot_back, NULL)) 
                                                 );
-    CCAction* forever2 = (CCAction*)(forever->copy()->autorelease());
-    forever->setTag(101);
-    forever2->setTag(102);
+    CCAction* f2 = (CCAction*)(f->copy()->autorelease());
+    f->setTag(101);
+    f2->setTag(102);
                                                   
     addChild(sp1, 0, kTagSprite1);
     addChild(sp2, 0, kTagSprite2);
             
-    sp1->runAction(forever);
-    sp2->runAction(forever2);
+    sp1->runAction(f);
+    sp2->runAction(f2);
     
     schedule( schedule_selector(Test5::addAndRemove), 2.0f);
 }
@@ -323,22 +323,22 @@ Test6::Test6()
         
     CCActionInterval* rot = CCRotateBy::actionWithDuration(2, 360);
     CCActionInterval* rot_back = rot->reverse();
-    CCAction* forever1 = CCRepeatForever::actionWithAction(
+    CCAction* f1 = CCRepeatForever::actionWithAction(
                                                             (CCActionInterval*)(CCSequence::actions(rot, rot_back, NULL)));
-    CCAction* forever11 =  (CCAction*)(forever1->copy()->autorelease());
+    CCAction* f11 =  (CCAction*)(f1->copy()->autorelease());
 
-    CCAction* forever2 =  (CCAction*)(forever1->copy()->autorelease());
-    CCAction* forever21 =  (CCAction*)(forever1->copy()->autorelease());
+    CCAction* f2 =  (CCAction*)(f1->copy()->autorelease());
+    CCAction* f21 =  (CCAction*)(f1->copy()->autorelease());
     
     addChild(sp1, 0, kTagSprite1);
     sp1->addChild(sp11);
     addChild(sp2, 0, kTagSprite2);
     sp2->addChild(sp21);
     
-    sp1->runAction(forever1);
-    sp11->runAction(forever11);
-    sp2->runAction(forever2);
-    sp21->runAction(forever21);
+    sp1->runAction(f1);
+    sp11->runAction(f11);
+    sp2->runAction(f2);
+    sp21->runAction(f21);
     
     schedule( schedule_selector(Test6::addAndRemove), 2.0f);
 }

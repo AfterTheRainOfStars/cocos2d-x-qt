@@ -23,6 +23,7 @@ contains(DEFINES,COCOS2DXQT_LIBRARY) {
         $$PWD/../src/cpBody.c \
         $$PWD/../src/cpSpaceHash.c \
         $$PWD/../src/cpBB.c \
+        $$PWD/../src/cpBBTree.c \
         $$PWD/../src/cpSpaceStep.c \
         $$PWD/../src/cpSpaceComponent.c \
         $$PWD/../src/prime.h \
@@ -40,7 +41,9 @@ contains(DEFINES,COCOS2DXQT_LIBRARY) {
         $$PWD/../src/cpArbiter.c \
         $$PWD/../src/cpCollision.c \
         $$PWD/../src/cpHashSet.c \
-        $$PWD/../src/cpSpace.c
+        $$PWD/../src/cpSpace.c \
+        $$PWD/../src/cpSpatialIndex.c \
+        $$PWD/../src/cpSweep1D.c
 }
 }
 

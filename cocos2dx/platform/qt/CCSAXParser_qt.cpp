@@ -98,6 +98,74 @@ bool CCSAXParser::init(const char *pszEncoding)
     return true;
 }
 
+bool CCSAXParser::parse(const char* pXMLData, unsigned int uDataLength)
+{
+#ifdef Q_OS_SYMBIAN
+    /*
+    QFile xmlFile(pszFile);
+    xmlFile.open(QIODevice::ReadOnly);
+    if(!xmlFile.isOpen())
+    {
+        return false;
+    }
+    */
+
+    QByteArray xmlBA(pXMLData, uDataLength);
+
+    CCXmlContentHandler xmlContentHandler(this);
+    //QXmlInputSource xmlSource(&xmlFile);
+    QXmlInputSource xmlSource;
+    //xmlSource.setData(pXMLData);
+    xmlSource.setData(xmlBA);
+
+    QXmlSimpleReader xmlReader;
+    xmlReader.setContentHandler(&xmlContentHandler);
+    xmlReader.parse(xmlSource);
+
+    return true;
+#else
+    unsigned long size = uDataLength;
+    char *pBuffer = pXMLData;
+
+    if (!pBuffer)
+    {
+        return false;
+    }
+
+    /*
+     * this initialize the library and check potential ABI mismatches
+     * between the version it was compiled for and the actual shared
+     * library used.
+     */
+    LIBXML_TEST_VERSION
+    xmlSAXHandler saxHandler;
+    memset( &saxHandler, 0, sizeof(saxHandler) );
+    // Using xmlSAXVersion( &saxHandler, 2 ) generate crash as it sets plenty of other pointers...
+    saxHandler.initialized = XML_SAX2_MAGIC;  // so we do this to force parsing as SAX2.
+    saxHandler.startElement = &CCSAXParser::startElement;
+    saxHandler.endElement = &CCSAXParser::endElement;
+    saxHandler.characters = &CCSAXParser::textHandler;
+
+    int result = xmlSAXUserParseMemory( &saxHandler, this, pBuffer, size );
+    if ( result != 0 )
+    {
+        return false;
+    }
+    /*
+     * Cleanup function for the XML library.
+     */
+    xmlCleanupParser();
+    /*
+     * this is to debug memory for regression tests
+     */
+#if (CC_TARGET_PLATFORM != CC_PLATFORM_BADA)
+    xmlMemoryDump();
+#endif
+
+    return true;
+#endif
+}
+
 bool CCSAXParser::parse(const char *pszFile)
 {
 #ifdef Q_OS_SYMBIAN

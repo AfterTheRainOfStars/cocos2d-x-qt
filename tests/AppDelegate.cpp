@@ -7,9 +7,16 @@
 USING_NS_CC;
 using namespace CocosDenshion;
 
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_QT)
+AppDelegate::AppDelegate(int &argc, char** argv) :
+    CCApplication(argc, argv)
+{
+}
+#else
 AppDelegate::AppDelegate()
 {
 }
+#endif
 
 AppDelegate::~AppDelegate()
 {

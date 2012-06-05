@@ -95,11 +95,13 @@ static TestScene* CreateTestScene(int nIdx)
         pScene = new PerformanceTestScene(); break;
     case TEST_ZWOPTEX:
         pScene = new ZwoptexTestScene(); break;
+#if (CC_TARGET_PLATFORM != CC_PLATFORM_QT)
 #if (CC_TARGET_PLATFORM != CC_PLATFORM_MARMALADE)
 // bada don't support libcurl
 #if (CC_TARGET_PLATFORM != CC_PLATFORM_BADA)
     case TEST_CURL:
         pScene = new CurlTestScene(); break;
+#endif
 #endif
 #endif
     case TEST_USERDEFAULT:
