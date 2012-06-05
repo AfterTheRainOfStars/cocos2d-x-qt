@@ -192,8 +192,10 @@ PUBLIC_HEADERS = \
     $$PWD/../platform/CCPlatformConfig.h \
     $$PWD/../platform/CCStdC.h \
     $$PWD/../platform/CCEGLViewProtocol.h \
+    $$PWD/../platform/CCFileUtilsCommon_cpp.h \
     $$PWD/../platform/CCCommon.h \
     $$PWD/../platform/CCImage.h \
+    $$PWD/../platform/CCImageCommon_cpp.h \
     $$PWD/../platform/CCAccelerometerDelegate.h \
     $$PWD/../platform/CCPlatformMacros.h \
     $$PWD/../actions/CCAction.h \

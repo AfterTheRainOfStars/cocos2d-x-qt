@@ -45,16 +45,15 @@ void CCAccelerometer::setDelegate(CCAccelerometerDelegate* pDelegate)
 
 void CCAccelerometer::readingChanged(QVariant x, QVariant y, QVariant z)
 {
-    /*
     if (!m_pAccelDelegate)
     {
         return;
     }
 
-    CCAcceleration AccValue;
     const time_t theTime = time(NULL);
     const double timestamp = (double)theTime / 100.0;
 
+    /*
 #if defined(Q_OS_SYMBIAN)
     switch(CCEGLView::sharedOpenGLView().getDeviceOrientation())
     {
@@ -80,11 +79,15 @@ void CCAccelerometer::readingChanged(QVariant x, QVariant y, QVariant z)
     AccValue.y = y.toDouble();
     AccValue.z = z.toDouble();
 #endif
+    */
 
+    CCAcceleration AccValue;
+    AccValue.x = y.toDouble();
+    AccValue.y =-x.toDouble();
+    AccValue.z = z.toDouble();
     AccValue.timestamp = timestamp;
 
     m_pAccelDelegate->didAccelerate(&AccValue);
-    */
 }
 
 void CCAccelerometer::setEnable(bool bEnable)
