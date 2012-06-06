@@ -15,9 +15,11 @@
 #include <libxml/parser.h>
 #include <libxml/tree.h>
 #include <libxml/xmlmemory.h>
-#include "CCLibxml2.h"
+//#include "CCLibxml2.h"
 #endif // Q_OS_SYMBIAN
 #include "CCFileUtils.h"
+
+#include <memory.h>
 
 NS_CC_BEGIN;
 
@@ -125,7 +127,7 @@ bool CCSAXParser::parse(const char* pXMLData, unsigned int uDataLength)
     return true;
 #else
     unsigned long size = uDataLength;
-    char *pBuffer = pXMLData;
+    const char *pBuffer = pXMLData;
 
     if (!pBuffer)
     {

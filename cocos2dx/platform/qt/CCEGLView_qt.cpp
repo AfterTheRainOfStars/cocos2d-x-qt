@@ -249,6 +249,7 @@ void CCEGLView::release()
 void CCEGLView::updateVkbOrientation()
 {
 #ifdef MEEGO_EDITION_HARMATTAN
+    /*
     Maliit::OrientationAngle mtfOrient;
 
     switch (m_eOrientation)
@@ -270,6 +271,7 @@ void CCEGLView::updateVkbOrientation()
     QMetaObject::invokeMethod(qApp->inputContext(),
         "notifyOrientationChanged",
         Q_ARG(Maliit::OrientationAngle, mtfOrient));
+        */
 #endif
 }
 

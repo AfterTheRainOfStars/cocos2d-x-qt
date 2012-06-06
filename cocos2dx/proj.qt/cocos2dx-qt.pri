@@ -13,6 +13,22 @@ INCLUDEPATH += \
     $$PWD/../support \
     $$PWD/../cocoa \
     $$PWD/../kazmath/include \
+    $$PWD/../actions \
+    $$PWD/../base_nodes \
+    $$PWD/../effects \
+    $$PWD/../label_nodes \
+    $$PWD/../sprite_nodes \
+    $$PWD/../script_support \
+    $$PWD/../shaders \
+    $$PWD/../textures \
+    $$PWD/../touch_dispatcher \
+    $$PWD/../menu_nodes \
+    $$PWD/../misc_nodes \
+    $$PWD/../keypad_dispatcher \
+    $$PWD/../layers_scenes_transitions_nodes \
+    $$PWD/../particle_nodes \
+    $$PWD/../tileMap_parallax_nodes \
+    $$PWD/../text_input_node \
     $$PWD/../
 
 contains(MEEGO_EDITION,harmattan) {

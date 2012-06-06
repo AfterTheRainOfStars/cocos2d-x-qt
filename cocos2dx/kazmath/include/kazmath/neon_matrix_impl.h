@@ -28,11 +28,11 @@
 #ifdef ANDROID
 // android don't have arm/arch.h but it defines __arm__
 #else
-#ifdef Q_OS_SYMBIAN
-// Symbian...
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_QT)
+// Qt
 #else
 #include "arm/arch.h"
-#endif Q_OS_SYMBIAN
+#endif //(CC_TARGET_PLATFORM == CC_PLATFORM_QT)
 #endif //ANDROID
 #endif // __arm__
 

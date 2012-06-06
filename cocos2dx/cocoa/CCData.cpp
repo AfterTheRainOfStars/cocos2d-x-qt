@@ -27,6 +27,7 @@ THE SOFTWARE.
 #include "CCFileUtils.h"
 
 #include <stdio.h>
+#include <memory.h>
 
 using namespace std;
 
