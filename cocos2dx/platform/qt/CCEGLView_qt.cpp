@@ -219,8 +219,6 @@ bool CCEGLView::Create()
 
     CCLOG("Create: width = %d height = %d", width(), height());
 
-    s_pMainWindow = this;
-
     setFrameSize(width(), height());
 
 #ifdef MEEGO_EDITION_HARMATTAN
@@ -235,6 +233,8 @@ bool CCEGLView::Create()
     activateWindow();
     setFocus();
     grabKeyboard();
+
+    s_pMainWindow = this;
 
     return true;
 }
@@ -383,6 +383,9 @@ void CCEGLView::resizeEvent(QResizeEvent *event)
 
 bool CCEGLView::handleTouchEvent(QEvent* event)
 {
+    if(!m_pDelegate)
+        return true;
+
     CCSet beganSet;
     CCSet updateSet;
     CCSet releaseSet;
@@ -587,7 +590,7 @@ bool CCEGLView::initEGL()
     int configAttributes[] =
     {
         EGL_SURFACE_TYPE, EGL_WINDOW_BIT,
-        EGL_RENDERABLE_TYPE, EGL_OPENGL_ES_BIT,
+        EGL_RENDERABLE_TYPE, EGL_OPENGL_ES2_BIT,
         EGL_DEPTH_SIZE, 16,
         EGL_NONE,
     };

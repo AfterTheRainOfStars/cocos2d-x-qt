@@ -12,7 +12,11 @@
 
 int main(int argc, char **argv)
 {
-    CCFileUtils::setResourcePath("/private/E8AA3F79/resources");
+#ifdef Q_OS_SYMBIAN
+        CCFileUtils::setResourcePath("/private/E8AA3F79/resources");
+#else
+        CCFileUtils::setResourcePath("/opt/helloworld/resources");
+#endif
 
     // create the application instance
     AppDelegate app(argc, argv);

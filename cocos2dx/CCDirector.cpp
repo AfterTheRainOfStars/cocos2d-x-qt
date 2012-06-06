@@ -306,14 +306,14 @@ void CCDirector::setOpenGLView(CCEGLView *pobOpenGLView)
         // set size
         m_obWinSizeInPoints = m_pobOpenGLView->getSize();
         m_obWinSizeInPixels = CCSizeMake(m_obWinSizeInPoints.width * m_fContentScaleFactor, m_obWinSizeInPoints.height * m_fContentScaleFactor);
-        
+
         createStatsLabel();
-        
+
         if (m_pobOpenGLView)
         {
             setGLDefaultValues();
-        }  
-        
+        }
+
         CHECK_GL_ERROR_DEBUG();
 
         if (m_fContentScaleFactor != 1)
@@ -724,7 +724,7 @@ void CCDirector::createStatsLabel()
     m_pFPSLabel = CCLabelBMFont::labelWithString("00.0", "fps_images.fnt");
     m_pSPFLabel = CCLabelBMFont::labelWithString("0.000", "fps_images.fnt");
     m_pDrawsLabel = CCLabelBMFont::labelWithString("000", "fps_images.fnt");
-    
+
     m_pFPSLabel->retain();
     m_pSPFLabel->retain();
     m_pDrawsLabel->retain();
