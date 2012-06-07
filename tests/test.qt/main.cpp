@@ -12,7 +12,11 @@
 
 int main(int argc, char **argv)
 {
-    CCFileUtils::setResourcePath("/private/E8AA3F78/resources");
+#ifdef Q_OS_SYMBIAN
+        CCFileUtils::setResourcePath("/private/E8AA3F78/resources");
+#else
+        CCFileUtils::setResourcePath("/opt/cocos2dxtests/resources");
+#endif
 
     AppDelegate app(argc, argv);
     return app.run();

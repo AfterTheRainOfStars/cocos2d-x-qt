@@ -103,21 +103,10 @@ bool CCSAXParser::init(const char *pszEncoding)
 bool CCSAXParser::parse(const char* pXMLData, unsigned int uDataLength)
 {
 #ifdef Q_OS_SYMBIAN
-    /*
-    QFile xmlFile(pszFile);
-    xmlFile.open(QIODevice::ReadOnly);
-    if(!xmlFile.isOpen())
-    {
-        return false;
-    }
-    */
-
     QByteArray xmlBA(pXMLData, uDataLength);
 
     CCXmlContentHandler xmlContentHandler(this);
-    //QXmlInputSource xmlSource(&xmlFile);
     QXmlInputSource xmlSource;
-    //xmlSource.setData(pXMLData);
     xmlSource.setData(xmlBA);
 
     QXmlSimpleReader xmlReader;

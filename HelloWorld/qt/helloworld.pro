@@ -9,7 +9,7 @@
 TARGET = helloworld
 TEMPLATE = app
 
-VERSION = 0.4
+VERSION = 0.7
 
 INCLUDEPATH += \
     ../Classes
