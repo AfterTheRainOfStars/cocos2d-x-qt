@@ -77,7 +77,6 @@ public:
 
     void release();
 
-
     /**
      @brief	get the shared main open gl window
      */

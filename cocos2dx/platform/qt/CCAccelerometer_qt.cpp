@@ -82,10 +82,16 @@ void CCAccelerometer::readingChanged(QVariant x, QVariant y, QVariant z)
     */
 
     CCAcceleration AccValue;
+#if defined(Q_OS_SYMBIAN)
     AccValue.x = y.toDouble();
     AccValue.y =-x.toDouble();
     AccValue.z = z.toDouble();
     AccValue.timestamp = timestamp;
+#elif defined(MEEGO_EDITION_HARMATTAN)
+    AccValue.x = x.toDouble();
+    AccValue.y = y.toDouble();
+    AccValue.z = z.toDouble();
+#endif
 
     m_pAccelDelegate->didAccelerate(&AccValue);
 }

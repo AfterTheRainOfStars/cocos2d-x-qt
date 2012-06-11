@@ -26,7 +26,8 @@ class CC_DLL CCApplication: public QApplication, public CCApplicationProtocol
 {
     Q_OBJECT
 public:
-    CCApplication(int &argc, char **argv);
+    CCApplication();
+    CCApplication(int& argc, char** argv);
     virtual ~CCApplication();
 
     /**
@@ -47,6 +48,34 @@ public:
     @param  the pointer of the application
     */
     virtual void applicationWillEnterForeground() = 0;
+
+    typedef enum
+    {
+        /// Device oriented vertically, home button on the bottom
+        kOrientationPortrait = 0,
+        /// Device oriented vertically, home button on the top
+        kOrientationPortraitUpsideDown = 1,
+        /// Device oriented horizontally, home button on the right
+        kOrientationLandscapeLeft = 2,
+        /// Device oriented horizontally, home button on the left
+        kOrientationLandscapeRight = 3,
+    } Orientation;
+
+    /**
+    @brief    Callback by CCDirector for change device orientation.
+    @orientation    The defination of orientation which CCDirector want change to.
+    @return         The actual orientation of the application.
+    */
+    Orientation setOrientation(Orientation orientation);
+
+    /**
+    @brief Get current device orientation.
+    @return Current orientation of the application.
+    */
+    inline Orientation getOrientation() const
+    {
+        return m_orientation;
+    }
 
     /**
     @brief    Callback by CCDirector for limit FPS.
@@ -76,6 +105,7 @@ public:
     QTimer *m_timer;
 protected:
     long m_nAnimationInterval;
+    Orientation m_orientation;
 	static CCApplication * sm_pSharedApplication;
 };
 

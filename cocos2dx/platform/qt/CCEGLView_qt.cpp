@@ -103,7 +103,7 @@ CCEGLView::CCEGLView(QWidget* parent):
 #endif // MEEGO_EDITION_HARMATTAN
 
 #if defined(Q_OS_SYMBIAN)
-    CAknAppUiBase::TAppUiOrientation uiOrientation;
+    //CAknAppUiBase::TAppUiOrientation uiOrientation;
 
     /*
     switch(m_eInitOrientation)
@@ -126,6 +126,7 @@ CCEGLView::CCEGLView(QWidget* parent):
     }
     */
 
+/*
     CAknAppUi *ui = dynamic_cast<CAknAppUi *>(CEikonEnv::Static()->AppUi());
     TRAPD(error,
         if(ui) {
@@ -134,6 +135,7 @@ CCEGLView::CCEGLView(QWidget* parent):
     );
 
     Q_UNUSED(error);
+*/
 #elif defined(MEEGO_EDITION_HARMATTAN)
     // TODO: The code below doesn't work on harmattan, FIX! (if possible and needed)
     /*
