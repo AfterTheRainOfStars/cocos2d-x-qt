@@ -53,9 +53,10 @@ void CCAccelerometer::readingChanged(QVariant x, QVariant y, QVariant z)
     const time_t theTime = time(NULL);
     const double timestamp = (double)theTime / 100.0;
 
-    /*
+    CCAcceleration AccValue;
+
 #if defined(Q_OS_SYMBIAN)
-    switch(CCEGLView::sharedOpenGLView().getDeviceOrientation())
+    switch(CCApplication::sharedApplication().getOrientation())
     {
     case CCApplication::kOrientationPortrait:
     case CCApplication::kOrientationPortraitUpsideDown:
@@ -74,19 +75,6 @@ void CCAccelerometer::readingChanged(QVariant x, QVariant y, QVariant z)
     default:
         break;
     }
-#elif defined(MEEGO_EDITION_HARMATTAN)
-    AccValue.x = x.toDouble();
-    AccValue.y = y.toDouble();
-    AccValue.z = z.toDouble();
-#endif
-    */
-
-    CCAcceleration AccValue;
-#if defined(Q_OS_SYMBIAN)
-    AccValue.x = y.toDouble();
-    AccValue.y =-x.toDouble();
-    AccValue.z = z.toDouble();
-    AccValue.timestamp = timestamp;
 #elif defined(MEEGO_EDITION_HARMATTAN)
     AccValue.x = x.toDouble();
     AccValue.y = y.toDouble();

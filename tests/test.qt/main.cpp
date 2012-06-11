@@ -19,5 +19,6 @@ int main(int argc, char **argv)
 #endif
 
     AppDelegate app(argc, argv);
+    app.setOrientation(CCApplication::kOrientationLandscapeLeft);
     return app.run();
 }
