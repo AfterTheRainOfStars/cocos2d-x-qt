@@ -21,7 +21,7 @@ COCOSBUILDMODE = static
 COCOSMODULES += box2d cocosdenshion chipmunk
 include(../../cocos2d-qt.pri)
 
-CCRESOURCES = ../resources
+CCRESOURCES = ../Resources
 
 HEADERS += \
     main.h \

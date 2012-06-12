@@ -1,7 +1,7 @@
 #ifndef __CC_APPLICATION_PROTOCOL_H__
 #define __CC_APPLICATION_PROTOCOL_H__
 
-#include "ccCommon.h"
+#include "CCCommon.h"
 #include "ccTypes.h"
 
 NS_CC_BEGIN
