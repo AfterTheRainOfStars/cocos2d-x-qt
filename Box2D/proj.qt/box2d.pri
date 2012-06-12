@@ -57,53 +57,53 @@ contains(DEFINES,COCOS2DXQT_LIBRARY) {
         $$PWD/../Collision/b2Collision.cpp \
         $$PWD/../Collision/b2Distance.cpp \
         $$PWD/../Collision/b2DynamicTree.cpp
-}
-}
 
-HEADERS = \
-    $$PWD/../Rope/b2Rope.h \
-    $$PWD/../Dynamics/b2World.h \
-    $$PWD/../Dynamics/Contacts/b2EdgeAndPolygonContact.h \
-    $$PWD/../Dynamics/Contacts/b2PolygonAndCircleContact.h \
-    $$PWD/../Dynamics/Contacts/b2ContactSolver.h \
-    $$PWD/../Dynamics/Contacts/b2CircleContact.h \
-    $$PWD/../Dynamics/Contacts/b2ChainAndPolygonContact.h \
-    $$PWD/../Dynamics/Contacts/b2ChainAndCircleContact.h \
-    $$PWD/../Dynamics/Contacts/b2PolygonContact.h \
-    $$PWD/../Dynamics/Contacts/b2Contact.h \
-    $$PWD/../Dynamics/Contacts/b2EdgeAndCircleContact.h \
-    $$PWD/../Dynamics/b2TimeStep.h \
-    $$PWD/../Dynamics/b2WorldCallbacks.h \
-    $$PWD/../Dynamics/Joints/b2PrismaticJoint.h \
-    $$PWD/../Dynamics/Joints/b2WheelJoint.h \
-    $$PWD/../Dynamics/Joints/b2WeldJoint.h \
-    $$PWD/../Dynamics/Joints/b2RevoluteJoint.h \
-    $$PWD/../Dynamics/Joints/b2DistanceJoint.h \
-    $$PWD/../Dynamics/Joints/b2RopeJoint.h \
-    $$PWD/../Dynamics/Joints/b2MouseJoint.h \
-    $$PWD/../Dynamics/Joints/b2GearJoint.h \
-    $$PWD/../Dynamics/Joints/b2PulleyJoint.h \
-    $$PWD/../Dynamics/Joints/b2FrictionJoint.h \
-    $$PWD/../Dynamics/Joints/b2Joint.h \
-    $$PWD/../Dynamics/b2Fixture.h \
-    $$PWD/../Dynamics/b2Island.h \
-    $$PWD/../Dynamics/b2Body.h \
-    $$PWD/../Dynamics/b2ContactManager.h \
-    $$PWD/../Common/b2Draw.h \
-    $$PWD/../Common/b2StackAllocator.h \
-    $$PWD/../Common/b2BlockAllocator.h \
-    $$PWD/../Common/b2Settings.h \
-    $$PWD/../Common/b2GrowableStack.h \
-    $$PWD/../Common/b2Math.h \
-    $$PWD/../Common/b2Timer.h \
-    $$PWD/../Collision/b2Collision.h \
-    $$PWD/../Collision/Shapes/b2Shape.h \
-    $$PWD/../Collision/Shapes/b2ChainShape.h \
-    $$PWD/../Collision/Shapes/b2PolygonShape.h \
-    $$PWD/../Collision/Shapes/b2CircleShape.h \
-    $$PWD/../Collision/Shapes/b2EdgeShape.h \
-    $$PWD/../Collision/b2DynamicTree.h \
-    $$PWD/../Collision/b2Distance.h \
-    $$PWD/../Collision/b2BroadPhase.h \
-    $$PWD/../Collision/b2TimeOfImpact.h \
-    $$PWD/../Box2D.h
+    HEADERS += \
+        $$PWD/../Rope/b2Rope.h \
+        $$PWD/../Dynamics/b2World.h \
+        $$PWD/../Dynamics/Contacts/b2EdgeAndPolygonContact.h \
+        $$PWD/../Dynamics/Contacts/b2PolygonAndCircleContact.h \
+        $$PWD/../Dynamics/Contacts/b2ContactSolver.h \
+        $$PWD/../Dynamics/Contacts/b2CircleContact.h \
+        $$PWD/../Dynamics/Contacts/b2ChainAndPolygonContact.h \
+        $$PWD/../Dynamics/Contacts/b2ChainAndCircleContact.h \
+        $$PWD/../Dynamics/Contacts/b2PolygonContact.h \
+        $$PWD/../Dynamics/Contacts/b2Contact.h \
+        $$PWD/../Dynamics/Contacts/b2EdgeAndCircleContact.h \
+        $$PWD/../Dynamics/b2TimeStep.h \
+        $$PWD/../Dynamics/b2WorldCallbacks.h \
+        $$PWD/../Dynamics/Joints/b2PrismaticJoint.h \
+        $$PWD/../Dynamics/Joints/b2WheelJoint.h \
+        $$PWD/../Dynamics/Joints/b2WeldJoint.h \
+        $$PWD/../Dynamics/Joints/b2RevoluteJoint.h \
+        $$PWD/../Dynamics/Joints/b2DistanceJoint.h \
+        $$PWD/../Dynamics/Joints/b2RopeJoint.h \
+        $$PWD/../Dynamics/Joints/b2MouseJoint.h \
+        $$PWD/../Dynamics/Joints/b2GearJoint.h \
+        $$PWD/../Dynamics/Joints/b2PulleyJoint.h \
+        $$PWD/../Dynamics/Joints/b2FrictionJoint.h \
+        $$PWD/../Dynamics/Joints/b2Joint.h \
+        $$PWD/../Dynamics/b2Fixture.h \
+        $$PWD/../Dynamics/b2Island.h \
+        $$PWD/../Dynamics/b2Body.h \
+        $$PWD/../Dynamics/b2ContactManager.h \
+        $$PWD/../Common/b2Draw.h \
+        $$PWD/../Common/b2StackAllocator.h \
+        $$PWD/../Common/b2BlockAllocator.h \
+        $$PWD/../Common/b2Settings.h \
+        $$PWD/../Common/b2GrowableStack.h \
+        $$PWD/../Common/b2Math.h \
+        $$PWD/../Common/b2Timer.h \
+        $$PWD/../Collision/b2Collision.h \
+        $$PWD/../Collision/Shapes/b2Shape.h \
+        $$PWD/../Collision/Shapes/b2ChainShape.h \
+        $$PWD/../Collision/Shapes/b2PolygonShape.h \
+        $$PWD/../Collision/Shapes/b2CircleShape.h \
+        $$PWD/../Collision/Shapes/b2EdgeShape.h \
+        $$PWD/../Collision/b2DynamicTree.h \
+        $$PWD/../Collision/b2Distance.h \
+        $$PWD/../Collision/b2BroadPhase.h \
+        $$PWD/../Collision/b2TimeOfImpact.h \
+        $$PWD/../Box2D.h
+}
+}

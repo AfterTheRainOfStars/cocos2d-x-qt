@@ -31,6 +31,15 @@ INCLUDEPATH += \
     $$PWD/../text_input_node \
     $$PWD/../
 
+contains(MEEGO_EDITION,harmattan) {
+    LIBS += -lpthread -lEGL -lGLESv2
+}
+
+symbian {
+    LIBS += -llibEGL -llibGLESv2
+    LIBS += -lcone -leikcore -lavkon
+}
+
 contains(DEFINES,COCOS2DXQT_LIBRARY) {
     SOURCES += \
         $$PWD/../text_input_node/CCIMEDispatcher.cpp \
@@ -54,7 +63,6 @@ contains(DEFINES,COCOS2DXQT_LIBRARY) {
         $$PWD/../tileMap_parallax_nodes/CCTMXXMLParser.cpp \
         $$PWD/../tileMap_parallax_nodes/CCTileMapAtlas.cpp \
         $$PWD/../platform/CCEGLViewProtocol.cpp \
-        $$PWD/../platform/CCStdC.cpp \
         $$PWD/../platform/platform.cpp \
         $$PWD/../platform/CCThread.cpp \
         $$PWD/../actions/CCActionManager.cpp \
@@ -168,202 +176,190 @@ contains(DEFINES,COCOS2DXQT_LIBRARY) {
         $$PWD/../platform/qt/CCSAXParser.cpp \
         $$PWD/../platform/qt/CCCommon.cpp
 
-}
+    PUBLIC_HEADERS = \
+        $$PWD/../text_input_node/CCIMEDelegate.h \
+        $$PWD/../text_input_node/CCIMEDispatcher.h \
+        $$PWD/../text_input_node/CCTextFieldTTF.h \
+        $$PWD/../support/zip_support/ZipUtils.h \
+        $$PWD/../support/zip_support/unzip.h \
+        $$PWD/../support/zip_support/ioapi.h \
+        $$PWD/../support/CCPointExtension.h \
+        $$PWD/../support/CCUserDefault.h \
+        $$PWD/../support/data_support/ccCArray.h \
+        $$PWD/../support/data_support/utlist.h \
+        $$PWD/../support/data_support/uthash.h \
+        $$PWD/../support/TransformUtils.h \
+        $$PWD/../support/CCVertex.h \
+        $$PWD/../support/ccUtils.h \
+        $$PWD/../support/image_support/TGAlib.h \
+        $$PWD/../support/CCProfiling.h \
+        $$PWD/../support/base64.h \
+        $$PWD/../tileMap_parallax_nodes/CCParallaxNode.h \
+        $$PWD/../tileMap_parallax_nodes/CCTMXObjectGroup.h \
+        $$PWD/../tileMap_parallax_nodes/CCTileMapAtlas.h \
+        $$PWD/../tileMap_parallax_nodes/CCTMXLayer.h \
+        $$PWD/../tileMap_parallax_nodes/CCTMXXMLParser.h \
+        $$PWD/../tileMap_parallax_nodes/CCTMXTiledMap.h \
+        $$PWD/../platform/CCThread.h \
+        $$PWD/../platform/platform.h \
+        $$PWD/../platform/CCFileUtils.h \
+        $$PWD/../platform/CCSAXParser.h \
+        $$PWD/../platform/CCApplicationProtocol.h \
+        $$PWD/../platform/CCPlatformConfig.h \
+        $$PWD/../platform/CCEGLViewProtocol.h \
+        $$PWD/../platform/CCFileUtilsCommon_cpp.h \
+        $$PWD/../platform/CCCommon.h \
+        $$PWD/../platform/CCImage.h \
+        $$PWD/../platform/CCImageCommon_cpp.h \
+        $$PWD/../platform/CCAccelerometerDelegate.h \
+        $$PWD/../platform/CCPlatformMacros.h \
+        $$PWD/../actions/CCAction.h \
+        $$PWD/../actions/CCActionInterval.h \
+        $$PWD/../actions/CCActionGrid3D.h \
+        $$PWD/../actions/CCActionEase.h \
+        $$PWD/../actions/CCActionPageTurn3D.h \
+        $$PWD/../actions/CCActionProgressTimer.h \
+        $$PWD/../actions/CCActionGrid.h \
+        $$PWD/../actions/CCActionCamera.h \
+        $$PWD/../actions/CCActionInstant.h \
+        $$PWD/../actions/CCActionTiledGrid.h \
+        $$PWD/../actions/CCActionTween.h \
+        $$PWD/../actions/CCActionManager.h \
+        $$PWD/../label_nodes/CCLabelBMFont.h \
+        $$PWD/../label_nodes/CCLabelAtlas.h \
+        $$PWD/../label_nodes/CCLabelTTF.h \
+        $$PWD/../layers_scenes_transitions_nodes/CCLayer.h \
+        $$PWD/../layers_scenes_transitions_nodes/CCScene.h \
+        $$PWD/../layers_scenes_transitions_nodes/CCTransition.h \
+        $$PWD/../layers_scenes_transitions_nodes/CCTransitionProgress.h \
+        $$PWD/../layers_scenes_transitions_nodes/CCTransitionPageTurn.h \
+        $$PWD/../base_nodes/CCAtlasNode.h \
+        $$PWD/../base_nodes/CCNode.h \
+        $$PWD/../extensions/CCBReader/CCBCustomClass.h \
+        $$PWD/../extensions/CCBReader/CCBReader.h \
+        $$PWD/../extensions/CCControlExtension/CCControl.h \
+        $$PWD/../extensions/CCControlExtension/CCControlButton.h \
+        $$PWD/../extensions/CCControlExtension/CCControlColourPicker.h \
+        $$PWD/../extensions/CCControlExtension/CCControlExtensions.h \
+        $$PWD/../extensions/CCControlExtension/CCControlHuePicker.h \
+        $$PWD/../extensions/CCControlExtension/CCControlSaturationBrightnessPicker.h \
+        $$PWD/../extensions/CCControlExtension/CCControlSlider.h \
+        $$PWD/../extensions/CCControlExtension/CCControlSwitch.h \
+        $$PWD/../extensions/CCControlExtension/CCControlUtils.h \
+        $$PWD/../extensions/CCControlExtension/CCInvocation.h \
+        $$PWD/../extensions/CCControlExtension/CCMenuPassive.h \
+        $$PWD/../extensions/CCControlExtension/CCScale9Sprite.h \
+        $$PWD/../extensions/CCControlExtension/CCSpacer.h \
+        $$PWD/../extensions/CCListView/CCControlDefine.h \
+        $$PWD/../extensions/CCListView/CCListView.h \
+        $$PWD/../extensions/CCListView/CCListViewCell.h \
+        $$PWD/../extensions/CCNotificationCenter/CCNotificationCenter.h \
+        $$PWD/../extensions/CCTextureWatcher/CCTextureWatcher.h \
+        $$PWD/../script_support/CCScriptSupport.h \
+        $$PWD/../kazmath/include/kazmath/plane.h \
+        $$PWD/../kazmath/include/kazmath/mat3.h \
+        $$PWD/../kazmath/include/kazmath/vec3.h \
+        $$PWD/../kazmath/include/kazmath/mat4.h \
+        $$PWD/../kazmath/include/kazmath/aabb.h \
+        $$PWD/../kazmath/include/kazmath/vec4.h \
+        $$PWD/../kazmath/include/kazmath/kazmath.h \
+        $$PWD/../kazmath/include/kazmath/neon_matrix_impl.h \
+        $$PWD/../kazmath/include/kazmath/GL/mat4stack.h \
+        $$PWD/../kazmath/include/kazmath/GL/matrix.h \
+        $$PWD/../kazmath/include/kazmath/utility.h \
+        $$PWD/../kazmath/include/kazmath/ray2.h \
+        $$PWD/../kazmath/include/kazmath/quaternion.h \
+        $$PWD/../kazmath/include/kazmath/vec2.h \
+        $$PWD/../CCConfiguration.h \
+        $$PWD/../menu_nodes/CCMenuItem.h \
+        $$PWD/../menu_nodes/CCMenu.h \
+        $$PWD/../include/cocos2dExt.h \
+        $$PWD/../include/cocos2d.h \
+        $$PWD/../include/ccConfig.h \
+        $$PWD/../include/ccTypes.h \
+        $$PWD/../include/CCProtocols.h \
+        $$PWD/../include/CCEventType.h \
+        $$PWD/../include/ccMacros.h \
+        $$PWD/../particle_nodes/CCParticleBatchNode.h \
+        $$PWD/../particle_nodes/CCParticleSystemQuad.h \
+        $$PWD/../particle_nodes/CCParticleExamples.h \
+        $$PWD/../particle_nodes/CCParticleSystem.h \
+        $$PWD/../keypad_dispatcher/CCKeypadDelegate.h \
+        $$PWD/../keypad_dispatcher/CCKeypadDispatcher.h \
+        $$PWD/../shaders/ccShader_PositionTextureA8Color_frag.h \
+        $$PWD/../shaders/CCShaderCache.h \
+        $$PWD/../shaders/ccShader_PositionTextureColor_vert.h \
+        $$PWD/../shaders/ccShader_PositionColor_vert.h \
+        $$PWD/../shaders/CCGLProgram.h \
+        $$PWD/../shaders/ccShader_PositionColor_frag.h \
+        $$PWD/../shaders/ccShader_PositionTexture_frag.h \
+        $$PWD/../shaders/ccShader_PositionTextureA8Color_vert.h \
+        $$PWD/../shaders/ccShaderEx_SwitchMask_frag.h \
+        $$PWD/../shaders/ccShader_PositionTexture_uColor_frag.h \
+        $$PWD/../shaders/ccShader_PositionTexture_uColor_vert.h \
+        $$PWD/../shaders/ccShader_PositionTextureColorAlphaTest_frag.h \
+        $$PWD/../shaders/ccShader_PositionTexture_vert.h \
+        $$PWD/../shaders/ccShader_PositionTextureColor_frag.h \
+        $$PWD/../shaders/ccShader_Position_uColor_frag.h \
+        $$PWD/../shaders/ccShaders.h \
+        $$PWD/../shaders/ccShader_Position_uColor_vert.h \
+        $$PWD/../shaders/ccGLStateCache.h \
+        $$PWD/../CCDirector.h \
+        $$PWD/../CCCamera.h \
+        $$PWD/../CCScheduler.h \
+        $$PWD/../misc_nodes/CCMotionStreak.h \
+        $$PWD/../misc_nodes/CCProgressTimer.h \
+        $$PWD/../misc_nodes/CCRenderTexture.h \
+        $$PWD/../cocoa/CCAffineTransform.h \
+        $$PWD/../cocoa/CCInteger.h \
+        $$PWD/../cocoa/CCObject.h \
+        $$PWD/../cocoa/CCAutoreleasePool.h \
+        $$PWD/../cocoa/CCDictionary.h \
+        $$PWD/../cocoa/CCSet.h \
+        $$PWD/../cocoa/CCArray.h \
+        $$PWD/../cocoa/CCNS.h \
+        $$PWD/../cocoa/CCString.h \
+        $$PWD/../cocoa/CCData.h \
+        $$PWD/../cocoa/CCGeometry.h \
+        $$PWD/../cocoa/CCZone.h \
+        $$PWD/../textures/CCTextureCache.h \
+        $$PWD/../textures/CCTexture2D.h \
+        $$PWD/../textures/CCTextureAtlas.h \
+        $$PWD/../textures/CCTexturePVR.h \
+        $$PWD/../sprite_nodes/CCAnimation.h \
+        $$PWD/../sprite_nodes/CCAnimationCache.h \
+        $$PWD/../sprite_nodes/CCSpriteFrame.h \
+        $$PWD/../sprite_nodes/CCSpriteFrameCache.h \
+        $$PWD/../sprite_nodes/CCSpriteBatchNode.h \
+        $$PWD/../sprite_nodes/CCSprite.h \
+        $$PWD/../touch_dispatcher/CCTouchHandler.h \
+        $$PWD/../touch_dispatcher/CCTouchDelegateProtocol.h \
+        $$PWD/../touch_dispatcher/CCTouchDispatcher.h \
+        $$PWD/../touch_dispatcher/CCTouch.h \
+        $$PWD/../CCDrawingPrimitives.h \
+        $$PWD/../effects/CCGrid.h \
+        $$PWD/../effects/CCGrabber.h
 
-PUBLIC_HEADERS = \
-    $$PWD/../text_input_node/CCIMEDelegate.h \
-    $$PWD/../text_input_node/CCIMEDispatcher.h \
-    $$PWD/../text_input_node/CCTextFieldTTF.h \
-    $$PWD/../support/zip_support/ZipUtils.h \
-    $$PWD/../support/zip_support/unzip.h \
-    $$PWD/../support/zip_support/ioapi.h \
-    $$PWD/../support/CCPointExtension.h \
-    $$PWD/../support/CCUserDefault.h \
-    $$PWD/../support/data_support/ccCArray.h \
-    $$PWD/../support/data_support/utlist.h \
-    $$PWD/../support/data_support/uthash.h \
-    $$PWD/../support/TransformUtils.h \
-    $$PWD/../support/CCVertex.h \
-    $$PWD/../support/ccUtils.h \
-    $$PWD/../support/image_support/TGAlib.h \
-    $$PWD/../support/CCProfiling.h \
-    $$PWD/../support/base64.h \
-    $$PWD/../tileMap_parallax_nodes/CCParallaxNode.h \
-    $$PWD/../tileMap_parallax_nodes/CCTMXObjectGroup.h \
-    $$PWD/../tileMap_parallax_nodes/CCTileMapAtlas.h \
-    $$PWD/../tileMap_parallax_nodes/CCTMXLayer.h \
-    $$PWD/../tileMap_parallax_nodes/CCTMXXMLParser.h \
-    $$PWD/../tileMap_parallax_nodes/CCTMXTiledMap.h \
-    $$PWD/../platform/CCThread.h \
-    $$PWD/../platform/platform.h \
-    $$PWD/../platform/CCFileUtils.h \
-    $$PWD/../platform/CCSAXParser.h \
-    $$PWD/../platform/CCApplicationProtocol.h \
-    $$PWD/../platform/CCPlatformConfig.h \
-    $$PWD/../platform/CCStdC.h \
-    $$PWD/../platform/CCEGLViewProtocol.h \
-    $$PWD/../platform/CCFileUtilsCommon_cpp.h \
-    $$PWD/../platform/CCCommon.h \
-    $$PWD/../platform/CCImage.h \
-    $$PWD/../platform/CCImageCommon_cpp.h \
-    $$PWD/../platform/CCAccelerometerDelegate.h \
-    $$PWD/../platform/CCPlatformMacros.h \
-    $$PWD/../actions/CCAction.h \
-    $$PWD/../actions/CCActionInterval.h \
-    $$PWD/../actions/CCActionGrid3D.h \
-    $$PWD/../actions/CCActionEase.h \
-    $$PWD/../actions/CCActionPageTurn3D.h \
-    $$PWD/../actions/CCActionProgressTimer.h \
-    $$PWD/../actions/CCActionGrid.h \
-    $$PWD/../actions/CCActionCamera.h \
-    $$PWD/../actions/CCActionInstant.h \
-    $$PWD/../actions/CCActionTiledGrid.h \
-    $$PWD/../actions/CCActionTween.h \
-    $$PWD/../actions/CCActionManager.h \
-    $$PWD/../label_nodes/CCLabelBMFont.h \
-    $$PWD/../label_nodes/CCLabelAtlas.h \
-    $$PWD/../label_nodes/CCLabelTTF.h \
-    $$PWD/../layers_scenes_transitions_nodes/CCLayer.h \
-    $$PWD/../layers_scenes_transitions_nodes/CCScene.h \
-    $$PWD/../layers_scenes_transitions_nodes/CCTransition.h \
-    $$PWD/../layers_scenes_transitions_nodes/CCTransitionProgress.h \
-    $$PWD/../layers_scenes_transitions_nodes/CCTransitionPageTurn.h \
-    $$PWD/../base_nodes/CCAtlasNode.h \
-    $$PWD/../base_nodes/CCNode.h \
-    $$PWD/../extensions/CCBReader/CCBCustomClass.h \
-    $$PWD/../extensions/CCBReader/CCBReader.h \
-    $$PWD/../extensions/CCControlExtension/CCControl.h \
-    $$PWD/../extensions/CCControlExtension/CCControlButton.h \
-    $$PWD/../extensions/CCControlExtension/CCControlColourPicker.h \
-    $$PWD/../extensions/CCControlExtension/CCControlExtensions.h \
-    $$PWD/../extensions/CCControlExtension/CCControlHuePicker.h \
-    $$PWD/../extensions/CCControlExtension/CCControlSaturationBrightnessPicker.h \
-    $$PWD/../extensions/CCControlExtension/CCControlSlider.h \
-    $$PWD/../extensions/CCControlExtension/CCControlSwitch.h \
-    $$PWD/../extensions/CCControlExtension/CCControlUtils.h \
-    $$PWD/../extensions/CCControlExtension/CCInvocation.h \
-    $$PWD/../extensions/CCControlExtension/CCMenuPassive.h \
-    $$PWD/../extensions/CCControlExtension/CCScale9Sprite.h \
-    $$PWD/../extensions/CCControlExtension/CCSpacer.h \
-    $$PWD/../extensions/CCListView/CCControlDefine.h \
-    $$PWD/../extensions/CCListView/CCListView.h \
-    $$PWD/../extensions/CCListView/CCListViewCell.h \
-    $$PWD/../extensions/CCNotificationCenter/CCNotificationCenter.h \
-    $$PWD/../extensions/CCTextureWatcher/CCTextureWatcher.h \
-    $$PWD/../script_support/CCScriptSupport.h \
-    $$PWD/../kazmath/include/kazmath/plane.h \
-    $$PWD/../kazmath/include/kazmath/mat3.h \
-    $$PWD/../kazmath/include/kazmath/vec3.h \
-    $$PWD/../kazmath/include/kazmath/mat4.h \
-    $$PWD/../kazmath/include/kazmath/aabb.h \
-    $$PWD/../kazmath/include/kazmath/vec4.h \
-    $$PWD/../kazmath/include/kazmath/kazmath.h \
-    $$PWD/../kazmath/include/kazmath/neon_matrix_impl.h \
-    $$PWD/../kazmath/include/kazmath/GL/mat4stack.h \
-    $$PWD/../kazmath/include/kazmath/GL/matrix.h \
-    $$PWD/../kazmath/include/kazmath/utility.h \
-    $$PWD/../kazmath/include/kazmath/ray2.h \
-    $$PWD/../kazmath/include/kazmath/quaternion.h \
-    $$PWD/../kazmath/include/kazmath/vec2.h \
-    $$PWD/../CCConfiguration.h \
-    $$PWD/../menu_nodes/CCMenuItem.h \
-    $$PWD/../menu_nodes/CCMenu.h \
-    $$PWD/../include/cocos2dExt.h \
-    $$PWD/../include/cocos2d.h \
-    $$PWD/../include/ccConfig.h \
-    $$PWD/../include/ccTypes.h \
-    $$PWD/../include/CCProtocols.h \
-    $$PWD/../include/CCEventType.h \
-    $$PWD/../include/ccMacros.h \
-    $$PWD/../particle_nodes/CCParticleBatchNode.h \
-    $$PWD/../particle_nodes/CCParticleSystemQuad.h \
-    $$PWD/../particle_nodes/CCParticleExamples.h \
-    $$PWD/../particle_nodes/CCParticleSystem.h \
-    $$PWD/../keypad_dispatcher/CCKeypadDelegate.h \
-    $$PWD/../keypad_dispatcher/CCKeypadDispatcher.h \
-    $$PWD/../shaders/ccShader_PositionTextureA8Color_frag.h \
-    $$PWD/../shaders/CCShaderCache.h \
-    $$PWD/../shaders/ccShader_PositionTextureColor_vert.h \
-    $$PWD/../shaders/ccShader_PositionColor_vert.h \
-    $$PWD/../shaders/CCGLProgram.h \
-    $$PWD/../shaders/ccShader_PositionColor_frag.h \
-    $$PWD/../shaders/ccShader_PositionTexture_frag.h \
-    $$PWD/../shaders/ccShader_PositionTextureA8Color_vert.h \
-    $$PWD/../shaders/ccShaderEx_SwitchMask_frag.h \
-    $$PWD/../shaders/ccShader_PositionTexture_uColor_frag.h \
-    $$PWD/../shaders/ccShader_PositionTexture_uColor_vert.h \
-    $$PWD/../shaders/ccShader_PositionTextureColorAlphaTest_frag.h \
-    $$PWD/../shaders/ccShader_PositionTexture_vert.h \
-    $$PWD/../shaders/ccShader_PositionTextureColor_frag.h \
-    $$PWD/../shaders/ccShader_Position_uColor_frag.h \
-    $$PWD/../shaders/ccShaders.h \
-    $$PWD/../shaders/ccShader_Position_uColor_vert.h \
-    $$PWD/../shaders/ccGLStateCache.h \
-    $$PWD/../CCDirector.h \
-    $$PWD/../CCCamera.h \
-    $$PWD/../CCScheduler.h \
-    $$PWD/../misc_nodes/CCMotionStreak.h \
-    $$PWD/../misc_nodes/CCProgressTimer.h \
-    $$PWD/../misc_nodes/CCRenderTexture.h \
-    $$PWD/../cocoa/CCAffineTransform.h \
-    $$PWD/../cocoa/CCInteger.h \
-    $$PWD/../cocoa/CCObject.h \
-    $$PWD/../cocoa/CCAutoreleasePool.h \
-    $$PWD/../cocoa/CCDictionary.h \
-    $$PWD/../cocoa/CCSet.h \
-    $$PWD/../cocoa/CCArray.h \
-    $$PWD/../cocoa/CCNS.h \
-    $$PWD/../cocoa/CCString.h \
-    $$PWD/../cocoa/CCData.h \
-    $$PWD/../cocoa/CCGeometry.h \
-    $$PWD/../cocoa/CCZone.h \
-    $$PWD/../textures/CCTextureCache.h \
-    $$PWD/../textures/CCTexture2D.h \
-    $$PWD/../textures/CCTextureAtlas.h \
-    $$PWD/../textures/CCTexturePVR.h \
-    $$PWD/../sprite_nodes/CCAnimation.h \
-    $$PWD/../sprite_nodes/CCAnimationCache.h \
-    $$PWD/../sprite_nodes/CCSpriteFrame.h \
-    $$PWD/../sprite_nodes/CCSpriteFrameCache.h \
-    $$PWD/../sprite_nodes/CCSpriteBatchNode.h \
-    $$PWD/../sprite_nodes/CCSprite.h \
-    $$PWD/../touch_dispatcher/CCTouchHandler.h \
-    $$PWD/../touch_dispatcher/CCTouchDelegateProtocol.h \
-    $$PWD/../touch_dispatcher/CCTouchDispatcher.h \
-    $$PWD/../touch_dispatcher/CCTouch.h \
-    $$PWD/../CCDrawingPrimitives.h \
-    $$PWD/../effects/CCGrid.h \
-    $$PWD/../effects/CCGrabber.h \
-    $$PWD/../platform/qt/CCPlatformDefine.h \
-    $$PWD/../platform/qt/CCGL.h
+    HEADERS += $${PUBLIC_HEADERS}
 
-HEADERS += $${PUBLIC_HEADERS}
-
-contains(DEFINES,COCOS2DXQT_LIBRARY) {
     HEADERS += \
+        $$PWD/../platform/qt/CCPlatformDefine.h \
         $$PWD/../platform/qt/CCApplication.h \
-        $$PWD/../platform/qt/accelerometerfilter.h \
+        $$PWD/../platform/qt/CCGL.h \
+        $$PWD/../platform/qt/CCStdC.h \
         $$PWD/../platform/qt/CCEGLView.h \
-        $$PWD/../platform/qt/CCAccelerometer.h
-}
+        $$PWD/../platform/qt/accelerometerfilter.h \
+        $$PWD/../platform/qt/CCAccelerometer.h \
 
-HEADERS += \
-    $$PWD/../effects/CCGrid.h \
-    $$PWD/../effects/CCGrabber.h \
-    $$PWD/../cocoa/CCNS.h \
-    $$PWD/../support/TransformUtils.h \
-    $$PWD/../support/ccUtils.h \
-    $$PWD/../support/base64.h \
-    $$PWD/../support/image_support/TGAlib.h \
-    $$PWD/../support/zip_support/ZipUtils.h \
-    $$PWD/../support/zip_support/unzip.h \
-    $$PWD/../support/zip_support/ioapi.h
-
-contains(MEEGO_EDITION,harmattan) {
-    LIBS += -lpthread -lEGL -lGLESv2
-}
-
-symbian {
-    LIBS += -llibEGL -llibGLESv2
-    LIBS += -lcone -leikcore -lavkon
+    HEADERS += \
+        $$PWD/../effects/CCGrid.h \
+        $$PWD/../effects/CCGrabber.h \
+        $$PWD/../cocoa/CCNS.h \
+        $$PWD/../support/TransformUtils.h \
+        $$PWD/../support/ccUtils.h \
+        $$PWD/../support/base64.h \
+        $$PWD/../support/image_support/TGAlib.h \
+        $$PWD/../support/zip_support/ZipUtils.h \
+        $$PWD/../support/zip_support/unzip.h \
+        $$PWD/../support/zip_support/ioapi.h
 }
