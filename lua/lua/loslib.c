@@ -19,8 +19,21 @@
 #include "lauxlib.h"
 #include "lualib.h"
 
-// NOTE: Hack for Qt (where this should come from?)
-#define CLOCKS_PER_SEC 1.0
+#ifdef Q_OS_SYMBIAN
+// workaround for missing CLOCKS_PER_SEC
+#ifndef CLOCKS_PER_SEC
+#ifndef __CLK_TCK
+#ifndef CLK_TCK
+#  warning CLOCKS_PER_SEC is undefined, defaulting to 100
+#  define CLOCKS_PER_SEC  100
+#else
+#  define CLOCKS_PER_SEC  CLK_TCK
+#endif
+#else
+#  define CLOCKS_PER_SEC  __CLK_TCK
+#endif
+#endif
+#endif
 
 static int os_pushresult (lua_State *L, int i, const char *filename) {
   int en = errno;  /* calls to Lua API may change this value */
