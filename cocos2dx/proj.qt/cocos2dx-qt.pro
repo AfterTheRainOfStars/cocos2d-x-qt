@@ -14,7 +14,12 @@ QT += gui xml
 CONFIG += mobility
 MOBILITY += multimedia systeminfo sensors
 
-DEFINES += COCOS2D_DEBUG
+CONFIG(debug, debug|release) {
+    # 0, or undefined: No debug messages
+    # 1: No CCLOGINFO
+    # >1: All
+    DEFINES += COCOS2D_DEBUG=1
+}
 
 include(../../cocos2d-qt-common.pri)
 include(cocos2dx-qt.pri)

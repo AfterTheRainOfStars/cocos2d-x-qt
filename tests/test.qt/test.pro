@@ -15,8 +15,6 @@ INCLUDEPATH += ../
 
 QT += core gui
 
-DEFINES += COCOS2D_DEBUG
-
 COCOSBUILDMODE = static
 COCOSMODULES += box2d cocosdenshion chipmunk
 include(../../cocos2d-qt.pri)

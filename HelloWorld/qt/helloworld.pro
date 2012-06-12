@@ -16,8 +16,6 @@ INCLUDEPATH += \
 
 QT += core gui
 
-DEFINES += COCOS2D_DEBUG
-
 COCOSBUILDMODE = static
 include(../../cocos2d-qt.pri)
 
