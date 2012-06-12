@@ -29,7 +29,7 @@ symbian {
     DEPLOYMENT += addFiles
 }
 
-contains(MEEGO_EDITION,harmattan) {
+unix {
     QMAKE_POST_LINK += if [ -e lib$${TARGET}.a ]; then cp lib$${TARGET}.a $$[QT_INSTALL_LIBS]; fi
 
     target.path = /usr/lib

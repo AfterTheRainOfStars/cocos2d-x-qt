@@ -31,7 +31,7 @@ INCLUDEPATH += \
     $$PWD/../text_input_node \
     $$PWD/../
 
-contains(MEEGO_EDITION,harmattan) {
+unix {
     LIBS += -lpthread -lEGL -lGLESv2
 }
 

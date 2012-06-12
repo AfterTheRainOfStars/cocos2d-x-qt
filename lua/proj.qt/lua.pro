@@ -35,7 +35,7 @@ symbian {
     DEPLOYMENT += addFiles
 }
 
-contains(MEEGO_EDITION,harmattan) {
+unix {
     QT += meegographicssystemhelper
 
     QMAKE_POST_LINK += if [ -e lib$${TARGET}.a ]; then cp lib$${TARGET}.a $$[QT_INSTALL_LIBS]; fi

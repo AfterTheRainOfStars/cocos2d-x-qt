@@ -14,6 +14,7 @@ contains(MEEGO_EDITION,harmattan) {
     QT += core gui xml meegographicssystemhelper
     CONFIG += mobility
     MOBILITY += multimedia systeminfo sensors
+    DEFINES += MEEGO_EDITION_HARMATTAN
 }
 
 symbian {
@@ -70,7 +71,7 @@ contains(COCOSBUILDMODE, inc) {
         LIBS += -lcocos2dx-qt
     } else {
         contains(COCOSBUILDMODE, static) {
-            contains(MEEGO_EDITION,harmattan) {
+            unix {
                 contains(COCOSMODULES, cocosdenshion) {
                     include(CocosDenshion/proj.qt/cocosdenshion.pri)
                     LIBS += -l:libcocosdenshion-qt.a
