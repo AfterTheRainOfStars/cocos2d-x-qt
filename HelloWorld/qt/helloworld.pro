@@ -56,8 +56,6 @@ symbian {
 }
 
 contains(MEEGO_EDITION,harmattan) {
-    DEFINES += MEEGO_EDITION_HARMATTAN
-
     target.path = /opt/helloworld/bin
     INSTALLS += target
 
