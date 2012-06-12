@@ -6,13 +6,13 @@
 * the distribution.
 */
 
-#include "CCAccelerometer_qt.h"
+#include "CCAccelerometer.h"
 #include "ccMacros.h"
 #include "accelerometerfilter.h"
 
 #include "CCApplication.h"
 #include "CCDirector.h"
-#include "CCEGLView_qt.h"
+#include "CCEGLView.h"
 
 #include <QAccelerometer>
 
