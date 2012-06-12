@@ -7,18 +7,16 @@
 */
 
 #include "AppDelegate.h"
-
 #include "CCFileUtils.h"
 
-int main(int argc, char **argv)
+int main(int argc, char** argv)
 {
 #ifdef Q_OS_SYMBIAN
-        CCFileUtils::setResourcePath("/private/E8AA3F79/resources");
+    CCFileUtils::setResourcePath("/private/E8AA3F99/resources");
 #else
-        CCFileUtils::setResourcePath("/opt/helloworld/resources");
+    CCFileUtils::setResourcePath("/opt/hellolua/resources");
 #endif
 
-    // create the application instance
     AppDelegate app;
     app.setOrientation(CCApplication::kOrientationLandscapeLeft);
     return app.run();

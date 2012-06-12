@@ -6,38 +6,29 @@
 # the distribution.
 #
 
-TARGET = helloworld
+TARGET = hellolua
 TEMPLATE = app
 
-VERSION = 0.7
+VERSION = 0.6
 
 INCLUDEPATH += \
     ../Classes
 
-QT += core gui
-
 COCOSBUILDMODE = static
+COCOSMODULES += cocosdenshion lua
 include(../../cocos2d-qt.pri)
 
-CCRESOURCES += \
-    ../Resources/CloseNormal.png \
-    ../Resources/CloseSelected.png \
-    ../Resources/fps_images.fnt \
-    ../Resources/fps_images.png \
-    ../Resources/HelloWorld.png
+CCRESOURCES += ../Resources
 
 HEADERS += \
-    ../Classes/HelloWorldScene.h \
-    ../Classes/AppDelegate.h \
-    main.h
+    ../Classes/AppDelegate.h
 
 SOURCES += \
-    ../Classes/HelloWorldScene.cpp \
     ../Classes/AppDelegate.cpp \
     main.cpp
 
 symbian {
-    TARGET.UID3 = 0xE8AA3F79
+    TARGET.UID3 = 0xE8AA3F99
     TARGET.CAPABILITY = ReadUserData WriteUserData
 
     MMP_RULES += "OPTION gcce -march=armv6"
@@ -51,16 +42,16 @@ symbian {
     ICON = icons/icon.svg
 
     ccres.sources = $$CCRESOURCES
-    ccres.path = !:/private/E8AA3F79/resources
+    ccres.path = !:/private/E8AA3F99/
     DEPLOYMENT += ccres
 }
 
 contains(MEEGO_EDITION,harmattan) {
-    target.path = /opt/helloworld/bin
+    target.path = /opt/hellolua/bin
     INSTALLS += target
 
     ccres.files = $$CCRESOURCES
-    ccres.path = /opt/helloworld/resources
+    ccres.path = /opt/hellolua/
     INSTALLS += ccres
 
     desktop.path = /usr/share/applications

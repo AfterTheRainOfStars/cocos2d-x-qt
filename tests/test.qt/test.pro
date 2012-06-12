@@ -250,8 +250,6 @@ symbian {
 }
 
 contains(MEEGO_EDITION,harmattan) {
-    DEFINES += MEEGO_EDITION_HARMATTAN
-
     target.path = /opt/cocos2dxtests/bin
     INSTALLS += target
 

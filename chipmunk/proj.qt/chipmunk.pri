@@ -44,34 +44,32 @@ contains(DEFINES,COCOS2DXQT_LIBRARY) {
         $$PWD/../src/cpSpace.c \
         $$PWD/../src/cpSpatialIndex.c \
         $$PWD/../src/cpSweep1D.c
+
+    HEADERS += \
+        $$PWD/../include/chipmunk/chipmunk_ffi.h \
+        $$PWD/../include/chipmunk/chipmunk.h \
+        $$PWD/../include/chipmunk/constraints/cpSimpleMotor.h \
+        $$PWD/../include/chipmunk/constraints/cpSlideJoint.h \
+        $$PWD/../include/chipmunk/constraints/cpDampedSpring.h \
+        $$PWD/../include/chipmunk/constraints/cpConstraint.h \
+        $$PWD/../include/chipmunk/constraints/cpGearJoint.h \
+        $$PWD/../include/chipmunk/constraints/cpRotaryLimitJoint.h \
+        $$PWD/../include/chipmunk/constraints/cpRatchetJoint.h \
+        $$PWD/../include/chipmunk/constraints/cpGrooveJoint.h \
+        $$PWD/../include/chipmunk/constraints/util.h \
+        $$PWD/../include/chipmunk/constraints/cpPinJoint.h \
+        $$PWD/../include/chipmunk/constraints/cpPivotJoint.h \
+        $$PWD/../include/chipmunk/constraints/cpDampedRotarySpring.h \
+        $$PWD/../include/chipmunk/cpSpatialIndex.h \
+        $$PWD/../include/chipmunk/chipmunk_types.h \
+        $$PWD/../include/chipmunk/cpBB.h \
+        $$PWD/../include/chipmunk/cpSpace.h \
+        $$PWD/../include/chipmunk/cpShape.h \
+        $$PWD/../include/chipmunk/cpBody.h \
+        $$PWD/../include/chipmunk/cpArbiter.h \
+        $$PWD/../include/chipmunk/cpVect.h \
+        $$PWD/../include/chipmunk/chipmunk_private.h \
+        $$PWD/../include/chipmunk/cpPolyShape.h \
+        $$PWD/../include/chipmunk/chipmunk_unsafe.h
 }
 }
-
-HEADERS = \
-    $$PWD/../include/chipmunk/chipmunk_ffi.h \
-    $$PWD/../include/chipmunk/chipmunk.h \
-    $$PWD/../include/chipmunk/constraints/cpSimpleMotor.h \
-    $$PWD/../include/chipmunk/constraints/cpSlideJoint.h \
-    $$PWD/../include/chipmunk/constraints/cpDampedSpring.h \
-    $$PWD/../include/chipmunk/constraints/cpConstraint.h \
-    $$PWD/../include/chipmunk/constraints/cpGearJoint.h \
-    $$PWD/../include/chipmunk/constraints/cpRotaryLimitJoint.h \
-    $$PWD/../include/chipmunk/constraints/cpRatchetJoint.h \
-    $$PWD/../include/chipmunk/constraints/cpGrooveJoint.h \
-    $$PWD/../include/chipmunk/constraints/util.h \
-    $$PWD/../include/chipmunk/constraints/cpPinJoint.h \
-    $$PWD/../include/chipmunk/constraints/cpPivotJoint.h \
-    $$PWD/../include/chipmunk/constraints/cpDampedRotarySpring.h \
-    $$PWD/../include/chipmunk/cpSpatialIndex.h \
-    $$PWD/../include/chipmunk/chipmunk_types.h \
-    $$PWD/../include/chipmunk/cpBB.h \
-    $$PWD/../include/chipmunk/cpSpace.h \
-    $$PWD/../include/chipmunk/cpShape.h \
-    $$PWD/../include/chipmunk/cpBody.h \
-    $$PWD/../include/chipmunk/cpArbiter.h \
-    $$PWD/../include/chipmunk/cpVect.h \
-    $$PWD/../include/chipmunk/chipmunk_private.h \
-    $$PWD/../include/chipmunk/cpPolyShape.h \
-    $$PWD/../include/chipmunk/chipmunk_unsafe.h
-
-

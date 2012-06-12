@@ -14,7 +14,7 @@
 
 #include "CCDirector.h"
 
-#include "CCEGLView_qt.h"
+#include "CCEGLView.h"
 
 using namespace cocos2d;
 QTM_USE_NAMESPACE

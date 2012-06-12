@@ -173,7 +173,7 @@ local function createLayerMenu()
 end
 
 -- play background music, preload effect
-SimpleAudioEngine:sharedEngine():playBackgroundMusic("background.mp3", true);
+SimpleAudioEngine:sharedEngine():playBackgroundMusic("background.ogg", true);
 SimpleAudioEngine:sharedEngine():preloadEffect("effect1.wav");
 
 -- run

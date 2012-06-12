@@ -16,22 +16,20 @@ INCLUDEPATH += \
     $$PWD/../../cocos2dx/cocoa \
     $$PWD/../../cocos2dx
 
+symbian {
+    LIBS += -lremconcoreapi -lremconinterfacebase -lmmfdevsound
+}
+
 contains(DEFINES,COCOS2DXQT_LIBRARY) {
     include($$PWD/../qt/qtgameenabler/qtgameenableraudio.pri)
 
     SOURCES += \
         $$PWD/../qt/SimpleAudioEngine.cpp \
         $$PWD/../qt/QtAudioPlayer.cpp
-}
 
-PUBLIC_HEADERS = \
-    $$PWD/../include/SimpleAudioEngine.h \
-    $$PWD/../include/Export.h \
-    $$PWD/../qt/QtAudioPlayer.h \
-    $$PWD/../qt/AudioPlayer.h
-
-HEADERS += $${PUBLIC_HEADERS}
-
-symbian {
-    LIBS += -lremconcoreapi -lremconinterfacebase -lmmfdevsound
+    HEADERS += \
+        $$PWD/../include/SimpleAudioEngine.h \
+        $$PWD/../include/Export.h \
+        $$PWD/../qt/QtAudioPlayer.h \
+        $$PWD/../qt/AudioPlayer.h
 }
