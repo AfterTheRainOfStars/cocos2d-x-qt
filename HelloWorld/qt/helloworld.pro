@@ -37,8 +37,6 @@ SOURCES += \
     main.cpp
 
 symbian {
-    DEFINES += Q_OS_SYMBIAN
-
     TARGET.UID3 = 0xE8AA3F79
     TARGET.CAPABILITY = ReadUserData WriteUserData
 

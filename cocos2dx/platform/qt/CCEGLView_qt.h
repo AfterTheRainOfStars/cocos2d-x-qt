@@ -18,17 +18,8 @@
 
 #include <EGL/egl.h>
 
-/*
-#ifdef Q_OS_SYMBIAN
 #define MS_USE_TOUCH_EVENTS
 #define MAX_TOUCH_POINTS 5
-#endif
-*/
-
-//#ifdef Q_WS_MAEMO_6
-#define MS_USE_TOUCH_EVENTS
-#define MAX_TOUCH_POINTS 5
-//#endif
 
 bool initExtensions();
 

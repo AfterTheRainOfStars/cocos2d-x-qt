@@ -24,7 +24,7 @@ symbian {
     # FIXME: Currently cocosdenshion uses fileutils from cocos2dx
     contains(CONFIG,shared) {
         LIBS += -lcocos2dx-qt
-        LIBS += -llibEGL -llibgles_cm
+        LIBS += -llibEGL -llibGLESv2
         LIBS += -lcone -leikcore -lavkon
     }
 
@@ -46,7 +46,7 @@ contains(MEEGO_EDITION,harmattan) {
     # FIXME: Currently cocosdenshion uses fileutils from cocos2dx
     contains(CONFIG,shared) {
         LIBS += -lcocos2dx-qt
-        LIBS += -lpthread -lxml2 -lEGL -lGLES_CM
+        LIBS += -lpthread -lEGL -lGLESv2
     }
 
     target.path = /usr/lib

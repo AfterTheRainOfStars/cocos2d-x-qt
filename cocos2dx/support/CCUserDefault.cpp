@@ -25,8 +25,7 @@ THE SOFTWARE.
 #include "CCCommon.h"
 #include "platform/CCFileUtils.h"
 
-#ifdef Q_OS_SYMBIAN
-#else
+#if (CC_TARGET_PLATFORM != CC_PLATFORM_QT)
 #include <libxml/parser.h>
 #include <libxml/tree.h>
 #endif

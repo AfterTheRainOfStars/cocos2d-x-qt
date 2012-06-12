@@ -31,12 +31,6 @@ INCLUDEPATH += \
     $$PWD/../text_input_node \
     $$PWD/../
 
-contains(MEEGO_EDITION,harmattan) {
-    INCLUDEPATH += \
-        /usr/include \
-        /usr/include/libxml2
-}
-
 contains(DEFINES,COCOS2DXQT_LIBRARY) {
     SOURCES += \
         $$PWD/../text_input_node/CCIMEDispatcher.cpp \
@@ -366,7 +360,7 @@ HEADERS += \
     $$PWD/../support/zip_support/ioapi.h
 
 contains(MEEGO_EDITION,harmattan) {
-    LIBS += -lpthread -lxml2 -lEGL -lGLESv2
+    LIBS += -lpthread -lEGL -lGLESv2
 }
 
 symbian {
