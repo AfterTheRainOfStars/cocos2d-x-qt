@@ -33,6 +33,8 @@ typedef AUDIO_SAMPLE_TYPE(*SAMPLE_FUNCTION_TYPE)(AudioBuffer *buffer,
 
 class Q_GE_EXPORT AudioBuffer : public QObject
 {
+    Q_OBJECT
+
 public:
     explicit AudioBuffer(QObject *parent = 0);
     virtual ~AudioBuffer();

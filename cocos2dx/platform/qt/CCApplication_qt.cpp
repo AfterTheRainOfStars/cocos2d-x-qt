@@ -28,10 +28,11 @@ char* tmpArgv[] = {"", NULL};
 CCApplication::CCApplication():
     QApplication(tmpArgc, tmpArgv),
     m_orientation(kOrientationPortrait),
-    m_timer(NULL)
+    m_timer(NULL),
+    m_refCount(0)
 {
-	CC_ASSERT(! sm_pSharedApplication);
-	sm_pSharedApplication = this;
+    CC_ASSERT(! sm_pSharedApplication);
+    sm_pSharedApplication = this;
     m_nAnimationInterval = 1.0f / 60.0f * 1000.0f;
 
 #ifdef Q_OS_SYMBIAN
@@ -44,7 +45,8 @@ CCApplication::CCApplication():
 CCApplication::CCApplication(int& argc, char** argv):
     QApplication(argc, argv),
     m_orientation(kOrientationPortrait),
-    m_timer(NULL)
+    m_timer(NULL),
+    m_refCount(0)
 {
     CC_ASSERT(! sm_pSharedApplication);
     sm_pSharedApplication = this;
@@ -64,6 +66,21 @@ CCApplication::~CCApplication()
 
     CC_SAFE_DELETE(m_timer);
 }
+
+void CCApplication::lock()
+{
+    m_refCount++;
+}
+
+void CCApplication::unlock()
+{
+    CC_ASSERT(m_refCount > 0);
+    if (m_refCount > 0)
+    {
+        m_refCount--;
+    }
+}
+
 
 CCApplication::Orientation CCApplication::setOrientation(Orientation orientation)
 {
@@ -198,5 +215,9 @@ CCApplication& CCApplication::sharedApplication()
 
 void CCApplication::timerUpdate()
 {
-    CCDirector::sharedDirector()->mainLoop();
+    // m_refCount is here to prevent calling the mainloop from nested event loops
+    if (!m_refCount)
+    {
+        CCDirector::sharedDirector()->mainLoop();
+    }
 }

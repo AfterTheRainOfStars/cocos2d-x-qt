@@ -41,6 +41,8 @@ public: // From AudioSource
 public slots:
     void play();
     void stop();
+	void pause() { m_paused = true; }
+	void resume() { m_paused = false; }
     void setSpeed(float speed);
     void seek(quint64 samplePos);
     quint64 position();
@@ -60,6 +62,7 @@ signals:
 protected: // Data
     VorbisDecoder *m_decoder;
     bool m_finished;
+	bool m_paused;
     bool m_destroyWhenFinished;
     qint64 m_fixedPos;
     int m_fixedInc;

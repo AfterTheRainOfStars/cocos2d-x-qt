@@ -37,6 +37,7 @@ const float GEDefaultAudioSpeed(1.0f); // 1.0 => 100 %
 VorbisSource::VorbisSource(QString filename, QObject *parent)
     : AudioSource(parent),
       m_finished(true),
+	  m_paused(false),
       m_destroyWhenFinished(false),
       m_fixedPos(0),
       m_fixedInc(0),
@@ -77,7 +78,7 @@ bool VorbisSource::canBeDestroyed()
 */
 int VorbisSource::pullAudio(AUDIO_SAMPLE_TYPE *target, int bufferLength)
 {
-    if (m_finished)
+    if (m_paused || m_finished)
         return 0;
 
     unsigned int channelLength(m_decoder->decodedLength() - 2);
@@ -152,6 +153,7 @@ int VorbisSource::pullAudio(AUDIO_SAMPLE_TYPE *target, int bufferLength)
 void VorbisSource::play()
 {
     m_finished = false;
+	m_paused = false;
 }
 
 /*!
@@ -161,6 +163,7 @@ void VorbisSource::play()
 void VorbisSource::stop()
 {
     m_finished = true;
+	m_paused = false;
 }
 
 /*!

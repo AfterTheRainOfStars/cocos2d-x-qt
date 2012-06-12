@@ -27,7 +27,7 @@ CONFIG += static
 # Uncomment to decode ogg vorbis files on-the-fly. If this is commented out,
 # the ogg vorbis files are decoded into memory when loading them.
 #
-#DEFINES += USE_VORBIS_SOURCE
+DEFINES += USE_VORBIS_SOURCE
 
 #-----------------------------------------------------------------------------
 

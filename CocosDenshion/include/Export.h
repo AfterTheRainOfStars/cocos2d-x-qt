@@ -17,6 +17,9 @@
     #define EXPORT_DLL     __attribute__((visibility("default")))
     #elif defined(IGNORE_EXPORT)
     #define EXPORT_DLL
+    #elif defined(SYSTEM_QT)
+    #include <QtCore/qglobal.h>
+    #define EXPORT_DLL Q_DECL_EXPORT
     #else
     #define EXPORT_DLL
     #endif

@@ -10,6 +10,7 @@
 #include "pullaudioout.h"
 #include "pushaudioout.h"
 #include "CCFileUtils.h"
+#include "CCApplication.h"
 #include <QDebug>
 
 using namespace GE;
@@ -60,10 +61,10 @@ QtAudioPlayer* QtAudioPlayer::sharedPlayer()
 QtAudioPlayer::QtAudioPlayer() :
     m_mixer(NULL),
     m_audioOut(NULL),
-    m_music(NULL),
     m_musicId(NULL),
     m_effectsVolume(0.7f),
-    m_musicVolume(0.7f)
+    m_musicVolume(0.7f),
+    m_music(NULL)
 #ifndef USE_VORBIS_SOURCE
    ,m_musicBuffer(NULL)
 #endif
@@ -73,6 +74,7 @@ QtAudioPlayer::QtAudioPlayer() :
 
 void QtAudioPlayer::init()
 {
+    CCApplication::sharedApplication().lock();
     m_mixer = new AudioMixer(this);
 
 #ifdef Q_OS_SYMBIAN
@@ -80,28 +82,27 @@ void QtAudioPlayer::init()
 #else
     m_audioOut = new PushAudioOut(m_mixer, this);
 #endif
+    CCApplication::sharedApplication().unlock();
 }
 
 void QtAudioPlayer::close()
 {
-    int i;
-
     delete m_mixer;
     m_mixer = NULL;
 
     delete m_audioOut;
     m_audioOut = NULL;
 
-    for (i = 0; i < m_effectInstances.count(); i++)
-        if (!m_effectInstances[i].m_ptr.isNull())
-            delete m_effectInstances[i].m_ptr;
-
+    foreach (QPointer<AudioBufferPlayInstance> i, m_effectInstances)
+    {
+        delete i;
+    }
     m_effectInstances.clear();
 
-    for (i = 0; i < m_effects.count(); i++)
-        if (!m_effects[i].m_ptr.isNull())
-            delete m_effects[i].m_ptr;
-
+    foreach (AudioBuffer *i, m_effects)
+    {
+        delete i;
+    }
     m_effects.clear();
 }
 
@@ -110,47 +111,22 @@ QtAudioPlayer::~QtAudioPlayer()
     close();
 }
 
-AudioBuffer *QtAudioPlayer::findBuffer(unsigned int hash)
+void QtAudioPlayer::checkFinishedEffects()
 {
-    foreach(HashedPointer ptr, m_effects)
+    QHash<unsigned int, QPointer<AudioBufferPlayInstance> >::iterator i =
+            m_effectInstances.begin();
+    while (i != m_effectInstances.end())
     {
-        if (ptr.m_ptr.isNull())
-        {
-            m_effectInstances.removeOne(ptr);
-            m_effects.removeOne(ptr);
-            continue;
-        }
-        else if (hash == ptr.m_hash)
-        {
-            return (AudioBuffer*)(ptr.m_ptr.data());
-        }
+        if (i.value().isNull())
+            i = m_effectInstances.erase(i);
+        else
+            ++i;
     }
-
-    return NULL;
-}
-
-AudioBufferPlayInstance *QtAudioPlayer::findBufferInstance(unsigned int hash)
-{
-    foreach(HashedPointer ptr, m_effectInstances)
-    {
-        if (ptr.m_ptr.isNull())
-        {
-            m_effectInstances.removeOne(ptr);
-            m_effects.removeOne(ptr);
-        }
-        else if (hash == ptr.m_hash)
-        {
-            return qobject_cast<AudioBufferPlayInstance*>(ptr.m_ptr);
-        }
-    }
-
-    return NULL;
 }
 
 void QtAudioPlayer::preloadBackgroundMusic(const char* pszFilePath)
 {
-    qDebug() << "preloadBackgroundMusic" << pszFilePath;
-    if (m_music)
+    if (!m_music.isNull())
     {
         m_mixer->removeAudioSource(m_music);
         delete m_music;
@@ -160,6 +136,7 @@ void QtAudioPlayer::preloadBackgroundMusic(const char* pszFilePath)
 
 #ifdef USE_VORBIS_SOURCE
     m_music = new VorbisSource(fullPathFromRelativePath(pszFilePath));
+    m_mixer->addAudioSource(m_music);
 #else
     if (m_musicBuffer)
     {
@@ -169,23 +146,43 @@ void QtAudioPlayer::preloadBackgroundMusic(const char* pszFilePath)
     m_musicBuffer = AudioBuffer::load(fullPathFromRelativePath(pszFilePath));
 #endif
     m_musicId = _Hash(pszFilePath);
-    m_mixer->addAudioSource(m_music);
 }
 
 void QtAudioPlayer::playBackgroundMusic(const char* pszFilePath, bool bLoop)
 {
-    qDebug() << "playBackgroundMusic" << pszFilePath << bLoop;
     unsigned int hash = _Hash(pszFilePath);
-    if (m_musicId != hash)
+
+#ifdef USE_VORBIS_SOURCE
+    if (m_music.isNull() || m_musicId != hash)
     {
         preloadBackgroundMusic(pszFilePath);
     }
-#ifdef USE_VORBIS_SOURCE
+
+    if (m_music.isNull())
+    {
+        CCLOG("preloadBackgroundMusic failed!");
+        return;
+    }
+    m_music->seek(0);
     m_music->play();
 #else
-    m_music = m_musicBuffer->playWithMixer(*m_mixer);
-    m_music->setDestroyWhenFinished(false);
+    if (!m_musicBuffer || m_musicId != hash)
+    {
+        preloadBackgroundMusic(pszFilePath);
+    }
+
+    if (!m_musicBuffer)
+    {
+        CCLOG("preloadBackgroundMusic failed!");
+        return;
+    }
+
+    if (m_music.isNull())
+    {
+        m_music = m_musicBuffer->playWithMixer(*m_mixer);
+    }
 #endif
+
     m_music->setLeftVolume(m_musicVolume);
     m_music->setRightVolume(m_musicVolume);
     if (bLoop)
@@ -194,8 +191,7 @@ void QtAudioPlayer::playBackgroundMusic(const char* pszFilePath, bool bLoop)
 
 void QtAudioPlayer::stopBackgroundMusic(bool bReleaseData)
 {
-    qDebug() << "stopBackgroundMusic" << "Release: " << bReleaseData;
-    if (!m_music)
+    if (m_music.isNull())
         return;
 
     m_music->seek(0);
@@ -212,45 +208,30 @@ void QtAudioPlayer::stopBackgroundMusic(bool bReleaseData)
 
 void QtAudioPlayer::pauseBackgroundMusic()
 {
-    qDebug() << "pauseBackgroundMusic";
-#ifdef USE_VORBIS_SOURCE
-    if (m_music)
-        m_music->stop();
-#else
-    if (m_music)
+    if (!m_music.isNull())
         m_music->pause();
-#endif
 }
 
 void QtAudioPlayer::resumeBackgroundMusic()
 {
-    qDebug() << "resumeBackgroundMusic";
-#ifdef USE_VORBIS_SOURCE
-    if (m_music)
-        m_music->play();
-#else
-    if (m_music)
+    if (!m_music.isNull())
         m_music->resume();
-#endif
 }
 
 void QtAudioPlayer::rewindBackgroundMusic()
 {
-    qDebug() << "rewindBackgroundMusic";
-    if (m_music)
+    if (!m_music.isNull())
         m_music->seek(0);
 }
 
 bool QtAudioPlayer::willPlayBackgroundMusic()
 {
-    qDebug() << "willPlayBackgroundMusic";
     return false;
 }
 
 bool QtAudioPlayer::isBackgroundMusicPlaying()
 {
-    qDebug() << "isBackgroundMusicPlaying";
-    if (!m_music)
+    if (m_music.isNull())
         return false;
 
     return (!m_music->isFinished());
@@ -258,14 +239,11 @@ bool QtAudioPlayer::isBackgroundMusicPlaying()
 
 float QtAudioPlayer::getBackgroundMusicVolume()
 {
-    qDebug() << "getBackgroundMusicVolume";
     return m_musicVolume;
 }
 
 void QtAudioPlayer::setBackgroundMusicVolume(float volume)
 {
-    qDebug() << "setBackgroundMusicVolume" << volume;
-
     if (volume > 1.0f)
     {
         volume = 1.0f;
@@ -277,7 +255,7 @@ void QtAudioPlayer::setBackgroundMusicVolume(float volume)
 
     m_musicVolume = volume;
 
-    if(m_music)
+    if (!m_music.isNull())
     {
         m_music->setLeftVolume(volume);
         m_music->setRightVolume(volume);
@@ -287,13 +265,11 @@ void QtAudioPlayer::setBackgroundMusicVolume(float volume)
 // for sound effects
 float QtAudioPlayer::getEffectsVolume()
 {
-    qDebug() << "getEffectsVolume" << m_effectsVolume;
     return m_effectsVolume;
 }
 
 void QtAudioPlayer::setEffectsVolume(float volume)
 {
-    qDebug() << "setEffectsVolume" << volume;
     if (volume > 1.0f)
     {
         volume = 1.0f;
@@ -305,152 +281,107 @@ void QtAudioPlayer::setEffectsVolume(float volume)
 
     m_effectsVolume = volume;
 
-    foreach (HashedPointer ptr, m_effectInstances)
+    checkFinishedEffects();
+    foreach (QPointer<AudioBufferPlayInstance> i, m_effectInstances)
     {
-        if (ptr.m_ptr.isNull())
-        {
-            m_effectInstances.removeOne(ptr);
-            m_effects.removeOne(ptr);
-        }
-        else
-        {
-            AudioBufferPlayInstance *instance =
-                qobject_cast<AudioBufferPlayInstance*>(ptr.m_ptr);
-            if (instance)
-            {
-                instance->setLeftVolume(m_effectsVolume);
-                instance->setRightVolume(m_effectsVolume);
-            }
-        }
+        i->setLeftVolume(m_effectsVolume);
+        i->setRightVolume(m_effectsVolume);
     }
 }
 
 unsigned int QtAudioPlayer::playEffect(const char* pszFilePath, bool bLoop)
 {
-    qDebug() << "playEffect" << pszFilePath << "loop " << bLoop;
-
     unsigned int hash = _Hash(pszFilePath);
 
-    AudioBuffer *buffer = findBuffer(hash);
+    checkFinishedEffects();
+    AudioBuffer *buffer = m_effects.value(hash);
     if (!buffer)
     {
         preloadEffect(pszFilePath);
-        buffer = findBuffer(hash);
+        buffer = m_effects.value(hash);
     }
 
-    // Not loaded successfully, or already playing
-    if (!buffer || findBufferInstance(hash))
-        return hash;
+    // Not loaded successfully
+    if (!buffer)
+        return 0;
 
     AudioBufferPlayInstance *inst = buffer->playWithMixer(*m_mixer);
+    if (!inst)
+    {
+        CCLOG("playWithMixer for %s failed", pszFilePath);
+        return 0;
+    }
     inst->setLeftVolume(m_effectsVolume);
     inst->setRightVolume(m_effectsVolume);
     if (bLoop)
         inst->setLoopCount(1<<30);
 
-    HashedPointer buf;
-    buf.m_ptr = inst;
-    buf.m_hash = hash;
-    m_effectInstances.append(buf);
+    m_effectInstances.insertMulti(hash, QPointer<AudioBufferPlayInstance>(inst));
 
     return hash;
 }
 
 void QtAudioPlayer::stopEffect(unsigned int nSoundId)
 {
-    qDebug() << "stopEffect" << nSoundId;
-
-    foreach(HashedPointer ptr, m_effectInstances)
+    checkFinishedEffects();
+    QHash<unsigned int, QPointer<AudioBufferPlayInstance> >::const_iterator i =
+             m_effectInstances.find(nSoundId);
+    while (i != m_effectInstances.end() && i.key() == nSoundId)
     {
-        if (ptr.m_ptr.isNull())
-        {
-            m_effectInstances.removeOne(ptr);
-            m_effects.removeOne(ptr);
-        }
-        else if (nSoundId == ptr.m_hash)
-        {
-            AudioBufferPlayInstance *buffer =
-                qobject_cast<AudioBufferPlayInstance*>(ptr.m_ptr);
-            if (buffer)
-                buffer->stop();
-
-            m_effectInstances.removeOne(ptr);
-        }
+        i.value()->stop();
+        ++i;
     }
+    m_effectInstances.remove(nSoundId);
 }
 
 void QtAudioPlayer::pauseEffect(unsigned int uSoundId)
 {
-    qDebug() << "pauseEffect" << uSoundId;
-    AudioBufferPlayInstance *buffer = findBufferInstance(uSoundId);
-    if (buffer)
-        buffer->pause();
+    checkFinishedEffects();
+    QHash<unsigned int, QPointer<AudioBufferPlayInstance> >::const_iterator i =
+             m_effectInstances.find(uSoundId);
+    while (i != m_effectInstances.end() && i.key() == uSoundId)
+    {
+       i.value()->pause();
+       ++i;
+    }
 }
 
 void QtAudioPlayer::pauseAllEffects()
 {
-    qDebug() << "pauseAllEffects";
-    foreach (HashedPointer ptr, m_effectInstances)
+    checkFinishedEffects();
+    foreach (QPointer<AudioBufferPlayInstance> i, m_effectInstances)
     {
-        if (ptr.m_ptr.isNull())
-        {
-            m_effectInstances.removeOne(ptr);
-            m_effects.removeOne(ptr);
-        }
-        else
-        {
-            AudioBufferPlayInstance *instance =
-                qobject_cast<AudioBufferPlayInstance*>(ptr.m_ptr);
-            if (instance)
-                instance->pause();
-        }
+        i->pause();
     }
 }
 
 void QtAudioPlayer::resumeEffect(unsigned int uSoundId)
 {
-    qDebug() << "resumeEffect" << uSoundId;
-    AudioBufferPlayInstance *buffer = findBufferInstance(uSoundId);
-    if (buffer)
-        buffer->resume();
+    checkFinishedEffects();
+    QHash<unsigned int, QPointer<AudioBufferPlayInstance> >::const_iterator i =
+             m_effectInstances.find(uSoundId);
+    while (i != m_effectInstances.end() && i.key() == uSoundId)
+    {
+        i.value()->resume();
+        ++i;
+    }
 }
 
 void QtAudioPlayer::resumeAllEffects()
 {
-    qDebug() << "resumeAllEffects";
-    foreach (HashedPointer ptr, m_effectInstances)
+    checkFinishedEffects();
+    foreach (QPointer<AudioBufferPlayInstance> i, m_effectInstances)
     {
-        if (ptr.m_ptr.isNull())
-        {
-            m_effectInstances.removeOne(ptr);
-            m_effects.removeOne(ptr);
-        }
-        else
-        {
-            AudioBufferPlayInstance *instance =
-                qobject_cast<AudioBufferPlayInstance*>(ptr.m_ptr);
-            if (instance)
-                instance->resume();
-        }
+        i->resume();
     }
 }
 
 void QtAudioPlayer::stopAllEffects()
 {
-    qDebug() << "stopAllEffects";
-    foreach (HashedPointer ptr, m_effectInstances)
+    checkFinishedEffects();
+    foreach (QPointer<AudioBufferPlayInstance> i, m_effectInstances)
     {
-        if (ptr.m_ptr.isNull())
-        {
-            m_effects.removeOne(ptr);
-        }
-        else
-        {
-            AudioBufferPlayInstance *instance =
-                qobject_cast<AudioBufferPlayInstance*>(ptr.m_ptr);
-            if (instance)
-                instance->stop();
-        }
+        i->stop();
     }
 
     m_effectInstances.clear();
@@ -458,38 +389,31 @@ void QtAudioPlayer::stopAllEffects()
 
 void QtAudioPlayer::preloadEffect(const char* pszFilePath)
 {
-    qDebug() << "preloadEffect" << pszFilePath;
     unsigned int hash = _Hash(pszFilePath);
 
-    AudioBuffer *buffer = findBuffer(hash);
+    AudioBuffer *buffer = m_effects.value(hash);
     if (!buffer)
     {
-        HashedPointer buf;
-        buf.m_ptr = AudioBuffer::load(fullPathFromRelativePath(pszFilePath));
-        buf.m_hash = hash;
-        m_effects.append(buf);
+        AudioBuffer *buffer = AudioBuffer::load(
+                    fullPathFromRelativePath(pszFilePath));
+        if (!buffer)
+        {
+            CCLOG("could not load audio effect %s", pszFilePath);
+            return;
+        }
+        m_effects.insert(hash, buffer);
     }
 }
 
 void QtAudioPlayer::unloadEffect(const char* pszFilePath)
 {
-    qDebug() << "unloadEffect" << pszFilePath;
     unsigned int hash = _Hash(pszFilePath);
     stopEffect(hash);
 
-    foreach(HashedPointer ptr, m_effects)
-    {
-        if (ptr.m_ptr.isNull())
-        {
-            m_effectInstances.removeOne(ptr);
-            m_effects.removeOne(ptr);
-        }
-        else if (hash == ptr.m_hash)
-        {
-            delete ptr.m_ptr;
-            m_effects.removeOne(ptr);
-        }
-    }
+    checkFinishedEffects();
+    AudioBuffer* buffer = m_effects.value(hash);
+    delete buffer;
+    m_effects.remove(hash);
 }
 
 } /* namespace CocosDenshion */

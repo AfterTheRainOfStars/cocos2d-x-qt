@@ -22,19 +22,6 @@ using namespace GE;
 
 namespace CocosDenshion {
 
-class HashedPointer
-{
-public:
-    bool operator==(const HashedPointer &other) const {
-        if (this->m_hash == other.m_hash)
-            return true;
-        return false;
-    }
-public:
-    unsigned int m_hash;
-    QPointer<QObject> m_ptr;
-};
-
 class QtAudioPlayer : public QObject,
                       public AudioPlayer
 {
@@ -169,23 +156,22 @@ public:
 
 private:
     void init();
-    AudioBuffer *findBuffer(unsigned int hash);
-    AudioBufferPlayInstance *findBufferInstance(unsigned int hash);
+    void checkFinishedEffects();
 
 private:
     AudioMixer *m_mixer;
     AudioOut *m_audioOut;
-    QList<HashedPointer> m_effects;
-    QList<HashedPointer> m_effectInstances;
-#ifdef USE_VORBIS_SOURCE
-    VorbisSource *m_music;
-#else
-    AudioBuffer *m_musicBuffer;
-    AudioBufferPlayInstance *m_music;
-#endif
+    QHash<unsigned int, AudioBuffer*> m_effects;
+    QHash<unsigned int, QPointer<AudioBufferPlayInstance> > m_effectInstances;
     unsigned int m_musicId;
     float m_effectsVolume;
     float m_musicVolume;
+#ifdef USE_VORBIS_SOURCE
+    QPointer<VorbisSource> m_music;
+#else
+    QPointer<AudioBufferPlayInstance> m_music;
+    AudioBuffer *m_musicBuffer;
+#endif
 };
 
 } /* namespace CocosDenshion */

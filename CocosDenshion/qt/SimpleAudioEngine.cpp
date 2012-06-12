@@ -24,8 +24,8 @@ SimpleAudioEngine::~SimpleAudioEngine()
 
 SimpleAudioEngine* SimpleAudioEngine::sharedEngine()
 {
-	static SimpleAudioEngine s_SharedEngine;
-	return &s_SharedEngine;
+    static SimpleAudioEngine s_SharedEngine;
+    return &s_SharedEngine;
 }
 
 void SimpleAudioEngine::end()

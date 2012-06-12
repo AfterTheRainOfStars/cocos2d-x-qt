@@ -99,10 +99,17 @@ public:
 	 @return Current application instance pointer.
 	 */
 	static CCApplication& sharedApplication();
+
+    void lock();
+    void unlock();
+
 public slots:
     void timerUpdate();
-public:
+
+private:
     QTimer *m_timer;
+    int m_refCount;
+
 protected:
     long m_nAnimationInterval;
     Orientation m_orientation;

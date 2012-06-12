@@ -487,7 +487,7 @@ bool VorbisDecoder::vorbisDecode(unsigned char *data, int len, int *leftover,
                 m_decSamples[outPos++] = (short)(outputs[i][t] * 30000.0f);
             }
         }
-        if (singleFrame)
+        if (singleFrame && outPos)
             break;
     }
     *leftover = len;
@@ -635,26 +635,28 @@ bool VorbisDecoder::vorbisSeekRelative(qint64 offset)
 */
 bool VorbisDecoder::vorbisSeek(qint64 pos)
 {
-    if (m_decSamplesLen &&
+    if (m_decSamplesLen && pos >= m_decodedDataStart && 
         pos < m_info.max_frame_size + m_decodedDataEnd) {
-        if (!vorbisDecodeNext())
+        if (!vorbisDecodeNext()) {
+			// Stop on the first failure.
+			m_decodedLength = m_decodedDataEnd;
             return false;
-    } else {
+		}
+    } else if (pos < m_decodedLength) {
         const OggPage *page;
-        if (pos < m_info.max_frame_size) {
-            page = firstAudioPage();
-        } else {
-            page = seekPage(pos / m_info.channels);
-        }
-        if (!page)
-            return false;
+		// Random position in the file
+		page = seekPage(pos / m_info.channels);
+		if (!page)
+			return false;
 
-        if (!vorbisFlush())
-            return false;
+		if (!vorbisFlush())
+			return false;
 
-        if (!vorbisDecodePage(page))
-            return false;
-    }
+		if (!vorbisDecodePage(page))
+			return false;
+    } else {
+		return false;
+	}
 
     return true;
 }
