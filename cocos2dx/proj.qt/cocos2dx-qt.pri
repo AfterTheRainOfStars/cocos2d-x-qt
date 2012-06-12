@@ -159,13 +159,13 @@ contains(DEFINES,COCOS2DXQT_LIBRARY) {
         $$PWD/../CCDirector.cpp
 
     SOURCES += \
-        $$PWD/../platform/qt/CCImage_qt.cpp \
-        $$PWD/../platform/qt/CCFileUtils_qt.cpp \
-        $$PWD/../platform/qt/CCEGLView_qt.cpp \
-        $$PWD/../platform/qt/CCApplication_qt.cpp \
-        $$PWD/../platform/qt/CCAccelerometer_qt.cpp \
+        $$PWD/../platform/qt/CCImage.cpp \
+        $$PWD/../platform/qt/CCFileUtils.cpp \
+        $$PWD/../platform/qt/CCEGLView.cpp \
+        $$PWD/../platform/qt/CCApplication.cpp \
+        $$PWD/../platform/qt/CCAccelerometer.cpp \
         $$PWD/../platform/qt/accelerometerfilter.cpp \
-        $$PWD/../platform/qt/CCSAXParser_qt.cpp \
+        $$PWD/../platform/qt/CCSAXParser.cpp \
         $$PWD/../platform/qt/CCCommon.cpp
 
 }
@@ -341,10 +341,10 @@ HEADERS += $${PUBLIC_HEADERS}
 
 contains(DEFINES,COCOS2DXQT_LIBRARY) {
     HEADERS += \
-        $$PWD/../platform/qt/CCApplication_qt.h \
+        $$PWD/../platform/qt/CCApplication.h \
         $$PWD/../platform/qt/accelerometerfilter.h \
-        $$PWD/../platform/qt/CCEGLView_qt.h \
-        $$PWD/../platform/qt/CCAccelerometer_qt.h
+        $$PWD/../platform/qt/CCEGLView.h \
+        $$PWD/../platform/qt/CCAccelerometer.h
 }
 
 HEADERS += \

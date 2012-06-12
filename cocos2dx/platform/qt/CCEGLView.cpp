@@ -6,7 +6,7 @@
 * the distribution.
 */
 
-#include "CCEGLView_qt.h"
+#include "CCEGLView.h"
 
 #include "CCGL.h"
 
