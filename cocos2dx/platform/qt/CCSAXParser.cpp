@@ -114,17 +114,16 @@ bool CCSAXParser::parse(const char* pXMLData, unsigned int uDataLength)
 
     QXmlSimpleReader xmlReader;
     xmlReader.setContentHandler(&xmlContentHandler);
-    xmlReader.parse(xmlSource);
-
-    return true;
+    return xmlReader.parse(xmlSource);
 }
 
 bool CCSAXParser::parse(const char *pszFile)
 {
-    QFile xmlFile(pszFile);
+    QFile xmlFile(CCFileUtils::fullPathFromRelativePath(pszFile));
     xmlFile.open(QIODevice::ReadOnly);
     if(!xmlFile.isOpen())
     {
+        CCLOGERROR("Could not open file %s", pszFile);
         return false;
     }
 
@@ -133,9 +132,7 @@ bool CCSAXParser::parse(const char *pszFile)
 
     QXmlSimpleReader xmlReader;
     xmlReader.setContentHandler(&xmlContentHandler);
-    xmlReader.parse(xmlSource);
-
-    return true;
+    return xmlReader.parse(xmlSource);
 }
 
 void CCSAXParser::startElement(void *ctx, const CC_XML_CHAR *name, const CC_XML_CHAR **atts)
