@@ -77,24 +77,55 @@ bool CCImage::initWithString(
     QString fontFamily = pFontName;
     QString fontStyle = "Normal";
 
-    // font already loaded?
-    QMap<QString, QString>::iterator fontIter = loadedFontMap.find(fontPath);
-    if(fontIter == loadedFontMap.end())
+    bool fontLoaded = false;
+
+    // try to load .ttf font first
+    if(!fontPath.endsWith(".ttf"))
     {
-        int fontID = QFontDatabase::addApplicationFont(fontPath);
-        if(fontID != -1)
+        QString fontPathTTF(fontPath);
+        fontPathTTF.append(".ttf");
+
+        // font already loaded?
+        QMap<QString, QString>::iterator fontIter = loadedFontMap.find(fontPathTTF);
+        if(fontIter == loadedFontMap.end())
         {
-            QStringList familyList = QFontDatabase::applicationFontFamilies(fontID);
+            int fontID = QFontDatabase::addApplicationFont(fontPathTTF);
+            if(fontID != -1)
+            {
+                QStringList familyList = QFontDatabase::applicationFontFamilies(fontID);
 
-            if(familyList.size() > 0)
-                fontFamily = familyList.at(0);
+                if(familyList.size() > 0)
+                    fontFamily = familyList.at(0);
+
+                loadedFontMap.insert(fontPathTTF, fontFamily);
+                fontLoaded = true;
+            }
+
+            //loadedFontMap.insert(fontPathTTF, fontFamily);
         }
-
-        loadedFontMap.insert(fontPath, fontFamily);
     }
-    else
+
+    if(!fontLoaded)
     {
-        fontFamily = fontIter.value();
+        // font already loaded?
+        QMap<QString, QString>::iterator fontIter = loadedFontMap.find(fontPath);
+        if(fontIter == loadedFontMap.end())
+        {
+            int fontID = QFontDatabase::addApplicationFont(fontPath);
+            if(fontID != -1)
+            {
+                QStringList familyList = QFontDatabase::applicationFontFamilies(fontID);
+
+                if(familyList.size() > 0)
+                    fontFamily = familyList.at(0);
+            }
+
+            loadedFontMap.insert(fontPath, fontFamily);
+        }
+        else
+        {
+            fontFamily = fontIter.value();
+        }
     }
 
     QFontDatabase fd;
