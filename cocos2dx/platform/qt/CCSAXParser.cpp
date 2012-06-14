@@ -30,7 +30,7 @@ public:
 
     virtual bool characters(const QString& ch)
     {
-        QByteArray text = ch.toLatin1();
+        QByteArray text = ch.toUtf8();
         CCSAXParser::textHandler(m_pParser,
                                  (const CC_XML_CHAR*)text.constData(),
                                  text.length());
@@ -42,7 +42,7 @@ public:
                             const QString& localName,
                             const QString& qName)
     {
-        QByteArray name = qName.toLatin1();
+        QByteArray name = qName.toUtf8();
         CCSAXParser::endElement(m_pParser,
                                 (const CC_XML_CHAR*)name.constData());
 
@@ -66,8 +66,8 @@ public:
         {
             for(int i = 0; i < attributeCount; i++)
             {
-                bav[i*2+0] = atts.qName(i).toLatin1();
-                bav[i*2+1] = atts.value(i).toLatin1();
+                bav[i*2+0] = atts.qName(i).toUtf8();
+                bav[i*2+1] = atts.value(i).toUtf8();
             }
 
             for(int i = 0; i < attributeCount2; i++)
@@ -76,7 +76,7 @@ public:
 
         strv[attributeCount2] = NULL;
 
-        QByteArray name = qName.toLatin1();
+        QByteArray name = qName.toUtf8();
         CCSAXParser::startElement(m_pParser,
                                   (const CC_XML_CHAR*)name.constData(),
                                   (const CC_XML_CHAR**)&strv[0]);
