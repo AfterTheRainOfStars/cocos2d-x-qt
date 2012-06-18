@@ -30,20 +30,11 @@ const float GEDefaultAudioSpeed(1.0f); // 1.0 => 100 %
 /*!
   Constructor.
 */
-VorbisSource::VorbisSource(QString filename, QObject *parent)
-    : AudioSource(parent),
-      m_finished(true),
-	  m_paused(false),
-      m_destroyWhenFinished(false),
-      m_fixedPos(0),
-      m_fixedInc(0),
-      m_fixedLeftVolume((int)GEMaxAudioVolumeValue),
-      m_fixedRightVolume((int)GEMaxAudioVolumeValue),
-      m_loopCount(0)
+VorbisSource::VorbisSource(QObject *parent)
+    : PlayableAudioSource(parent)
 {
     DEBUG_POINT;
-    m_decoder = new VorbisDecoder(true, this);
-    m_decoder->load(filename);
+    m_destroyWhenFinished = false;
 }
 
 
@@ -56,15 +47,10 @@ VorbisSource::~VorbisSource()
     delete m_decoder;
 }
 
-/*!
-  From AudioSource.
-
-  The framework will use this to know whether this AudioSource can be
-  destroyed or not.
-*/
-bool VorbisSource::canBeDestroyed()
+bool VorbisSource::load(QString filename)
 {
-    return false;
+    m_decoder = new VorbisDecoder(true, this);
+    return m_decoder->load(filename);
 }
 
 /*!
@@ -74,7 +60,7 @@ bool VorbisSource::canBeDestroyed()
 */
 int VorbisSource::pullAudio(AUDIO_SAMPLE_TYPE *target, int bufferLength)
 {
-    if (m_paused || m_finished)
+    if (m_paused || m_finished || !m_decoder)
         return 0;
 
     unsigned int channelLength(m_decoder->decodedLength() - 2);
@@ -144,46 +130,24 @@ int VorbisSource::pullAudio(AUDIO_SAMPLE_TYPE *target, int bufferLength)
 }
 
 /*!
-  Play/resume playback.
-*/
-void VorbisSource::play()
-{
-    m_finished = false;
-	m_paused = false;
-}
-
-/*!
-  Stop/pause playback. Calling play() after stop() continues playback from the
-  position where the playback was stopped.
-*/
-void VorbisSource::stop()
-{
-    m_finished = true;
-	m_paused = false;
-}
-
-/*!
   Sets \a speed as the speed of which the buffer is played in. The given
   argument value should not be zero. 1.0 indicates 100 % forward speed, -1.0
   100 % reverse speed.
 */
 void VorbisSource::setSpeed(float speed)
 {
+    if (!m_decoder)
+        return;
+
+    m_speed = speed;
     m_fixedInc = (int)(((float)m_decoder->fileInfo()->sample_rate *
         GEMaxAudioSpeedValue * speed) / (float)AUDIO_FREQUENCY);
 
     if (!m_fixedInc)
+    {
+        m_speed = 1.0f;
         m_fixedInc = 1;
-}
-
-/*!
-  Sets the loop count to \a count. If the argument value is -1, the
-  buffer is looped forever.
-*/
-void VorbisSource::setLoopCount(int count)
-{
-    DEBUG_INFO("Setting the loop count to " << count);
-    m_loopCount = count;
+    }
 }
 
 /*!
@@ -193,6 +157,9 @@ void VorbisSource::setLoopCount(int count)
 */
 void VorbisSource::seek(quint64 samplePos)
 {
+    if (!m_decoder)
+        return;
+
     const unsigned int channelLength = m_decoder->decodedLength();
 
     if (samplePos > channelLength)
@@ -202,40 +169,15 @@ void VorbisSource::seek(quint64 samplePos)
 }
 
 /*!
-  Return the current playback position in units of PCM audio samples per
-  channel.
-*/
-quint64 VorbisSource::position()
-{
-    return (m_fixedPos >> 12);
-}
-
-/*!
   Return the length of the stream in units of PCM audio samples per
   channel.
 */
 quint64 VorbisSource::length()
 {
+    if (!m_decoder)
+        return 0;
+
     return m_decoder->decodedLength();
-}
-
-/*!
-  Sets \a volume for the left channel. The given argument value should be
-  between 0.0 and 1.0 since 1.0 indicates 100 %.
-*/
-void VorbisSource::setLeftVolume(float volume)
-{
-    m_fixedLeftVolume = (int)(GEMaxAudioVolumeValue * volume);
-}
-
-
-/*!
-  Sets \a volume for the right channel. The given argument value should be
-  between 0.0 and 1.0 since 1.0 indicates 100 %.
-*/
-void VorbisSource::setRightVolume(float volume)
-{
-    m_fixedRightVolume = (int)(GEMaxAudioVolumeValue * volume);
 }
 
 int VorbisSource::mixBlock(AUDIO_SAMPLE_TYPE *target, int samplesToMix)

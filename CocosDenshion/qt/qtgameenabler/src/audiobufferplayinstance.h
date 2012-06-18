@@ -14,7 +14,6 @@
 #include <QPointer>
 #include "geglobal.h"
 #include "audiosourceif.h"
-#include "audioeffect.h"
 
 namespace GE {
 
@@ -22,7 +21,7 @@ namespace GE {
 class AudioBuffer;
 
 
-class Q_GE_EXPORT AudioBufferPlayInstance : public AudioSource
+class Q_GE_EXPORT AudioBufferPlayInstance : public PlayableAudioSource
 {
     Q_OBJECT
 
@@ -32,12 +31,8 @@ public:
 
 public:
     bool isPlaying() const;
-    inline bool isFinished() const { return m_finished; }
-    inline void setDestroyWhenFinished(bool set) { m_destroyWhenFinished = set; }
-    inline bool destroyWhenFinished() const { return m_destroyWhenFinished; }
 
-public: // From AudioSource
-    bool canBeDestroyed();
+public: // From PlayableAudioSource
     int pullAudio(AUDIO_SAMPLE_TYPE *target, int bufferLength);
 
 public slots:
@@ -47,39 +42,15 @@ public slots:
                     float speed,
                     int loopCount = 0);
     void stop();
-    void setLoopCount(int count);
     void setSpeed(float speed);
-    void seek(unsigned int samplePos);
-    unsigned int position();
-    void setLeftVolume(float volume);
-    void setRightVolume(float volume);
-    float leftVolume() { return m_fixedLeftVolume / 4096.0f; }
-    float rightVolume() { return m_fixedRightVolume / 4096.0f; }
-    void setEffect(AudioEffect *effect) { m_effect = effect; }
-    void pause() { m_paused = true; }
-    void resume() { m_paused = false; }
+    void seek(quint64 samplePos);
+    quint64 length();
 
 protected:
     int mixBlock(AUDIO_SAMPLE_TYPE *target, int bufferLength);
 
-signals:
-    void finished();
-
 protected: // Data
     QPointer<AudioBuffer> m_buffer; // Not owned
-    QPointer<AudioEffect> m_effect; // Not owned
-    bool m_finished;
-    bool m_destroyWhenFinished;
-    bool m_paused;
-#ifdef QTGAMEENABLER_SUPPORT_LONG_SAMPLES
-    quint64 m_fixedPos;
-#else
-    unsigned int m_fixedPos;
-#endif
-    int m_fixedInc;
-    int m_fixedLeftVolume;
-    int m_fixedRightVolume;
-    int m_loopCount;
 };
 
 } // namespace GE

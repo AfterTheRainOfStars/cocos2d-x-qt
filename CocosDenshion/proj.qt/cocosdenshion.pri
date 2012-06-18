@@ -8,8 +8,8 @@
 
 INCLUDEPATH += \
     $$PWD/../include \
+    $$PWD/../qt/ \
     $$PWD/../qt/qtgameenabler/src \
-    $$PWD/../ \
     $$PWD/../../cocos2dx/platform/qt \
     $$PWD/../../cocos2dx/platform \
     $$PWD/../../cocos2dx/include \
@@ -25,11 +25,16 @@ contains(DEFINES,COCOS2DXQT_LIBRARY) {
 
     SOURCES += \
         $$PWD/../qt/SimpleAudioEngine.cpp \
-        $$PWD/../qt/QtAudioPlayer.cpp
+        $$PWD/../qt/AdvancedAudioEngine.cpp \
+        $$PWD/../qt/QtAudioPlayer.cpp \
+        $$PWD/../qt/QtAdvancedAudioPlayer.cpp
 
     HEADERS += \
         $$PWD/../include/SimpleAudioEngine.h \
         $$PWD/../include/Export.h \
+        $$PWD/../qt/AdvancedAudioEngine.h \
+        $$PWD/../qt/AdvancedAudioPlayer.h \
+        $$PWD/../qt/QtAdvancedAudioPlayer.h \
         $$PWD/../qt/QtAudioPlayer.h \
         $$PWD/../qt/AudioPlayer.h
 }

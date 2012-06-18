@@ -47,28 +47,34 @@ void SimpleAudioEngine::stopBackgroundMusic(bool bReleaseData)
     oAudioPlayer->stopBackgroundMusic(bReleaseData);
 }
 
-void SimpleAudioEngine::pauseBackgroundMusic() {
+void SimpleAudioEngine::pauseBackgroundMusic()
+{
     oAudioPlayer->pauseBackgroundMusic();
 }
 
-void SimpleAudioEngine::resumeBackgroundMusic() {
+void SimpleAudioEngine::resumeBackgroundMusic()
+{
     oAudioPlayer->resumeBackgroundMusic();
 }
 
-void SimpleAudioEngine::rewindBackgroundMusic() {
+void SimpleAudioEngine::rewindBackgroundMusic()
+{
     oAudioPlayer->rewindBackgroundMusic();
 }
 
-bool SimpleAudioEngine::willPlayBackgroundMusic() {
+bool SimpleAudioEngine::willPlayBackgroundMusic()
+{
     return oAudioPlayer->willPlayBackgroundMusic();
 }
 
-bool SimpleAudioEngine::isBackgroundMusicPlaying() {
+bool SimpleAudioEngine::isBackgroundMusicPlaying()
+{
     return oAudioPlayer->isBackgroundMusicPlaying();
 }
 
-void SimpleAudioEngine::preloadBackgroundMusic(const char* pszFilePath) {
-    return oAudioPlayer->preloadBackgroundMusic(pszFilePath);
+void SimpleAudioEngine::preloadBackgroundMusic(const char* pszFilePath)
+{
+    oAudioPlayer->preloadBackgroundMusic(pszFilePath);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -83,17 +89,17 @@ unsigned int SimpleAudioEngine::playEffect(const char* pszFilePath,
 
 void SimpleAudioEngine::stopEffect(unsigned int nSoundId)
 {
-    return oAudioPlayer->stopEffect(nSoundId);
+    oAudioPlayer->stopEffect(nSoundId);
 }
 
 void SimpleAudioEngine::preloadEffect(const char* pszFilePath)
 {
-    return oAudioPlayer->preloadEffect(pszFilePath);
+    oAudioPlayer->preloadEffect(pszFilePath);
 }
 
 void SimpleAudioEngine::unloadEffect(const char* pszFilePath)
 {
-    return oAudioPlayer->unloadEffect(pszFilePath);
+    oAudioPlayer->unloadEffect(pszFilePath);
 }
 
 void SimpleAudioEngine::pauseEffect(unsigned int uSoundId)
@@ -134,7 +140,7 @@ float SimpleAudioEngine::getBackgroundMusicVolume()
 
 void SimpleAudioEngine::setBackgroundMusicVolume(float volume)
 {
-    return oAudioPlayer->setBackgroundMusicVolume(volume);
+    oAudioPlayer->setBackgroundMusicVolume(volume);
 }
 
 float SimpleAudioEngine::getEffectsVolume()
@@ -144,7 +150,7 @@ float SimpleAudioEngine::getEffectsVolume()
 
 void SimpleAudioEngine::setEffectsVolume(float volume)
 {
-    return oAudioPlayer->setEffectsVolume(volume);
+    oAudioPlayer->setEffectsVolume(volume);
 }
 
 } // end of namespace CocosDenshion

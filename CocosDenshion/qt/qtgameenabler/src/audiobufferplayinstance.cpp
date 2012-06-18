@@ -10,7 +10,6 @@
 
 #include "audiobufferplayinstance.h"
 #include "audiobuffer.h"
-#include "audioeffect.h"
 #include "trace.h"
 
 using namespace GE;
@@ -32,17 +31,8 @@ const float GEDefaultAudioSpeed(1.0f); // 1.0 => 100 %
 */
 AudioBufferPlayInstance::AudioBufferPlayInstance(AudioBuffer *buffer /* = 0 */,
                                                  QObject *parent /* = 0 */)
-    : AudioSource(parent),
-      m_buffer(0),
-      m_effect(0),
-      m_finished(false),
-      m_destroyWhenFinished(true),
-      m_paused(false),
-      m_fixedPos(0),
-      m_fixedInc(0),
-      m_fixedLeftVolume((int)GEMaxAudioVolumeValue),
-      m_fixedRightVolume((int)GEMaxAudioVolumeValue),
-      m_loopCount(0)
+    : PlayableAudioSource(parent),
+      m_buffer(0)
 {
     DEBUG_POINT;
     if (buffer) {
@@ -67,21 +57,6 @@ AudioBufferPlayInstance::~AudioBufferPlayInstance()
 bool AudioBufferPlayInstance::isPlaying() const
 {
     if (!m_buffer.isNull())
-        return true;
-
-    return false;
-}
-
-
-/*!
-  From AudioSource.
-
-  The framework will use this to know whether this AudioSource can be
-  destroyed or not.
-*/
-bool AudioBufferPlayInstance::canBeDestroyed()
-{
-    if (m_finished && m_destroyWhenFinished)
         return true;
 
     return false;
@@ -170,9 +145,6 @@ int AudioBufferPlayInstance::pullAudio(AUDIO_SAMPLE_TYPE *target,
             break;
     }
 
-    if (!m_effect.isNull())
-        return m_effect->process(target, totalMixed * 2);
-
     return totalMixed * 2;
 }
 
@@ -188,6 +160,7 @@ void AudioBufferPlayInstance::playBuffer(AudioBuffer *buffer,
     m_buffer = buffer;
     m_loopCount = loopCount;
     m_fixedPos = 0;
+    m_paused = false;
 }
 
 
@@ -208,28 +181,14 @@ void AudioBufferPlayInstance::playBuffer(AudioBuffer *buffer,
     playBuffer(buffer, loopCount);
 }
 
-
 /*!
   Resets the local buffer i.e. gets rid of the set buffer.
 */
 void AudioBufferPlayInstance::stop()
 {
     m_buffer = 0;
-    m_finished = true;
-    emit finished();
+    PlayableAudioSource::stop();
 }
-
-
-/*!
-  Sets the loop count to \a count. If the argument value is -1, the
-  buffer is looped forever.
-*/
-void AudioBufferPlayInstance::setLoopCount(int count)
-{
-    DEBUG_INFO("Setting the loop count to " << count);
-    m_loopCount = count;
-}
-
 
 /*!
   Sets \a speed as the speed of which the buffer is played in. The given
@@ -241,11 +200,15 @@ void AudioBufferPlayInstance::setSpeed(float speed)
     if (m_buffer.isNull())
         return;
     
+    m_speed = speed;
     m_fixedInc = (int)(((float)m_buffer->getSamplesPerSec() *
         GEMaxAudioSpeedValue * speed) / (float)AUDIO_FREQUENCY);
     
     if (!m_fixedInc)
+    {
+        m_speed = 1.0f;
         m_fixedInc = 1;
+    }
 }
 
 /*
@@ -253,7 +216,7 @@ void AudioBufferPlayInstance::setSpeed(float speed)
   audio samples per channel. 0 indicates beginning of the buffer and -1 the
   end of the buffer.
 */
-void AudioBufferPlayInstance::seek(unsigned int samplePos)
+void AudioBufferPlayInstance::seek(quint64 samplePos)
 {
     if (m_buffer.isNull())
         return;
@@ -270,38 +233,17 @@ void AudioBufferPlayInstance::seek(unsigned int samplePos)
 #endif
 }
 
-/*
-  Return the current playback position in units of PCM audio samples per
+/*!
+  Return the length of the stream in units of PCM audio samples per
   channel.
 */
-unsigned int AudioBufferPlayInstance::position()
+quint64 AudioBufferPlayInstance::length()
 {
     if (m_buffer.isNull())
         return 0;
 
-    return (m_fixedPos >> 12);
+    return m_buffer->getDataLength() / m_buffer->getNofChannels();
 }
-
-
-/*!
-  Sets \a volume for the left channel. The given argument value should be
-  between 0.0 and 1.0 since 1.0 indicates 100 %.
-*/
-void AudioBufferPlayInstance::setLeftVolume(float volume)
-{
-    m_fixedLeftVolume = (int)(GEMaxAudioVolumeValue * volume);
-}
-
-
-/*!
-  Sets \a volume for the right channel. The given argument value should be
-  between 0.0 and 1.0 since 1.0 indicates 100 %.
-*/
-void AudioBufferPlayInstance::setRightVolume(float volume)
-{
-    m_fixedRightVolume = (int)(GEMaxAudioVolumeValue * volume);
-}
-
 
 /*!
   TODO: Document this method.

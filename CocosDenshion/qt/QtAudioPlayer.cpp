@@ -135,7 +135,11 @@ void QtAudioPlayer::preloadBackgroundMusic(const char* pszFilePath)
     }
 
 #ifdef USE_VORBIS_SOURCE
-    m_music = new VorbisSource(fullPathFromRelativePath(pszFilePath));
+    m_music = new VorbisSource();
+    if (!m_music->load(fullPathFromRelativePath(pszFilePath)))
+    {
+        return;
+    }
     m_mixer->addAudioSource(m_music);
 #else
     if (m_musicBuffer)

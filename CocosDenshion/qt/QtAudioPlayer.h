@@ -12,6 +12,7 @@
 #include "AudioPlayer.h"
 #include "audiomixer.h"
 #include "audioout.h"
+#include "audiobuffer.h"
 #include "vorbissource.h"
 #include "audiobufferplayinstance.h"
 
