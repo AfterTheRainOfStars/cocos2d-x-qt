@@ -55,7 +55,7 @@ symbian {
     DEPLOYMENT += ccres
 }
 
-unix {
+unix:!symbian {
     target.path = /opt/helloworld/bin
     INSTALLS += target
 
