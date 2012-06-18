@@ -31,7 +31,7 @@ INCLUDEPATH += \
     $$PWD/../text_input_node \
     $$PWD/../
 
-unix {
+unix:!symbian {
     LIBS += -lpthread -lEGL -lGLESv2
 }
 

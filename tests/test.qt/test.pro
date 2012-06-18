@@ -250,7 +250,7 @@ symbian {
     DEPLOYMENT += ccres
 }
 
-unix {
+unix:!symbian {
     target.path = /opt/cocos2dxtests/bin
     INSTALLS += target
 

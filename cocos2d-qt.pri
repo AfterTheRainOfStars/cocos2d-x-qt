@@ -10,7 +10,7 @@ QMAKE_CFLAGS += -std=c99
 
 DEFINES += SYSTEM_QT
 
-unix {
+unix:!symbian {
     QT += core gui xml
     CONFIG += mobility
     MOBILITY += multimedia systeminfo sensors
@@ -75,7 +75,7 @@ contains(COCOSBUILDMODE, inc) {
         LIBS += -lcocos2dx-qt
     } else {
         contains(COCOSBUILDMODE, static) {
-            unix {
+            unix:!symbian {
                 contains(COCOSMODULES, cocosdenshion) {
                     include(CocosDenshion/proj.qt/cocosdenshion.pri)
                     LIBS += -l:libcocosdenshion-qt.a
