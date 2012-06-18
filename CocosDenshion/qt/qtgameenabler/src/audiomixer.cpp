@@ -28,7 +28,6 @@ using namespace GE;
 AudioMixer::AudioMixer(QObject *parent)
     : AudioSource(parent),
       m_mixingBuffer(0),
-      m_effect(0),
       m_mixingBufferLength(0),
       m_fixedGeneralVolume((int)GEMaxAudioVolumeValue)
 {
@@ -142,8 +141,7 @@ int AudioMixer::pullAudio(AUDIO_SAMPLE_TYPE *target, int bufferLength)
     QMutexLocker locker(&m_mutex);
     Q_UNUSED(locker); // To prevent warnings
 
-    if ((m_sourceList.isEmpty() && m_effect.isNull())
-             || bufferLength <= 0) {
+    if (m_sourceList.isEmpty() || bufferLength <= 0) {
         return 0;
     }
 
@@ -200,11 +198,6 @@ int AudioMixer::pullAudio(AUDIO_SAMPLE_TYPE *target, int bufferLength)
         }
     }
 
-    if (!m_effect.isNull()) {
-        return m_effect->process(target, bufferLength);
-    }
-
-    //DEBUG_INFO("Done, will return buffer length: " << bufferLength);
     return bufferLength;
 }
 

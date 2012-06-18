@@ -10,12 +10,8 @@
 
 #include "vorbissource.h"
 #include "audiobuffer.h"
-#include "audioeffect.h"
 #include "trace.h"
 #include "vorbisdecoder.h"
-
-#include <QDebug>
-#include <QTime>
 
 using namespace GE;
 

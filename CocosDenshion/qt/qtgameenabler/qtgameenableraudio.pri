@@ -25,10 +25,7 @@ HEADERS  += \
     $$PWD/src/audioout.h \
     $$PWD/src/pushaudioout.h \
     $$PWD/src/pullaudioout.h \
-    $$PWD/src/audiosourceif.h \
-    $$PWD/src/audioeffect.h \
-    $$PWD/src/echoeffect.h \
-    $$PWD/src/cutoffeffect.h
+    $$PWD/src/audiosourceif.h
 
 SOURCES += \
     $$PWD/src/audiobuffer.cpp \
@@ -36,10 +33,7 @@ SOURCES += \
     $$PWD/src/audiomixer.cpp \
     $$PWD/src/pushaudioout.cpp \
     $$PWD/src/pullaudioout.cpp \
-    $$PWD/src/audiosourceif.cpp \
-    $$PWD/src/audioeffect.cpp \
-    $$PWD/src/echoeffect.cpp \
-    $$PWD/src/cutoffeffect.cpp
+    $$PWD/src/audiosourceif.cpp
 
 contains(DEFINES, QTGAMEENABLER_SUPPORT_OGG_VORBIS) {
     HEADERS += \
@@ -113,9 +107,9 @@ unix:!symbian {
         else {
             message(Unix based desktop build)
 
+            QT += multimedia
             CONFIG += mobility
-            MOBILITY += multimedia systeminfo
-            #DEFINES += GE_PULLMODEAUDIO
+            MOBILITY += systeminfo
         }
     }
 }

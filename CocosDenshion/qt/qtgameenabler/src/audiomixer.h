@@ -14,7 +14,6 @@
 #include <QMutex>
 #include "geglobal.h"
 #include "audiosourceif.h"
-#include "audioeffect.h"
 
 namespace GE {
 
@@ -33,7 +32,6 @@ public:
     bool removeAudioSource(AudioSource *source);
     void destroyList();
     int audioSourceCount();
-    void setEffect(AudioEffect *effect) { m_effect = effect; }
 
 public: // From AudioSource
     int pullAudio(AUDIO_SAMPLE_TYPE *target, int bufferLength);
@@ -49,7 +47,6 @@ signals:
 protected: // Data
     QList<AudioSource*> m_sourceList; // Owned
     AUDIO_SAMPLE_TYPE *m_mixingBuffer; // Owned
-    QPointer<AudioEffect> m_effect; // Not owned
     QMutex m_mutex;
     int m_mixingBufferLength;
     int m_fixedGeneralVolume;
