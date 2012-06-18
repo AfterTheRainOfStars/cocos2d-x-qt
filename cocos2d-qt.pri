@@ -10,11 +10,15 @@ QMAKE_CFLAGS += -std=c99
 
 DEFINES += SYSTEM_QT
 
-contains(MEEGO_EDITION,harmattan) {
-    QT += core gui xml meegographicssystemhelper
+unix {
+    QT += core gui xml
     CONFIG += mobility
     MOBILITY += multimedia systeminfo sensors
-    DEFINES += MEEGO_EDITION_HARMATTAN
+
+    contains(MEEGO_EDITION,harmattan) {
+        QT += meegographicssystemhelper
+        DEFINES += MEEGO_EDITION_HARMATTAN
+    }
 }
 
 symbian {
@@ -94,8 +98,8 @@ contains(COCOSBUILDMODE, inc) {
                     LIBS += -l:liblua-qt.a
                 }
 
-                include(cocos2dx/proj.qt/cocos2dx-qt.pri)
                 LIBS += -l:libcocos2dx-qt.a
+                include(cocos2dx/proj.qt/cocos2dx-qt.pri)
             }
 
             symbian {
@@ -121,8 +125,8 @@ contains(COCOSBUILDMODE, inc) {
                     LIBS += -llua-qt.lib
                 }
 
-                include(cocos2dx/proj.qt/cocos2dx-qt.pri)
                 LIBS += -lcocos2dx-qt.lib
+                include(cocos2dx/proj.qt/cocos2dx-qt.pri)
             }
         } else {
             error("COCOSBUILDMODE not defined!");

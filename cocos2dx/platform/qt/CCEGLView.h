@@ -18,7 +18,10 @@
 
 #include <EGL/egl.h>
 
+#if defined(Q_OS_SYMBIAN) || defined(MEEGO_EDITION_HARMATTAN)
 #define MS_USE_TOUCH_EVENTS
+#endif
+
 #define MAX_TOUCH_POINTS 5
 
 bool initExtensions();

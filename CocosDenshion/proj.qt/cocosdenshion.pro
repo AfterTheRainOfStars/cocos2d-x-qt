@@ -41,7 +41,13 @@ symbian {
 }
 
 unix {
-    QMAKE_POST_LINK += if [ -e lib$${TARGET}.a ]; then cp lib$${TARGET}.a $$[QT_INSTALL_LIBS]; fi
+    contains(MEEGO_EDITION,harmattan) {
+        QMAKE_POST_LINK += if [ -e lib$${TARGET}.a ]; then cp lib$${TARGET}.a $$[QT_INSTALL_LIBS]; fi
+    } else {
+        staticlib.sources = lib$${TARGET}.a
+        staticlib.path = $$[QT_INSTALL_LIBS]
+        INSTALLS += staticlib
+    }
 
     # FIXME: Currently cocosdenshion uses fileutils from cocos2dx
     contains(CONFIG,shared) {

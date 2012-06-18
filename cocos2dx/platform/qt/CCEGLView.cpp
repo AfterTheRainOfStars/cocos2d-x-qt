@@ -20,6 +20,9 @@
 
 #ifdef Q_OS_LINUX
 #include <QX11Info>
+// QEvent::KeyPress/release conflicts with X.h
+#undef KeyPress
+#undef KeyRelease
 #endif
 
 #include <QEvent>
@@ -217,6 +220,8 @@ bool CCEGLView::Create()
 {
 #ifdef Q_OS_SYMBIAN
     showFullScreen();
+#else
+    show();
 #endif
 
     CCLOG("Create: width = %d height = %d", width(), height());
@@ -503,13 +508,12 @@ bool CCEGLView::event(QEvent* event)
 void CCEGLView::mousePressEvent(QMouseEvent *event)
 {
     QMouseEvent* mouseEvent = (QMouseEvent*)event;
-    CCPoint point(mouseEvent->x(), mouseEvent->y());
 
     if(m_pTouch)
         m_pTouch->release();
 
     m_pTouch = new CCTouch;
-    m_pTouch->SetTouchInfo(ind, point.x, point.y);
+    m_pTouch->setTouchInfo(0, (float)mouseEvent->x(), (float)mouseEvent->y());
 
     CCSet set;
     set.addObject(m_pTouch);
@@ -522,18 +526,14 @@ void CCEGLView::mousePressEvent(QMouseEvent *event)
 void CCEGLView::mouseReleaseEvent(QMouseEvent *event)
 {
     QMouseEvent* mouseEvent = (QMouseEvent*)event;
-    CCPoint point(mouseEvent->x(), mouseEvent->y());
 
     if(!m_pTouch)
         m_pTouch = new CCTouch;
 
-    m_pTouch->SetTouchInfo(ind, point.x, point.y);
+    m_pTouch->setTouchInfo(0, (float)mouseEvent->x(), (float)mouseEvent->y());
 
     CCSet set;
     set.addObject(m_pTouch);
-
-    m_pTouch->release();
-    m_pTouch = NULL;
 
     m_pDelegate->touchesEnded(&set, NULL);
 
@@ -543,12 +543,11 @@ void CCEGLView::mouseReleaseEvent(QMouseEvent *event)
 void CCEGLView::mouseMoveEvent(QMouseEvent *event)
 {
     QMouseEvent* mouseEvent = (QMouseEvent*)event;
-    CCPoint point(mouseEvent->x(), mouseEvent->y());
 
     if(!m_pTouch)
         m_pTouch = new CCTouch;
 
-    m_pTouch->SetTouchInfo(ind, point.x, point.y);
+    m_pTouch->setTouchInfo(0, (float)mouseEvent->x(), (float)mouseEvent->y());
 
     CCSet set;
     set.addObject(m_pTouch);
@@ -589,7 +588,7 @@ bool CCEGLView::initEGL()
 
     eglBindAPI(EGL_OPENGL_ES_API);
 
-    int configAttributes[] =
+    EGLint configAttributes[] =
     {
         EGL_SURFACE_TYPE, EGL_WINDOW_BIT,
         EGL_RENDERABLE_TYPE, EGL_OPENGL_ES2_BIT,
@@ -597,7 +596,7 @@ bool CCEGLView::initEGL()
         EGL_NONE,
     };
 
-    int configCount = 0;
+    EGLint configCount = 0;
     if(!eglChooseConfig(m_eglDisplay, configAttributes, &m_eglConfig, 1,
                         &configCount) || configCount != 1)
     {
@@ -613,7 +612,7 @@ bool CCEGLView::initEGL()
         return false;
     }
 
-    int contextAttributes[] =
+    EGLint contextAttributes[] =
     {
         EGL_CONTEXT_CLIENT_VERSION, 2, // 1
         EGL_NONE,

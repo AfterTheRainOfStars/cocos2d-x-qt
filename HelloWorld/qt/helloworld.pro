@@ -55,7 +55,7 @@ symbian {
     DEPLOYMENT += ccres
 }
 
-contains(MEEGO_EDITION,harmattan) {
+unix {
     target.path = /opt/helloworld/bin
     INSTALLS += target
 
@@ -63,17 +63,19 @@ contains(MEEGO_EDITION,harmattan) {
     ccres.path = /opt/helloworld/resources
     INSTALLS += ccres
 
-    desktop.path = /usr/share/applications
-    desktop.files += qtc_packaging/debian_harmattan/$${TARGET}.desktop
-    INSTALLS += desktop
+    contains(MEEGO_EDITION,harmattan) {
+        desktop.path = /usr/share/applications
+        desktop.files += qtc_packaging/debian_harmattan/$${TARGET}.desktop
+        INSTALLS += desktop
 
-    gameclassify.path = /usr/share/policy/etc/syspart.conf.d
-    gameclassify.files += qtc_packaging/debian_harmattan/$${TARGET}.conf
-    INSTALLS += gameclassify
+        gameclassify.path = /usr/share/policy/etc/syspart.conf.d
+        gameclassify.files += qtc_packaging/debian_harmattan/$${TARGET}.conf
+        INSTALLS += gameclassify
 
-    icon80.path = /usr/share/icons/hicolor/64x64/apps
-    icon80.files += icons/$${TARGET}.png
-    INSTALLS += icon80
+        icon80.path = /usr/share/icons/hicolor/64x64/apps
+        icon80.files += icons/$${TARGET}.png
+        INSTALLS += icon80
+    }
 }
 
 OTHER_FILES += \

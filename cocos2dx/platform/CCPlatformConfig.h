@@ -94,7 +94,7 @@ build for which target platform
 #endif
 
 // qt
-#if ! CC_TARGET_PLATFORM && (defined(MEEGO_EDITION_HARMATTAN) || defined(Q_OS_SYMBIAN))
+#if ! CC_TARGET_PLATFORM && (defined(SYSTEM_QT))
     #undef  CC_TARGET_PLATFORM
     #define CC_TARGET_PLATFORM     CC_PLATFORM_QT
 #endif

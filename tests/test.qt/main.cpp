@@ -15,7 +15,7 @@ int main(int argc, char **argv)
 #ifdef Q_OS_SYMBIAN
         CCFileUtils::setResourcePath("/private/E8AA3F78/resources");
 #else
-        CCFileUtils::setResourcePath("/opt/cocos2dxtests/resources");
+        CCFileUtils::setResourcePath("/opt/cocos2dxtests/Resources");
 #endif
 
     AppDelegate app(argc, argv);

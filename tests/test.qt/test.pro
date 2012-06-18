@@ -13,7 +13,7 @@ VERSION = 0.7
 
 INCLUDEPATH += ../
 
-QT += core gui
+DEFINES += COCOS2D_DEBUG
 
 COCOSBUILDMODE = static
 COCOSMODULES += box2d cocosdenshion chipmunk
@@ -107,7 +107,6 @@ HEADERS += \
     ../tests/TileMapTest/TileMapTest.h \
     ../tests/ParticleTest/ParticleTest.h \
     ../tests/ParallaxTest/ParallaxTest.h \
-    ../tests/CocosNodeTest/CocosNodeTest.h \
     ../tests/EffectsTest/EffectsTest.h \
     ../tests/LabelTest/LabelTest.h \
     ../tests/SchedulerTest/SchedulerTest.h \
@@ -249,7 +248,7 @@ symbian {
     DEPLOYMENT += ccres
 }
 
-contains(MEEGO_EDITION,harmattan) {
+unix {
     target.path = /opt/cocos2dxtests/bin
     INSTALLS += target
 
@@ -257,17 +256,19 @@ contains(MEEGO_EDITION,harmattan) {
     ccres.path = /opt/cocos2dxtests/
     INSTALLS += ccres
 
-    desktop.path = /usr/share/applications
-    desktop.files += qtc_packaging/debian_harmattan/$${TARGET}.desktop
-    INSTALLS += desktop
+    contains(MEEGO_EDITION,harmattan) {
+        desktop.path = /usr/share/applications
+        desktop.files += qtc_packaging/debian_harmattan/$${TARGET}.desktop
+        INSTALLS += desktop
 
-    gameclassify.path = /usr/share/policy/etc/syspart.conf.d
-    gameclassify.files += qtc_packaging/debian_harmattan/$${TARGET}.conf
-    INSTALLS += gameclassify
+        gameclassify.path = /usr/share/policy/etc/syspart.conf.d
+        gameclassify.files += qtc_packaging/debian_harmattan/$${TARGET}.conf
+        INSTALLS += gameclassify
 
-    icon80.path = /usr/share/icons/hicolor/64x64/apps
-    icon80.files += icons/$${TARGET}.png
-    INSTALLS += icon80
+        icon80.path = /usr/share/icons/hicolor/64x64/apps
+        icon80.files += icons/$${TARGET}.png
+        INSTALLS += icon80
+    }
 }
 
 OTHER_FILES += \

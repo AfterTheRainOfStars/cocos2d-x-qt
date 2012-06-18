@@ -30,7 +30,13 @@ symbian {
 }
 
 unix {
-    QMAKE_POST_LINK += if [ -e lib$${TARGET}.a ]; then cp lib$${TARGET}.a $$[QT_INSTALL_LIBS]; fi
+    contains(MEEGO_EDITION,harmattan) {
+        QMAKE_POST_LINK += if [ -e lib$${TARGET}.a ]; then cp lib$${TARGET}.a $$[QT_INSTALL_LIBS]; fi
+    } else {
+        staticlib.sources = lib$${TARGET}.a
+        staticlib.path = $$[QT_INSTALL_LIBS]
+        INSTALLS += staticlib
+    }
 
     target.path = /usr/lib
     INSTALLS += target
