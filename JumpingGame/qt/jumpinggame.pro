@@ -14,8 +14,6 @@ VERSION = 0.6
 INCLUDEPATH += \
     ../Classes
 
-QT += core gui
-
 DEFINES += COCOS2D_DEBUG
 
 COCOSBUILDMODE = static
@@ -55,8 +53,6 @@ SOURCES += \
     main.cpp
 
 symbian {
-    DEFINES += Q_OS_SYMBIAN
-
     TARGET.UID3 = 0xE8AA3FAF
     TARGET.CAPABILITY = ReadUserData WriteUserData
 
@@ -75,9 +71,7 @@ symbian {
     DEPLOYMENT += ccres
 }
 
-contains(MEEGO_EDITION,harmattan) {
-    DEFINES += MEEGO_EDITION_HARMATTAN
-
+unix:!symbian {
     target.path = /opt/jumpinggame/bin
     INSTALLS += target
 
@@ -85,17 +79,19 @@ contains(MEEGO_EDITION,harmattan) {
     ccres.path = /opt/jumpinggame/resources
     INSTALLS += ccres
 
-    desktop.path = /usr/share/applications
-    desktop.files += qtc_packaging/debian_harmattan/$${TARGET}.desktop
-    INSTALLS += desktop
+    contains(MEEGO_EDITION,harmattan) {
+        desktop.path = /usr/share/applications
+        desktop.files += qtc_packaging/debian_harmattan/$${TARGET}.desktop
+        INSTALLS += desktop
 
-    gameclassify.path = /usr/share/policy/etc/syspart.conf.d
-    gameclassify.files += qtc_packaging/debian_harmattan/$${TARGET}.conf
-    INSTALLS += gameclassify
+        gameclassify.path = /usr/share/policy/etc/syspart.conf.d
+        gameclassify.files += qtc_packaging/debian_harmattan/$${TARGET}.conf
+        INSTALLS += gameclassify
 
-    icon80.path = /usr/share/icons/hicolor/64x64/apps
-    icon80.files += icons/$${TARGET}.png
-    INSTALLS += icon80
+        icon80.path = /usr/share/icons/hicolor/64x64/apps
+        icon80.files += icons/$${TARGET}.png
+        INSTALLS += icon80
+    }
 }
 
 OTHER_FILES += \
