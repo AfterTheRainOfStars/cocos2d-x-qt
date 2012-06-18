@@ -91,6 +91,10 @@ static TestScene* CreateTestScene(int nIdx)
 #endif
     case TEST_COCOSDENSHION:
         pScene = new CocosDenshionTestScene(); break;
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_QT)
+    case TEST_ADVCOCOSDENSHION:
+        pScene = new AdvCocosDenshionTestScene(); break;
+#endif
     case TEST_PERFORMANCE:
         pScene = new PerformanceTestScene(); break;
     case TEST_ZWOPTEX:

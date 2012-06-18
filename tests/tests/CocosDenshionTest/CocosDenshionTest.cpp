@@ -15,6 +15,8 @@
     #define MUSIC_FILE        "music.mid"
 #elif (CC_TARGET_PLATFORM == CC_PLATFORM_QNX)
     #define MUSIC_FILE        "background.ogg"
+#elif (CC_TARGET_PLATFORM == CC_PLATFORM_QT)
+    #define MUSIC_FILE        "background.ogg"
 #else
     #define MUSIC_FILE        "background.mp3"
 #endif // CC_PLATFORM_WIN32

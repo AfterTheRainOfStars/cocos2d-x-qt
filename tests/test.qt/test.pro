@@ -111,6 +111,7 @@ HEADERS += \
     ../tests/LabelTest/LabelTest.h \
     ../tests/SchedulerTest/SchedulerTest.h \
     ../tests/CocosDenshionTest/CocosDenshionTest.h \
+    ../tests/AdvCocosDenshionTest/AdvCocosDenshionTest.h \
     ../tests/testResource.h \
     ../tests/TransitionsTest/TransitionsTest.h \
     ../tests/SceneTest/SceneTest.h \
@@ -193,6 +194,7 @@ SOURCES += \
     ../tests/LabelTest/LabelTest.cpp \
     ../tests/SchedulerTest/SchedulerTest.cpp \
     ../tests/CocosDenshionTest/CocosDenshionTest.cpp \
+    ../tests/AdvCocosDenshionTest/AdvCocosDenshionTest.cpp \
     ../tests/TransitionsTest/TransitionsTest.cpp \
     ../tests/SceneTest/SceneTest.cpp \
     ../tests/ShaderTest/ShaderTest.cpp \

@@ -54,6 +54,10 @@
 #endif
 #endif // (CC_TARGET_PLATFORM != CC_PLATFORM_MARMALADE)
 
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_QT)
+    #include "AdvCocosDenshionTest/AdvCocosDenshionTest.h"
+#endif
+
 #include "ExtensionsTest/ExtensionsTest.h"
 #include "MutiTouchTest/MutiTouchTest.h"
 
@@ -92,6 +96,9 @@ enum
     TEST_ACCELEROMRTER,
     TEST_KEYPAD,
     TEST_COCOSDENSHION,
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_QT)
+    TEST_ADVCOCOSDENSHION,
+#endif
     TEST_PERFORMANCE,
     TEST_ZWOPTEX,
     TEST_CURL,
@@ -141,6 +148,9 @@ const std::string g_aTestNames[TESTS_COUNT] = {
     "Accelerometer",
     "KeypadTest",
     "CocosDenshionTest",
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_QT)
+    "AdvCocosDenshionTest",
+#endif
     "PerformanceTest",
     "ZwoptexTest",
     "CurlTest",
