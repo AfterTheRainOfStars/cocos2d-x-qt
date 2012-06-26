@@ -137,3 +137,20 @@ quint64 PlayableAudioSource::position()
 {
     return (m_fixedPos >> 12);
 }
+
+void PlayableAudioSource::checkOverlappingFadeDurations()
+{
+    // TODO: ...
+}
+
+void PlayableAudioSource::setFadeInDuration(float duration)
+{
+    m_fadeInDuration = duration;
+    checkOverlappingFadeDurations();
+}
+
+void PlayableAudioSource::setFadeOutDuration(float duration)
+{
+    m_fadeOutDuration = duration;
+    checkOverlappingFadeDurations();
+}

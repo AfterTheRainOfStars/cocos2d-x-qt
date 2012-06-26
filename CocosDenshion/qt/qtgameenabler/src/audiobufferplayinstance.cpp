@@ -263,24 +263,37 @@ int AudioBufferPlayInstance::mixBlock(AUDIO_SAMPLE_TYPE *target,
     AUDIO_SAMPLE_TYPE *t_target = target + samplesToMix * 2;
     unsigned int sourcepos(0);
 
+    int fixedLeftVolume = m_fixedLeftVolume;
+    int fixedRightVolume = m_fixedRightVolume;
+    unsigned int fadeInLen = m_fadeInDuration * m_buffer->getSamplesPerSec();
+    unsigned int fadeOutLen = m_fadeOutDuration * m_buffer->getSamplesPerSec();
+
     if (m_buffer->getNofChannels() == 2) {
         // Stereo
         while (target != t_target) {
             sourcepos = m_fixedPos >> 12;
+
+            if (fadeOutLen > 0 && length() - sourcepos < fadeOutLen) {
+                fixedLeftVolume = (length() - sourcepos) * m_fixedLeftVolume / fadeOutLen;
+                fixedRightVolume = (length() - sourcepos) * m_fixedRightVolume / fadeOutLen;
+            } else if (fadeInLen > 0 && sourcepos < fadeInLen) {
+                fixedLeftVolume = sourcepos * m_fixedLeftVolume / fadeInLen;
+                fixedRightVolume = sourcepos * m_fixedRightVolume / fadeInLen;
+            }
 
             target[0] = (((((sampleFunction)
                             (m_buffer, sourcepos, 0) *
                             (4096 - (m_fixedPos & 4095)) +
                             (sampleFunction)(m_buffer, sourcepos + 1, 0) *
                             (m_fixedPos & 4095)) >> 12) *
-                          m_fixedLeftVolume) >> 12);
+                          fixedLeftVolume) >> 12);
 
             target[1] = (((((sampleFunction)
                             (m_buffer, sourcepos, 1) *
                             (4096 - (m_fixedPos & 4095)) +
                             (sampleFunction)(m_buffer, sourcepos + 1, 1) *
                             (m_fixedPos & 4095) ) >> 12) *
-                          m_fixedRightVolume) >> 12);
+                          fixedRightVolume) >> 12);
 
             m_fixedPos += m_fixedInc;
             target += 2;
@@ -293,13 +306,21 @@ int AudioBufferPlayInstance::mixBlock(AUDIO_SAMPLE_TYPE *target,
         while (target != t_target) {
             sourcepos = m_fixedPos >> 12;
 
+            if (fadeOutLen > 0 && length() - sourcepos < fadeOutLen) {
+                fixedLeftVolume = (length() - sourcepos) * m_fixedLeftVolume / fadeOutLen;
+                fixedRightVolume = (length() - sourcepos) * m_fixedRightVolume / fadeOutLen;
+            } else if (fadeInLen > 0 && sourcepos < fadeInLen) {
+                fixedLeftVolume = sourcepos * m_fixedLeftVolume / fadeInLen;
+                fixedRightVolume = sourcepos * m_fixedRightVolume / fadeInLen;
+            }
+
             temp = (((sampleFunction)(m_buffer, sourcepos, 0 ) *
                      (4096 - (m_fixedPos & 4095)) +
                      (sampleFunction)(m_buffer, sourcepos + 1, 0) *
                      (m_fixedPos & 4095)) >> 12);
 
-            target[0] = ((temp * m_fixedLeftVolume) >> 12);
-            target[1] = ((temp * m_fixedRightVolume) >> 12);
+            target[0] = ((temp * fixedLeftVolume) >> 12);
+            target[1] = ((temp * fixedRightVolume) >> 12);
 
             m_fixedPos += m_fixedInc;
             target += 2;

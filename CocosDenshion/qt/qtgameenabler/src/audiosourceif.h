@@ -78,14 +78,17 @@ public:
     virtual quint64 position();
     virtual quint64 length() = 0;
 
-    virtual void setFadeInDuration(float duration) { m_fadeInDuration = duration; }
-    virtual void setFadeOutDuration(float duration) { m_fadeInDuration = duration; }
+    virtual void setFadeInDuration(float duration);
+    virtual void setFadeOutDuration(float duration);
 
     virtual void play();
     virtual void stop();
 
 signals:
     void finished(unsigned int);
+
+private:
+    void checkOverlappingFadeDurations();
 
 protected:
     bool m_finished;

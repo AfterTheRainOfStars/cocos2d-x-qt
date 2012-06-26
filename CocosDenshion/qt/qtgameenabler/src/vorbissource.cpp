@@ -185,21 +185,35 @@ int VorbisSource::mixBlock(AUDIO_SAMPLE_TYPE *target, int samplesToMix)
     AUDIO_SAMPLE_TYPE *t_target = target + samplesToMix * 2;
     qint64 sourcepos(0);
 
+    int fixedLeftVolume = m_fixedLeftVolume;
+    int fixedRightVolume = m_fixedRightVolume;
+    unsigned int fadeInLen = m_fadeInDuration * m_decoder->fileInfo()->sample_rate;
+    unsigned int fadeOutLen = m_fadeOutDuration * m_decoder->fileInfo()->sample_rate;
+
     if (m_decoder->fileInfo()->channels == 2) {
         // Stereo
         while (target != t_target) {
             sourcepos = m_fixedPos >> 12;
+
+            if (fadeOutLen > 0 && length() - sourcepos < fadeOutLen) {
+                fixedLeftVolume = (length() - sourcepos) * m_fixedLeftVolume / fadeOutLen;
+                fixedRightVolume = (length() - sourcepos) * m_fixedRightVolume / fadeOutLen;
+            } else if (fadeInLen > 0 && sourcepos < fadeInLen) {
+                fixedLeftVolume = sourcepos * m_fixedLeftVolume / fadeInLen;
+                fixedRightVolume = sourcepos * m_fixedRightVolume / fadeInLen;
+            }
+
             *target++ = ((((m_decoder->at(sourcepos * 2) *
                             (4096 - (m_fixedPos & 4095)) +
                             m_decoder->at((sourcepos + 1) * 2) *
                             (m_fixedPos & 4095)) >> 12) *
-                          m_fixedLeftVolume) >> 12);
+                          fixedLeftVolume) >> 12);
 
             *target++ = ((((m_decoder->at(sourcepos * 2 + 1) *
                             (4096 - (m_fixedPos & 4095)) +
                             m_decoder->at((sourcepos + 1) * 2 + 1) *
                             (m_fixedPos & 4095) ) >> 12) *
-                          m_fixedRightVolume) >> 12);
+                          fixedRightVolume) >> 12);
             m_fixedPos += m_fixedInc;
         }
     }
@@ -209,12 +223,22 @@ int VorbisSource::mixBlock(AUDIO_SAMPLE_TYPE *target, int samplesToMix)
 
         while (target != t_target) {
             sourcepos = m_fixedPos >> 12;
+
+            if (fadeOutLen > 0 && length() - sourcepos < fadeOutLen) {
+                fixedLeftVolume = (length() - sourcepos) * m_fixedLeftVolume / fadeOutLen;
+                fixedRightVolume = (length() - sourcepos) * m_fixedRightVolume / fadeOutLen;
+            } else if (fadeInLen > 0 && sourcepos < fadeInLen) {
+                fixedLeftVolume = sourcepos * m_fixedLeftVolume / fadeInLen;
+                fixedRightVolume = sourcepos * m_fixedRightVolume / fadeInLen;
+            }
+
             temp = ((m_decoder->at(sourcepos) *
                      (4096 - (m_fixedPos & 4095)) +
                      m_decoder->at(sourcepos + 1) *
                      (m_fixedPos & 4095)) >> 12);
-            *target++ = ((temp * m_fixedLeftVolume) >> 12);
-            *target++ = ((temp * m_fixedRightVolume) >> 12);
+            *target++ = ((temp * fixedLeftVolume) >> 12);
+            *target++ = ((temp * fixedRightVolume) >> 12);
+
             m_fixedPos += m_fixedInc;
         }
     }
