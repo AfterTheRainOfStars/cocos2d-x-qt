@@ -180,6 +180,14 @@ quint64 VorbisSource::length()
     return m_decoder->decodedLength();
 }
 
+int VorbisSource::sampleRate()
+{
+    if (!m_decoder)
+        return 0;
+
+    return m_decoder->fileInfo()->sample_rate;
+}
+
 int VorbisSource::mixBlock(AUDIO_SAMPLE_TYPE *target, int samplesToMix)
 {
     AUDIO_SAMPLE_TYPE *t_target = target + samplesToMix * 2;

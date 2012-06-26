@@ -35,6 +35,7 @@ public:
     void setSpeed(float speed);
     void seek(quint64 samplePos);
     quint64 length();
+    int sampleRate();
 
     bool load(QString filename);
 

@@ -45,6 +45,7 @@ public slots:
     void setSpeed(float speed);
     void seek(quint64 samplePos);
     quint64 length();
+    int sampleRate();
 
 protected:
     int mixBlock(AUDIO_SAMPLE_TYPE *target, int bufferLength);

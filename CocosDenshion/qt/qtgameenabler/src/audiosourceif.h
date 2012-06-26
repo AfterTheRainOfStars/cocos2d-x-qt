@@ -78,6 +78,8 @@ public:
     virtual quint64 position();
     virtual quint64 length() = 0;
 
+    virtual int sampleRate() = 0;
+
     virtual void setFadeInDuration(float duration);
     virtual void setFadeOutDuration(float duration);
 

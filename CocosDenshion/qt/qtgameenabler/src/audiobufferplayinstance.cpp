@@ -245,6 +245,14 @@ quint64 AudioBufferPlayInstance::length()
     return m_buffer->getDataLength() / m_buffer->getNofChannels();
 }
 
+int AudioBufferPlayInstance::sampleRate()
+{
+    if (m_buffer.isNull())
+        return 0;
+
+    return m_buffer->getSamplesPerSec();
+}
+
 /*!
   TODO: Document this method.
 
