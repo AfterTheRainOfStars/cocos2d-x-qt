@@ -63,13 +63,13 @@ int VorbisSource::pullAudio(AUDIO_SAMPLE_TYPE *target, int bufferLength)
     if (m_paused || m_finished || !m_decoder)
         return 0;
 
-    unsigned int channelLength(m_decoder->decodedLength() - 2);
+    quint64 channelLength(m_decoder->decodedLength() - 2);
     unsigned int samplesToWrite(bufferLength / 2);
     unsigned int amount(0);
     unsigned int totalMixed(0);
 
     while (samplesToWrite > 0) {
-        unsigned int samplesLeft;
+        quint64 samplesLeft;
 
         if (m_fixedInc == 0) {
             // No speed set. Will lead to division by zero error if not set.
@@ -80,8 +80,7 @@ int VorbisSource::pullAudio(AUDIO_SAMPLE_TYPE *target, int bufferLength)
             (m_fixedPos >> 12);
 
         // This is how much we can mix at least.
-        unsigned int maxMixAmount = (int)(((long long int)(samplesLeft) << 12) /
-                                 qAbs(m_fixedInc));
+        quint64 maxMixAmount = (samplesLeft << 12) / qAbs(m_fixedInc);
 
         if (maxMixAmount > samplesToWrite) {
             maxMixAmount = samplesToWrite;
@@ -160,7 +159,7 @@ void VorbisSource::seek(quint64 samplePos)
     if (!m_decoder)
         return;
 
-    const unsigned int channelLength = m_decoder->decodedLength();
+    const quint64 channelLength = m_decoder->decodedLength();
 
     if (samplePos > channelLength)
         samplePos = channelLength;
