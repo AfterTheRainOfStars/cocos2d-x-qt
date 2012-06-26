@@ -87,7 +87,7 @@ private:
 private:
     AudioMixer *m_mixer;
     AudioOut *m_audioOut;
-    QHash<unsigned int, QObject*> m_effects;
+    QHash<unsigned int, QPointer<QObject> > m_effects;
     QHash<unsigned int, QPointer<PlayableAudioSource> > m_effectInstances;
     AudioEventListener *m_audioEventListener;
     unsigned int m_sfxInstanceId;

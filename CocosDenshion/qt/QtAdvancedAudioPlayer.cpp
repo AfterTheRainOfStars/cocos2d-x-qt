@@ -88,15 +88,10 @@ void QtAdvancedAudioPlayer::close()
     delete m_audioOut;
     m_audioOut = NULL;
 
-    foreach (QPointer<PlayableAudioSource> i, m_effectInstances)
+    foreach (QPointer<QObject> i, m_effects)
     {
-        delete i;
-    }
-    m_effectInstances.clear();
-
-    foreach (QObject *i, m_effects)
-    {
-        delete i;
+        if (!i.isNull())
+            delete i;
     }
     m_effects.clear();
 }
@@ -123,7 +118,7 @@ SfxId QtAdvancedAudioPlayer::loadEffect(const char* pszFilePath)
 {
     unsigned int hash = _Hash(pszFilePath);
 
-    QObject *sfx = m_effects.value(hash);
+    QPointer<QObject> sfx = m_effects.value(hash);
     if (!sfx)
     {
         AudioBuffer *buffer = AudioBuffer::load(
@@ -133,7 +128,7 @@ SfxId QtAdvancedAudioPlayer::loadEffect(const char* pszFilePath)
             CCLOGERROR("could not load audio effect %s", pszFilePath);
             return 0;
         }
-        m_effects.insert(hash, buffer);
+        m_effects.insert(hash, QPointer<QObject>(buffer));
     }
     return hash;
 }
