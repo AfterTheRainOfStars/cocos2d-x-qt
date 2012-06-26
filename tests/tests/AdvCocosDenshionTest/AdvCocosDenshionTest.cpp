@@ -32,8 +32,9 @@ m_nActiveSoundId(0)
 {
     std::string testItems[] = {
         "play background music",
+        "play background music repeatedly",
         "play effect",
-        "play effect repeatly",
+        "play effect repeatedly",
         "is playing",
         "get active instance",
         "stop",
@@ -78,16 +79,18 @@ m_nActiveSoundId(0)
 
     setIsTouchEnabled(true);
 
-    AdvancedAudioEngine::sharedEngine()->setAudioEventListener(this);
+    m_audioEngine = AdvancedAudioEngine::sharedEngine();
+
+    m_audioEngine->setAudioEventListener(this);
 
     // preload background music and effect
-    m_nMusicSfxId = AdvancedAudioEngine::sharedEngine()->loadMusic(
+    m_nMusicSfxId = m_audioEngine->loadMusic(
                 CCFileUtils::fullPathFromRelativePath(MUSIC_FILE));
-    m_nSfxId = AdvancedAudioEngine::sharedEngine()->loadEffect(
+    m_nSfxId = m_audioEngine->loadEffect(
                 CCFileUtils::fullPathFromRelativePath(EFFECT_FILE));
     
     // set default volume
-    AdvancedAudioEngine::sharedEngine()->setVolume(0.5);
+    m_audioEngine->setVolume(0.5);
 }
 
 AdvCocosDenshionTest::~AdvCocosDenshionTest()
@@ -98,7 +101,7 @@ void AdvCocosDenshionTest::onExit()
 {
     CCLayer::onExit();
 
-    AdvancedAudioEngine::sharedEngine()->end();
+    m_audioEngine->end();
 }
 
 void AdvCocosDenshionTest::menuCallback(CCObject * pSender)
@@ -111,30 +114,37 @@ void AdvCocosDenshionTest::menuCallback(CCObject * pSender)
     {
     case 0:
         // play background music
-        m_nActiveSoundId = AdvancedAudioEngine::sharedEngine()->play(m_nMusicSfxId);
-        AdvancedAudioEngine::sharedEngine()->setLoopCount(m_nActiveSoundId, -1);
-        AdvancedAudioEngine::sharedEngine()->setFadeInDuration(m_nActiveSoundId, m_fadeIn);
-        AdvancedAudioEngine::sharedEngine()->setFadeOutDuration(m_nActiveSoundId, m_fadeOut);
-        AdvancedAudioEngine::sharedEngine()->setVolume(m_nActiveSoundId, 0.5f);
+        m_nActiveSoundId = m_audioEngine->play(m_nMusicSfxId);
+        m_audioEngine->setFadeInDuration(m_nActiveSoundId, m_fadeIn);
+        m_audioEngine->setFadeOutDuration(m_nActiveSoundId, m_fadeOut);
+        m_audioEngine->setVolume(m_nActiveSoundId, 0.5f);
         break;
     case 1:
-        // play effect
-        m_nActiveSoundId = AdvancedAudioEngine::sharedEngine()->play(m_nSfxId);
-        AdvancedAudioEngine::sharedEngine()->setFadeInDuration(m_nActiveSoundId, m_fadeIn);
-        AdvancedAudioEngine::sharedEngine()->setFadeOutDuration(m_nActiveSoundId, m_fadeOut);
-        AdvancedAudioEngine::sharedEngine()->setVolume(m_nActiveSoundId, 0.5f);
+        // play background music repeatedly
+        m_nActiveSoundId = m_audioEngine->play(m_nMusicSfxId);
+        m_audioEngine->setLoopCount(m_nActiveSoundId, -1);
+        m_audioEngine->setFadeInDuration(m_nActiveSoundId, m_fadeIn);
+        m_audioEngine->setFadeOutDuration(m_nActiveSoundId, m_fadeOut);
+        m_audioEngine->setVolume(m_nActiveSoundId, 0.5f);
         break;
     case 2:
         // play effect
-        m_nActiveSoundId = AdvancedAudioEngine::sharedEngine()->play(m_nSfxId);
-        AdvancedAudioEngine::sharedEngine()->setLoopCount(m_nActiveSoundId, -1);
-        AdvancedAudioEngine::sharedEngine()->setFadeInDuration(m_nActiveSoundId, m_fadeIn);
-        AdvancedAudioEngine::sharedEngine()->setFadeOutDuration(m_nActiveSoundId, m_fadeOut);
-        AdvancedAudioEngine::sharedEngine()->setVolume(m_nActiveSoundId, 0.5f);
+        m_nActiveSoundId = m_audioEngine->play(m_nSfxId);
+        m_audioEngine->setFadeInDuration(m_nActiveSoundId, m_fadeIn);
+        m_audioEngine->setFadeOutDuration(m_nActiveSoundId, m_fadeOut);
+        m_audioEngine->setVolume(m_nActiveSoundId, 0.5f);
         break;
     case 3:
+        // play effect repeatedly
+        m_nActiveSoundId = m_audioEngine->play(m_nSfxId);
+        m_audioEngine->setLoopCount(m_nActiveSoundId, -1);
+        m_audioEngine->setFadeInDuration(m_nActiveSoundId, m_fadeIn);
+        m_audioEngine->setFadeOutDuration(m_nActiveSoundId, m_fadeOut);
+        m_audioEngine->setVolume(m_nActiveSoundId, 0.5f);
+        break;
+    case 4:
         // is playing
-        if (AdvancedAudioEngine::sharedEngine()->isPlaying(m_nActiveSoundId))
+        if (m_audioEngine->isPlaying(m_nActiveSoundId))
         {
             CCLOG("is playing");
         }
@@ -143,105 +153,105 @@ void AdvCocosDenshionTest::menuCallback(CCObject * pSender)
             CCLOG("not playing");
         }
         break;
-    case 4:
-        // get active effect
-        m_nActiveSoundId = AdvancedAudioEngine::sharedEngine()->getActiveSfxInstanceId();
-        break;
     case 5:
-        // stop effect
-        AdvancedAudioEngine::sharedEngine()->stop(m_nActiveSoundId);
+        // get active effect
+        m_nActiveSoundId = m_audioEngine->getActiveSfxInstanceId();
         break;
     case 6:
-        // pause effect
-        AdvancedAudioEngine::sharedEngine()->pause(m_nActiveSoundId);
+        // stop effect
+        m_audioEngine->stop(m_nActiveSoundId);
         break;
     case 7:
-        // resume effect
-        AdvancedAudioEngine::sharedEngine()->resume(m_nActiveSoundId);
+        // pause effect
+        m_audioEngine->pause(m_nActiveSoundId);
         break;
     case 8:
-        // unload effect
-        AdvancedAudioEngine::sharedEngine()->unload(m_nSfxId);
+        // resume effect
+        m_audioEngine->resume(m_nActiveSoundId);
         break;
     case 9:
-        // pause all
-        AdvancedAudioEngine::sharedEngine()->pauseAll();
+        // unload effect
+        m_audioEngine->unload(m_nSfxId);
         break;
     case 10:
-        // resume all
-        AdvancedAudioEngine::sharedEngine()->resumeAll();
+        // pause all
+        m_audioEngine->pauseAll();
         break;
     case 11:
-        // stop all
-        AdvancedAudioEngine::sharedEngine()->stopAll();
+        // resume all
+        m_audioEngine->resumeAll();
         break;
     case 12:
-        // add master volume
-        AdvancedAudioEngine::sharedEngine()->setVolume(
-            AdvancedAudioEngine::sharedEngine()->getVolume() + 0.1f);
+        // stop all
+        m_audioEngine->stopAll();
         break;
     case 13:
-        // sub master volume
-        AdvancedAudioEngine::sharedEngine()->setVolume(
-            AdvancedAudioEngine::sharedEngine()->getVolume() - 0.1f);
+        // add master volume
+        m_audioEngine->setVolume(
+            m_audioEngine->getVolume() + 0.1f);
         break;
     case 14:
-        // add volume
-        AdvancedAudioEngine::sharedEngine()->setVolume(m_nActiveSoundId,
-            AdvancedAudioEngine::sharedEngine()->getVolume(m_nActiveSoundId) + 0.1f);
+        // sub master volume
+        m_audioEngine->setVolume(
+            m_audioEngine->getVolume() - 0.1f);
         break;
     case 15:
-        // sub volume
-        AdvancedAudioEngine::sharedEngine()->setVolume(m_nActiveSoundId,
-           AdvancedAudioEngine::sharedEngine()->getVolume(m_nActiveSoundId) - 0.1f);
+        // add volume
+        m_audioEngine->setVolume(m_nActiveSoundId,
+            m_audioEngine->getVolume(m_nActiveSoundId) + 0.1f);
         break;
     case 16:
-        // increase pitch
-        AdvancedAudioEngine::sharedEngine()->setPitch(m_nActiveSoundId,
-            AdvancedAudioEngine::sharedEngine()->getPitch(m_nActiveSoundId) + 0.1f);
+        // sub volume
+        m_audioEngine->setVolume(m_nActiveSoundId,
+           m_audioEngine->getVolume(m_nActiveSoundId) - 0.1f);
         break;
     case 17:
-        // sub pitch
-        AdvancedAudioEngine::sharedEngine()->setPitch(m_nActiveSoundId,
-            AdvancedAudioEngine::sharedEngine()->getPitch(m_nActiveSoundId) - 0.1f);
+        // increase pitch
+        m_audioEngine->setPitch(m_nActiveSoundId,
+            m_audioEngine->getPitch(m_nActiveSoundId) + 0.1f);
         break;
     case 18:
-        // increase pan
-        AdvancedAudioEngine::sharedEngine()->setPanning(m_nActiveSoundId,
-            AdvancedAudioEngine::sharedEngine()->getPanning(m_nActiveSoundId) + 0.1f);
+        // sub pitch
+        m_audioEngine->setPitch(m_nActiveSoundId,
+            m_audioEngine->getPitch(m_nActiveSoundId) - 0.1f);
         break;
     case 19:
-        // sub pan
-        AdvancedAudioEngine::sharedEngine()->setPanning(m_nActiveSoundId,
-            AdvancedAudioEngine::sharedEngine()->getPanning(m_nActiveSoundId) - 0.1f);
+        // pan right
+        m_audioEngine->setPanning(m_nActiveSoundId,
+            m_audioEngine->getPanning(m_nActiveSoundId) + 0.1f);
         break;
     case 20:
-        // fade out
-        m_fadeOut = 0.5f;
-        AdvancedAudioEngine::sharedEngine()->setFadeOutDuration(
-            m_nActiveSoundId, m_fadeOut);
+        // pan left
+        m_audioEngine->setPanning(m_nActiveSoundId,
+            m_audioEngine->getPanning(m_nActiveSoundId) - 0.1f);
         break;
     case 21:
-        // fade in
-        m_fadeIn = 0.5f;
-        AdvancedAudioEngine::sharedEngine()->setFadeInDuration(
-            m_nActiveSoundId, m_fadeIn);
+        // fade out
+        m_fadeOut = 0.5f;
+        m_audioEngine->setFadeOutDuration(
+            m_nActiveSoundId, m_fadeOut);
         break;
     case 22:
+        // fade in
+        m_fadeIn = 0.5f;
+        m_audioEngine->setFadeInDuration(
+            m_nActiveSoundId, m_fadeIn);
+        break;
+    case 23:
         // no fade
         m_fadeIn = 0.0f;
         m_fadeOut = 0.0f;
-        AdvancedAudioEngine::sharedEngine()->setFadeInDuration(
+        m_audioEngine->setFadeInDuration(
             m_nActiveSoundId, m_fadeIn);
-        AdvancedAudioEngine::sharedEngine()->setFadeOutDuration(
+        m_audioEngine->setFadeOutDuration(
             m_nActiveSoundId, m_fadeOut);
         break;
-    case 23:
+    case 24:
         {
         // random seek
         float pos = (float)rand() / (float)RAND_MAX * 5.0f;
         CCLOG("Seek to %.3f", pos);
-        AdvancedAudioEngine::sharedEngine()->seek(m_nActiveSoundId, pos);
+        m_audioEngine->seek(m_nActiveSoundId, pos);
         }
         break;
     }
@@ -249,8 +259,8 @@ void AdvCocosDenshionTest::menuCallback(CCObject * pSender)
 
 void AdvCocosDenshionTest::effectEnded(SfxInstanceId soundId)
 {
-    CCLOG("Effect %u ended", soundId);
-    m_nActiveSoundId = AdvancedAudioEngine::sharedEngine()->getActiveSfxInstanceId();
+    CCLOG("Sound %u ended", soundId);
+    m_nActiveSoundId = m_audioEngine->getActiveSfxInstanceId();
 }
 
 void AdvCocosDenshionTest::ccTouchesBegan(CCSet *pTouches, CCEvent *pEvent)

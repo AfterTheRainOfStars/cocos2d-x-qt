@@ -23,6 +23,7 @@ public: // AudioEventListener
 private:
     CCMenu* m_pItmeMenu;
     CCPoint m_tBeginPos;
+    AdvancedAudioEngine *m_audioEngine;
     int m_nTestCount;
     unsigned int m_nActiveSoundId;
     unsigned int m_nSfxId;
