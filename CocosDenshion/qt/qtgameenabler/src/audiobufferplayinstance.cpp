@@ -222,10 +222,10 @@ void AudioBufferPlayInstance::seek(quint64 samplePos)
         return;
 
     const unsigned int channelLength = m_buffer->getDataLength() /
-        m_buffer->getNofChannels() * m_buffer->getBytesPerSample();
+        m_buffer->getNofChannels() / m_buffer->getBytesPerSample();
 
-    if (samplePos > channelLength)
-        samplePos = channelLength;
+    if (samplePos > channelLength - 2)
+        samplePos = channelLength - 2;
 #ifdef QTGAMEENABLER_SUPPORT_LONG_SAMPLES
     m_fixedPos = (quint64)samplePos << 12;
 #else
