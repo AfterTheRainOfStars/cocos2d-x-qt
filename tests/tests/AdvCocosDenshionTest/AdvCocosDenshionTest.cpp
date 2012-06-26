@@ -239,7 +239,7 @@ void AdvCocosDenshionTest::menuCallback(CCObject * pSender)
     case 23:
         {
         // random seek
-        float pos = (float)rand() / (float)RAND_MAX * 5.0f * 44100;
+        float pos = (float)rand() / (float)RAND_MAX * 5.0f;
         CCLOG("Seek to %.3f", pos);
         AdvancedAudioEngine::sharedEngine()->seek(m_nActiveSoundId, pos);
         }

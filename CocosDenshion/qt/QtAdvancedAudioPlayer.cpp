@@ -418,8 +418,7 @@ void QtAdvancedAudioPlayer::seek(SfxInstanceId soundId, float position)
     PlayableAudioSource *instance = m_effectInstances.value(soundId);
     if (instance)
     {
-        // TODO: Calculate position
-        instance->seek(position);
+        instance->seek(position * instance->sampleRate());
     }
 }
 
@@ -428,8 +427,7 @@ float QtAdvancedAudioPlayer::position(SfxInstanceId soundId)
     PlayableAudioSource *instance = m_effectInstances.value(soundId);
     if (instance)
     {
-        // TODO: Calculate position
-        return instance->position();
+        return (float)instance->position() / (float)instance->sampleRate();
     }
     return 0.0f;
 }
