@@ -9,7 +9,7 @@
 #ifndef QTADVANCEDAUDIOPLAYER_H_
 #define QTADVANCEDAUDIOPLAYER_H_
 
-#include "AdvancedAudioPlayer.h"
+#include "AdvancedAudioEngine.h"
 #include "audiomixer.h"
 #include "audioout.h"
 #include "audiobuffer.h"
@@ -23,17 +23,14 @@ using namespace GE;
 
 namespace CocosDenshion {
 
-class QtAdvancedAudioPlayer : public QObject, public AdvancedAudioPlayer
+class EXPORT_DLL QtAdvancedAudioPlayer : public QObject,
+        public AdvancedAudioEngine
 {
     Q_OBJECT
 
 public:
     QtAdvancedAudioPlayer();
     virtual ~QtAdvancedAudioPlayer();
-
-    static QtAdvancedAudioPlayer* sharedPlayer();
-
-    virtual void close();
 
     virtual SfxId loadEffect(const char* pszFilePath);
     virtual SfxId loadMusic(const char* pszFilePath);
@@ -51,6 +48,7 @@ public:
     virtual void pause(SfxInstanceId soundId);
     virtual void resume(SfxInstanceId soundId);
     virtual bool isPlaying(SfxInstanceId soundId);
+    virtual bool isPaused(SfxInstanceId soundId);
 
     virtual void setLoopCount(SfxInstanceId soundId, unsigned int loopCount);
     virtual unsigned int getLoopCount(SfxInstanceId soundId);
@@ -64,8 +62,8 @@ public:
     virtual void setPanning(SfxInstanceId soundId, float pan);
     virtual float getPanning(SfxInstanceId soundId);
 
-    virtual void setFadeInDuration(SfxInstanceId soundId, float fadeInDurationMs);
-    virtual void setFadeOutDuration(SfxInstanceId soundId, float fadeOutDurationMs);
+    virtual void setFadeInDuration(SfxInstanceId soundId, float fadeInDuration);
+    virtual void setFadeOutDuration(SfxInstanceId soundId, float fadeOutDuration);
 
     virtual void seek(SfxInstanceId soundId, float position);
     virtual float position(SfxInstanceId soundId);
@@ -74,8 +72,11 @@ public:
     virtual void removeAudioEventListener();
 
     virtual SfxId sfxIdForFile(const char* pszFilePath);
+    virtual SfxId sfxIdForInstance(SfxInstanceId soundId);
     virtual SfxInstanceId sfxInstanceIdForSfxId(SfxId soundId);
     virtual SfxInstanceId getActiveSfxInstanceId();
+    virtual unsigned int getSfxInstanceCount();
+    virtual SfxInstanceId getSfxInstance(unsigned int index);
 
 public slots:
     void sfxFinished(unsigned int tag);

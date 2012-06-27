@@ -52,10 +52,24 @@ static QString fullPathFromRelativePath(const char *pszRelativePath)
     return strRet;
 }
 
-QtAdvancedAudioPlayer* QtAdvancedAudioPlayer::sharedPlayer()
+
+AdvancedAudioEngine::AdvancedAudioEngine()
+{
+}
+
+AdvancedAudioEngine::~AdvancedAudioEngine()
+{
+}
+
+AdvancedAudioEngine* AdvancedAudioEngine::sharedEngine()
 {
     static QtAdvancedAudioPlayer s_SharedPlayer;
     return &s_SharedPlayer;
+}
+
+void AdvancedAudioEngine::end()
+{
+    sharedEngine()->stopAll();
 }
 
 QtAdvancedAudioPlayer::QtAdvancedAudioPlayer() :
@@ -80,7 +94,7 @@ void QtAdvancedAudioPlayer::init()
     CCApplication::sharedApplication().unlock();
 }
 
-void QtAdvancedAudioPlayer::close()
+QtAdvancedAudioPlayer::~QtAdvancedAudioPlayer()
 {
     delete m_mixer;
     m_mixer = NULL;
@@ -94,11 +108,6 @@ void QtAdvancedAudioPlayer::close()
             delete i;
     }
     m_effects.clear();
-}
-
-QtAdvancedAudioPlayer::~QtAdvancedAudioPlayer()
-{
-    close();
 }
 
 void QtAdvancedAudioPlayer::checkFinishedEffects()
@@ -290,10 +299,31 @@ void QtAdvancedAudioPlayer::resume(SfxInstanceId soundId)
 bool QtAdvancedAudioPlayer::isPlaying(SfxInstanceId soundId)
 {
     checkFinishedEffects();
-    return (m_effectInstances.value(soundId) != NULL);
+    PlayableAudioSource *instance = m_effectInstances.value(soundId);
+    if (!instance)
+        return false;
+
+    if (instance->isFinished())
+        return false;
+
+    return true;
 }
 
-void QtAdvancedAudioPlayer::setLoopCount(SfxInstanceId soundId, unsigned int loopCount)
+bool QtAdvancedAudioPlayer::isPaused(SfxInstanceId soundId)
+{
+    checkFinishedEffects();
+    PlayableAudioSource *instance = m_effectInstances.value(soundId);
+    if (!instance)
+        return false;
+
+    if (instance->isFinished())
+        return false;
+
+    return instance->isPaused();
+}
+
+void QtAdvancedAudioPlayer::setLoopCount(SfxInstanceId soundId,
+                                         unsigned int loopCount)
 {
     PlayableAudioSource *instance = m_effectInstances.value(soundId);
     if (instance)
@@ -317,14 +347,15 @@ void QtAdvancedAudioPlayer::setVolume(SfxInstanceId soundId, float volume)
     PlayableAudioSource *instance = m_effectInstances.value(soundId);
     if (instance)
     {
-        if (volume < -1.0f)
-            volume = -1.0f;
+        if (volume < 0.0f)
+            volume = 0.0f;
         if (volume > 1.0f)
             volume = 1.0f;
 
-        // TODO: Doesn't maintain pan
+        //float pan = getPanning(soundId);
         instance->setLeftVolume(volume);
         instance->setRightVolume(volume);
+        //setPanning(soundId, pan);
     }
 }
 
@@ -358,8 +389,6 @@ float QtAdvancedAudioPlayer::getPitch(SfxInstanceId soundId)
     return 1.0f;
 }
 
-static float panx = 0.0f;
-
 void QtAdvancedAudioPlayer::setPanning(SfxInstanceId soundId, float pan)
 {
     PlayableAudioSource *instance = m_effectInstances.value(soundId);
@@ -373,7 +402,6 @@ void QtAdvancedAudioPlayer::setPanning(SfxInstanceId soundId, float pan)
         float volume = (instance->leftVolume() + instance->rightVolume()) / 2.0f;
         instance->setLeftVolume(-(pan - 1.0f) * volume);
         instance->setRightVolume((pan + 1.0f) * volume);
-        panx = pan;
     }
 }
 
@@ -382,19 +410,22 @@ float QtAdvancedAudioPlayer::getPanning(SfxInstanceId soundId)
     PlayableAudioSource *instance = m_effectInstances.value(soundId);
     if (instance)
     {
-        // TODO ....
-        return panx;
+        float volume = (instance->leftVolume() + instance->rightVolume()) / 2.0f;
+        if (instance->leftVolume() > instance->rightVolume())
+            return -(instance->leftVolume() / volume - 1.0f);
+        else
+            return instance->rightVolume() / volume - 1.0f;
     }
     return 0.0f;
 }
 
 void QtAdvancedAudioPlayer::setFadeInDuration(SfxInstanceId soundId,
-                                              float fadeInDurationMs)
+                                              float fadeInDuration)
 {
     PlayableAudioSource *instance = m_effectInstances.value(soundId);
     if (instance)
     {
-        instance->setFadeInDuration(fadeInDurationMs);
+        instance->setFadeInDuration(fadeInDuration);
     }
 }
 
@@ -442,6 +473,16 @@ SfxId QtAdvancedAudioPlayer::sfxIdForFile(const char* pszFilePath)
     return _Hash(pszFilePath);
 }
 
+SfxId QtAdvancedAudioPlayer::sfxIdForInstance(SfxInstanceId soundId)
+{
+    PlayableAudioSource *instance = m_effectInstances.value(soundId);
+    if (instance)
+    {
+        return instance->getTag();
+    }
+    return 0;
+}
+
 SfxInstanceId QtAdvancedAudioPlayer::sfxInstanceIdForSfxId(SfxId soundId)
 {
     foreach (QPointer<PlayableAudioSource> i, m_effectInstances)
@@ -462,6 +503,17 @@ SfxInstanceId QtAdvancedAudioPlayer::getActiveSfxInstanceId()
     }
 
     return m_effectInstances.keys().at(m_effectInstances.keys().count() - 1);
+}
+
+unsigned int QtAdvancedAudioPlayer::getSfxInstanceCount()
+{
+    checkFinishedEffects();
+    return m_effectInstances.keys().count();
+}
+
+SfxInstanceId QtAdvancedAudioPlayer::getSfxInstance(unsigned int index)
+{
+    return m_effectInstances.keys().at(index);
 }
 
 void QtAdvancedAudioPlayer::sfxFinished(unsigned int tag)

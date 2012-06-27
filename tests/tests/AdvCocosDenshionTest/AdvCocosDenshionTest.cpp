@@ -26,9 +26,14 @@ using namespace CocosDenshion;
 #define LINE_SPACE          40
 
 AdvCocosDenshionTest::AdvCocosDenshionTest()
-: m_pItmeMenu(NULL),
-m_tBeginPos(CCPointZero),
-m_nActiveSoundId(0)
+    : m_pItmeMenu(NULL),
+      m_tBeginPos(CCPointZero),
+      m_audioEngine(NULL),
+      m_nActiveSoundId(0),
+      m_nSfxId(0),
+      m_nMusicSfxId(0),
+      m_fadeOut(0.0f),
+      m_fadeIn(0.0f)
 {
     std::string testItems[] = {
         "play background music",
@@ -36,6 +41,7 @@ m_nActiveSoundId(0)
         "play effect",
         "play effect repeatedly",
         "is playing",
+        "is paused",
         "get active instance",
         "stop",
         "pause",
@@ -95,12 +101,14 @@ m_nActiveSoundId(0)
 
 AdvCocosDenshionTest::~AdvCocosDenshionTest()
 {
+    m_audioEngine->removeAudioEventListener();
 }
 
 void AdvCocosDenshionTest::onExit()
 {
     CCLayer::onExit();
 
+    m_audioEngine->removeAudioEventListener();
     m_audioEngine->end();
 }
 
@@ -154,90 +162,102 @@ void AdvCocosDenshionTest::menuCallback(CCObject * pSender)
         }
         break;
     case 5:
-        // get active effect
-        m_nActiveSoundId = m_audioEngine->getActiveSfxInstanceId();
+        // is paused
+        if (m_audioEngine->isPaused(m_nActiveSoundId))
+        {
+            CCLOG("is paused");
+        }
+        else
+        {
+            CCLOG("not paused");
+        }
         break;
     case 6:
+        // get active effect
+        m_nActiveSoundId = m_audioEngine->getActiveSfxInstanceId();
+        CCLOG("active instance %u", m_nActiveSoundId);
+        break;
+    case 7:
         // stop effect
         m_audioEngine->stop(m_nActiveSoundId);
         break;
-    case 7:
+    case 8:
         // pause effect
         m_audioEngine->pause(m_nActiveSoundId);
         break;
-    case 8:
+    case 9:
         // resume effect
         m_audioEngine->resume(m_nActiveSoundId);
         break;
-    case 9:
-        // unload effect
-        m_audioEngine->unload(m_nSfxId);
-        break;
     case 10:
+        // unload effect
+        m_audioEngine->unload(m_audioEngine->sfxIdForInstance(m_nActiveSoundId));
+        break;
+    case 11:
         // pause all
         m_audioEngine->pauseAll();
         break;
-    case 11:
+    case 12:
         // resume all
         m_audioEngine->resumeAll();
         break;
-    case 12:
+    case 13:
         // stop all
         m_audioEngine->stopAll();
         break;
-    case 13:
+    case 14:
         // add master volume
         m_audioEngine->setVolume(
             m_audioEngine->getVolume() + 0.1f);
         break;
-    case 14:
+    case 15:
         // sub master volume
         m_audioEngine->setVolume(
             m_audioEngine->getVolume() - 0.1f);
         break;
-    case 15:
+    case 16:
         // add volume
         m_audioEngine->setVolume(m_nActiveSoundId,
             m_audioEngine->getVolume(m_nActiveSoundId) + 0.1f);
         break;
-    case 16:
+    case 17:
         // sub volume
         m_audioEngine->setVolume(m_nActiveSoundId,
            m_audioEngine->getVolume(m_nActiveSoundId) - 0.1f);
         break;
-    case 17:
+    case 18:
         // increase pitch
         m_audioEngine->setPitch(m_nActiveSoundId,
             m_audioEngine->getPitch(m_nActiveSoundId) + 0.1f);
         break;
-    case 18:
+    case 19:
         // sub pitch
         m_audioEngine->setPitch(m_nActiveSoundId,
             m_audioEngine->getPitch(m_nActiveSoundId) - 0.1f);
         break;
-    case 19:
+    case 20:
         // pan right
         m_audioEngine->setPanning(m_nActiveSoundId,
             m_audioEngine->getPanning(m_nActiveSoundId) + 0.1f);
         break;
-    case 20:
+    case 21:
         // pan left
         m_audioEngine->setPanning(m_nActiveSoundId,
             m_audioEngine->getPanning(m_nActiveSoundId) - 0.1f);
         break;
-    case 21:
+    case 22:
         // fade out
         m_fadeOut = 0.5f;
         m_audioEngine->setFadeOutDuration(
             m_nActiveSoundId, m_fadeOut);
         break;
-    case 22:
+    case 23:
         // fade in
         m_fadeIn = 0.5f;
         m_audioEngine->setFadeInDuration(
             m_nActiveSoundId, m_fadeIn);
         break;
-    case 23:
+    case 24:
         // no fade
         m_fadeIn = 0.0f;
         m_fadeOut = 0.0f;
@@ -246,12 +266,13 @@ void AdvCocosDenshionTest::menuCallback(CCObject * pSender)
         m_audioEngine->setFadeOutDuration(
             m_nActiveSoundId, m_fadeOut);
         break;
-    case 24:
+    case 25:
         {
         // random seek
         float pos = (float)rand() / (float)RAND_MAX * 5.0f;
-        CCLOG("Seek to %.3f", pos);
         m_audioEngine->seek(m_nActiveSoundId, pos);
+        CCLOG("Seek to %.3f (%.3f)", m_audioEngine->position(m_nActiveSoundId),
+              pos);
         }
         break;
     }
@@ -292,7 +313,8 @@ void AdvCocosDenshionTest::ccTouchesMoved(CCSet *pTouches, CCEvent *pEvent)
 
     if (nextPos.y > ((m_nTestCount + 1)* LINE_SPACE - winSize.height))
     {
-        m_pItmeMenu->setPosition(ccp(0, ((m_nTestCount + 1)* LINE_SPACE - winSize.height)));
+        m_pItmeMenu->setPosition(ccp(0, ((m_nTestCount + 1)* LINE_SPACE
+                                         - winSize.height)));
         return;
     }
 

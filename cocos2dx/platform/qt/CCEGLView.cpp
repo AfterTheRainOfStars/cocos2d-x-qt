@@ -218,9 +218,9 @@ void CCEGLView::setIMEKeyboardState(bool bOpen)
 
 bool CCEGLView::Create()
 {
-#ifdef Q_OS_SYMBIAN
+#if defined(Q_OS_SYMBIAN)
     showFullScreen();
-#else
+#elif !defined(MEEGO_EDITION_HARMATTAN)
     show();
 #endif
 

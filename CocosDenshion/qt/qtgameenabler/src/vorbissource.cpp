@@ -31,7 +31,8 @@ const float GEDefaultAudioSpeed(1.0f); // 1.0 => 100 %
   Constructor.
 */
 VorbisSource::VorbisSource(QObject *parent)
-    : PlayableAudioSource(parent)
+    : PlayableAudioSource(parent),
+      m_decoder(NULL)
 {
     DEBUG_POINT;
     m_destroyWhenFinished = false;
@@ -49,6 +50,7 @@ VorbisSource::~VorbisSource()
 
 bool VorbisSource::load(QString filename)
 {
+    delete m_decoder;
     m_decoder = new VorbisDecoder(true, this);
     return m_decoder->load(filename);
 }

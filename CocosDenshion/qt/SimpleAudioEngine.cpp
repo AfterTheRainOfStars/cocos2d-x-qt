@@ -7,15 +7,20 @@
 */
 
 #include "SimpleAudioEngine.h"
-#include "QtAudioPlayer.h"
+#include "QtAdvancedAudioPlayer.h"
 
 namespace CocosDenshion {
 
-static AudioPlayer* oAudioPlayer;
+static AdvancedAudioEngine* oAudioPlayer;
+static SfxId musicId = 0;
+static float effectVol = 1.0f;
+static float musicVol = 1.0f;
+static float masterVol = 0.7f;
 
 SimpleAudioEngine::SimpleAudioEngine()
 {
-    oAudioPlayer = QtAudioPlayer::sharedPlayer();
+    oAudioPlayer = QtAdvancedAudioPlayer::sharedEngine();
+    oAudioPlayer->setVolume(masterVol);
 }
 
 SimpleAudioEngine::~SimpleAudioEngine()
@@ -30,6 +35,7 @@ SimpleAudioEngine* SimpleAudioEngine::sharedEngine()
 
 void SimpleAudioEngine::end()
 {
+    oAudioPlayer->stopAll();
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -39,42 +45,48 @@ void SimpleAudioEngine::end()
 void SimpleAudioEngine::playBackgroundMusic(const char* pszFilePath,
         bool bLoop)
 {
-    oAudioPlayer->playBackgroundMusic(pszFilePath, bLoop);
+    SfxId id = oAudioPlayer->loadMusic(pszFilePath);
+    musicId = oAudioPlayer->play(id);
+    oAudioPlayer->setLoopCount(musicId, bLoop ? -1 : 0);
+    oAudioPlayer->setVolume(musicId, musicVol);
 }
 
 void SimpleAudioEngine::stopBackgroundMusic(bool bReleaseData)
 {
-    oAudioPlayer->stopBackgroundMusic(bReleaseData);
+    if (bReleaseData)
+        oAudioPlayer->unload(oAudioPlayer->sfxIdForInstance(musicId));
+    else
+        oAudioPlayer->stop(musicId);
 }
 
 void SimpleAudioEngine::pauseBackgroundMusic()
 {
-    oAudioPlayer->pauseBackgroundMusic();
+    oAudioPlayer->pause(musicId);
 }
 
 void SimpleAudioEngine::resumeBackgroundMusic()
 {
-    oAudioPlayer->resumeBackgroundMusic();
+    oAudioPlayer->resume(musicId);
 }
 
 void SimpleAudioEngine::rewindBackgroundMusic()
 {
-    oAudioPlayer->rewindBackgroundMusic();
+    oAudioPlayer->seek(musicId, 0.0f);
 }
 
 bool SimpleAudioEngine::willPlayBackgroundMusic()
 {
-    return oAudioPlayer->willPlayBackgroundMusic();
+    return false;
 }
 
 bool SimpleAudioEngine::isBackgroundMusicPlaying()
 {
-    return oAudioPlayer->isBackgroundMusicPlaying();
+    return oAudioPlayer->isPlaying(musicId);
 }
 
 void SimpleAudioEngine::preloadBackgroundMusic(const char* pszFilePath)
 {
-    oAudioPlayer->preloadBackgroundMusic(pszFilePath);
+    musicId = oAudioPlayer->loadMusic(pszFilePath);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -84,47 +96,69 @@ void SimpleAudioEngine::preloadBackgroundMusic(const char* pszFilePath)
 unsigned int SimpleAudioEngine::playEffect(const char* pszFilePath,
         bool bLoop)
 {
-    return oAudioPlayer->playEffect(pszFilePath, bLoop);
+    SfxId id = oAudioPlayer->loadEffect(pszFilePath);
+    SfxInstanceId soundId = oAudioPlayer->play(id);
+    oAudioPlayer->setLoopCount(soundId, bLoop ? -1 : 0);
+    oAudioPlayer->setVolume(soundId, effectVol);
+    return (unsigned int)soundId;
 }
 
 void SimpleAudioEngine::stopEffect(unsigned int nSoundId)
 {
-    oAudioPlayer->stopEffect(nSoundId);
+    oAudioPlayer->stop((SfxInstanceId)nSoundId);
 }
 
 void SimpleAudioEngine::preloadEffect(const char* pszFilePath)
 {
-    oAudioPlayer->preloadEffect(pszFilePath);
+    oAudioPlayer->loadEffect(pszFilePath);
 }
 
 void SimpleAudioEngine::unloadEffect(const char* pszFilePath)
 {
-    oAudioPlayer->unloadEffect(pszFilePath);
+    oAudioPlayer->unload(oAudioPlayer->sfxIdForFile(pszFilePath));
 }
 
 void SimpleAudioEngine::pauseEffect(unsigned int uSoundId)
 {
-    oAudioPlayer->pauseEffect(uSoundId);
+    oAudioPlayer->pause((SfxInstanceId)uSoundId);
 }
 
 void SimpleAudioEngine::pauseAllEffects()
 {
-    oAudioPlayer->pauseAllEffects();
+    unsigned int cnt = oAudioPlayer->getSfxInstanceCount();
+    for (unsigned int i = 0; i < cnt; i++) {
+        SfxInstanceId id = oAudioPlayer->getSfxInstance(i);
+        if (id != musicId) {
+            oAudioPlayer->pause(id);
+        }
+    }
 }
 
 void SimpleAudioEngine::resumeEffect(unsigned int uSoundId)
 {
-    oAudioPlayer->resumeEffect(uSoundId);
+    oAudioPlayer->resume((SfxInstanceId)uSoundId);
 }
 
 void SimpleAudioEngine::resumeAllEffects()
 {
-    oAudioPlayer->resumeAllEffects();
+    unsigned int cnt = oAudioPlayer->getSfxInstanceCount();
+    for (unsigned int i = 0; i < cnt; i++) {
+        SfxInstanceId id = oAudioPlayer->getSfxInstance(i);
+        if (id != musicId) {
+            oAudioPlayer->resume(id);
+        }
+    }
 }
 
 void SimpleAudioEngine::stopAllEffects()
 {
-    oAudioPlayer->stopAllEffects();
+    unsigned int cnt = oAudioPlayer->getSfxInstanceCount();
+    for (unsigned int i = 0; i < cnt; i++) {
+        SfxInstanceId id = oAudioPlayer->getSfxInstance(i);
+        if (id != musicId) {
+            oAudioPlayer->stop(id);
+        }
+    }
 }
 
 
@@ -135,22 +169,40 @@ void SimpleAudioEngine::stopAllEffects()
 
 float SimpleAudioEngine::getBackgroundMusicVolume()
 {
-    return oAudioPlayer->getBackgroundMusicVolume();
+    return musicVol;
 }
 
 void SimpleAudioEngine::setBackgroundMusicVolume(float volume)
 {
-    oAudioPlayer->setBackgroundMusicVolume(volume);
+    if (volume < 0.0f)
+        volume = 0.0f;
+    if (volume > 1.0f)
+        volume = 1.0f;
+    musicVol = volume;
+    oAudioPlayer->setVolume(musicId, musicVol);
 }
 
 float SimpleAudioEngine::getEffectsVolume()
 {
-    return oAudioPlayer->getEffectsVolume();
+    return effectVol;
 }
 
 void SimpleAudioEngine::setEffectsVolume(float volume)
 {
-    oAudioPlayer->setEffectsVolume(volume);
+    unsigned int cnt = oAudioPlayer->getSfxInstanceCount();
+
+    if (volume < 0.0f)
+        volume = 0.0f;
+    if (volume > 1.0f)
+        volume = 1.0f;
+    effectVol = volume;
+
+    for (unsigned int i = 0; i < cnt; i++) {
+        SfxInstanceId id = oAudioPlayer->getSfxInstance(i);
+        if (id != musicId) {
+            oAudioPlayer->setVolume(id, effectVol);
+        }
+    }
 }
 
 } // end of namespace CocosDenshion

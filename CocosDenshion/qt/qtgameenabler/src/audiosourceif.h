@@ -52,6 +52,7 @@ public:
 
 public:
     inline bool isFinished() const { return m_finished; }
+    inline bool isPaused() const { return m_paused; }
     inline void setDestroyWhenFinished(bool set) { m_destroyWhenFinished = set; }
     inline bool destroyWhenFinished() const { return m_destroyWhenFinished; }
     inline void setTag(unsigned int tag) { m_tag = tag; }

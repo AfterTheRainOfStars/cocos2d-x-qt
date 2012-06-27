@@ -30,47 +30,54 @@ public:
     static AdvancedAudioEngine* sharedEngine();
     static void end();
 
-    SfxId loadEffect(const char* pszFilePath);
-    SfxId loadMusic(const char* pszFilePath);
-    void unload(SfxId soundId);
+    virtual SfxId loadEffect(const char* pszFilePath) = 0;
+    virtual SfxId loadMusic(const char* pszFilePath) = 0;
+    virtual void unload(SfxId soundId) = 0;
 
-    void pauseAll();
-    void resumeAll();
-    void stopAll();
+    virtual void pauseAll() = 0;
+    virtual void resumeAll() = 0;
+    virtual void stopAll() = 0;
 
-    float getVolume();
-    void setVolume(float volume);
+    virtual float getVolume() = 0;
+    virtual void setVolume(float volume) = 0;
 
-    SfxInstanceId play(SfxId soundId);
-    void stop(SfxInstanceId soundId);
-    void pause(SfxInstanceId soundId);
-    void resume(SfxInstanceId soundId);
-    bool isPlaying(SfxInstanceId soundId);
+    virtual SfxInstanceId play(SfxId soundId) = 0;
+    virtual void stop(SfxInstanceId soundId) = 0;
+    virtual void pause(SfxInstanceId soundId) = 0;
+    virtual void resume(SfxInstanceId soundId) = 0;
+    virtual bool isPlaying(SfxInstanceId soundId) = 0;
+    virtual bool isPaused(SfxInstanceId soundId) = 0;
 
-    void setLoopCount(SfxInstanceId soundId, unsigned int loopCount);
-    unsigned int getLoopCount(SfxInstanceId soundId);
+    virtual void setLoopCount(SfxInstanceId soundId,
+                              unsigned int loopCount) = 0;
+    virtual unsigned int getLoopCount(SfxInstanceId soundId) = 0;
 
-    void setVolume(SfxInstanceId soundId, float volume);
-    float getVolume(SfxInstanceId soundId);
+    virtual void setVolume(SfxInstanceId soundId, float volume) = 0;
+    virtual float getVolume(SfxInstanceId soundId) = 0;
 
-    void setPitch(SfxInstanceId soundId, float pitch);
-    float getPitch(SfxInstanceId soundId);
+    virtual void setPitch(SfxInstanceId soundId, float pitch) = 0;
+    virtual float getPitch(SfxInstanceId soundId) = 0;
 
-    void setPanning(SfxInstanceId soundId, float pan);
-    float getPanning(SfxInstanceId soundId);
+    virtual void setPanning(SfxInstanceId soundId, float pan) = 0;
+    virtual float getPanning(SfxInstanceId soundId) = 0;
 
-    void setFadeInDuration(SfxInstanceId soundId, float fadeInDurationMs);
-    void setFadeOutDuration(SfxInstanceId soundId, float fadeOutDurationMs);
+    virtual void setFadeInDuration(SfxInstanceId soundId,
+                                   float fadeInDuration) = 0;
+    virtual void setFadeOutDuration(SfxInstanceId soundId,
+                                    float fadeOutDuration) = 0;
 
-    void seek(SfxInstanceId soundId, float position);
-    float position(SfxInstanceId soundId);
+    virtual void seek(SfxInstanceId soundId, float position) = 0;
+    virtual float position(SfxInstanceId soundId) = 0;
 
-    void setAudioEventListener(AudioEventListener *listener);
-    void removeAudioEventListener();
+    virtual void setAudioEventListener(AudioEventListener *listener) = 0;
+    virtual void removeAudioEventListener() = 0;
 
-    SfxId sfxIdForFile(const char *pszFilePath);
-    SfxInstanceId sfxInstanceIdForSfxId(SfxId soundId);
-    SfxInstanceId getActiveSfxInstanceId();
+    virtual SfxId sfxIdForFile(const char* pszFilePath) = 0;
+    virtual SfxId sfxIdForInstance(SfxInstanceId soundId) = 0;
+    virtual SfxInstanceId sfxInstanceIdForSfxId(SfxId soundId) = 0;
+    virtual SfxInstanceId getActiveSfxInstanceId() = 0;
+    virtual unsigned int getSfxInstanceCount() = 0;
+    virtual SfxInstanceId getSfxInstance(unsigned int index) = 0;
 };
 }
 
