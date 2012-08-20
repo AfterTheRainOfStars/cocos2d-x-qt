@@ -83,17 +83,15 @@ AdvCocosDenshionTest::AdvCocosDenshionTest()
     m_pItmeMenu->setPosition(CCPointZero);
     addChild(m_pItmeMenu);
 
-    setIsTouchEnabled(true);
-
     m_audioEngine = AdvancedAudioEngine::sharedEngine();
 
     m_audioEngine->setAudioEventListener(this);
 
     // preload background music and effect
     m_nMusicSfxId = m_audioEngine->loadMusic(
-                CCFileUtils::fullPathFromRelativePath(MUSIC_FILE));
+                CCFileUtils::sharedFileUtils()->fullPathFromRelativePath(MUSIC_FILE));
     m_nSfxId = m_audioEngine->loadEffect(
-                CCFileUtils::fullPathFromRelativePath(EFFECT_FILE));
+                CCFileUtils::sharedFileUtils()->fullPathFromRelativePath(EFFECT_FILE));
     
     // set default volume
     m_audioEngine->setVolume(0.5);

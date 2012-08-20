@@ -1,12 +1,17 @@
 #ifndef __CC_APPLICATION_PROTOCOL_H__
 #define __CC_APPLICATION_PROTOCOL_H__
 
-#include "CCCommon.h"
 #include "ccTypes.h"
+#include "CCCommon.h"
 
 NS_CC_BEGIN
 
 class CCRect;
+
+/**
+ * @addtogroup platform
+ * @{
+ */
 
 class CC_DLL CCApplicationProtocol
 {
@@ -44,8 +49,13 @@ public:
     @return Current language config
     */
     virtual ccLanguageType getCurrentLanguage() = 0;
+    
+    virtual bool isIpad() { return false; }
 
 };
+
+// end of platform group
+/// @}
 
 NS_CC_END
 

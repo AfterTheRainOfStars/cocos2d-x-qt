@@ -5,6 +5,11 @@
 #define glDeleteVertexArrays        glDeleteVertexArraysOES
 #define glGenVertexArrays           glGenVertexArraysOES
 #define glBindVertexArray           glBindVertexArrayOES
+#ifdef Q_OS_SYMBIAN
+#define GL_DEPTH24_STENCIL8_OES 0x88F0
+#endif
+
+#define CC_GL_DEPTH24_STENCIL8      GL_DEPTH24_STENCIL8_OES
 
 #include <GLES2/gl2platform.h>
 #ifndef GL_GLEXT_PROTOTYPES
@@ -16,14 +21,5 @@
 #include <GLES2/gl2ext.h>
 
 typedef char GLchar;
-/*
-extern PFNGLGENVERTEXARRAYSOESPROC glGenVertexArraysOESEXT;
-extern PFNGLBINDVERTEXARRAYOESPROC glBindVertexArrayOESEXT;
-extern PFNGLDELETEVERTEXARRAYSOESPROC glDeleteVertexArraysOESEXT;
 
-#define glGenVertexArraysOES glGenVertexArraysOESEXT
-#define glBindVertexArrayOES glBindVertexArrayOESEXT
-#define glDeleteVertexArraysOES glDeleteVertexArraysOESEXT
-*/
-
-#endif // __PLATFOMR_CCGL_H__
+#endif // __CCGL_H__

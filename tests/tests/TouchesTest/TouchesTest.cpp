@@ -25,7 +25,7 @@ enum
 //------------------------------------------------------------------
 PongScene::PongScene()
 {
-    PongLayer *pongLayer = new PongLayer();//PongLayer::node();
+    PongLayer *pongLayer = new PongLayer();//PongLayer::create();
     addChild(pongLayer);
     pongLayer->release();
 }
@@ -54,7 +54,7 @@ PongLayer::PongLayer()
     
     CCTexture2D* paddleTexture = CCTextureCache::sharedTextureCache()->addImage(s_Paddle);
     
-    CCArray *paddlesM = CCArray::arrayWithCapacity(4);
+    CCArray *paddlesM = CCArray::create(4);
     
     Paddle* paddle = Paddle::paddleWithTexture(paddleTexture);
     paddle->setPosition( CCPointMake(m_tWinSize.width/2, 15) );
@@ -103,7 +103,7 @@ void PongLayer::resetAndScoreBallForPlayer(int player)
     // TODO -- scoring
 }
 
-void PongLayer::doStep(ccTime delta)
+void PongLayer::doStep(float delta)
 {
     m_ball->move(delta);
 

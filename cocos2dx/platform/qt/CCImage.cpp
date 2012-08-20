@@ -72,7 +72,7 @@ bool CCImage::initWithString(
         return false;
     }
 
-    QString fontPath(CCFileUtils::fullPathFromRelativePath(pFontName));
+    QString fontPath(CCFileUtils::sharedFileUtils()->fullPathFromRelativePath(pFontName));
 
     QString fontFamily = pFontName;
     QString fontStyle = "Normal";

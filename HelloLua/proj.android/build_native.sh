@@ -62,6 +62,7 @@ cp $file $GAME_ANDROID_ROOT/assets
 fi
 done
 
+
 # build
 if [[ $buildexternalsfromsource ]]; then
 echo "Building external dependencies from source"

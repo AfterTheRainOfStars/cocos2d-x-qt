@@ -119,7 +119,7 @@ bool CCSAXParser::parse(const char* pXMLData, unsigned int uDataLength)
 
 bool CCSAXParser::parse(const char *pszFile)
 {
-    QFile xmlFile(CCFileUtils::fullPathFromRelativePath(pszFile));
+    QFile xmlFile(CCFileUtils::sharedFileUtils()->fullPathFromRelativePath(pszFile));
     xmlFile.open(QIODevice::ReadOnly);
     if(!xmlFile.isOpen())
     {

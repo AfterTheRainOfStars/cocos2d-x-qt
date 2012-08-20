@@ -12,9 +12,9 @@
 int main(int argc, char** argv)
 {
 #ifdef Q_OS_SYMBIAN
-    CCFileUtils::setResourcePath("/private/E8AA3F99/resources");
+    CCFileUtils::sharedFileUtils()->setResourcePath("/private/E8AA3F99/resources");
 #else
-    CCFileUtils::setResourcePath("/opt/hellolua/Resources");
+    CCFileUtils::sharedFileUtils()->setResourcePath("/opt/hellolua/Resources");
 #endif
 
     AppDelegate app;

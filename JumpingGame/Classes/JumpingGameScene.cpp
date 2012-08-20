@@ -106,7 +106,7 @@ void JumpingGame::onExit()
     CCDirector::sharedDirector()->getScheduler()->unscheduleUpdateForTarget(this);
 }
 
-void JumpingGame::update(ccTime dt)
+void JumpingGame::update(float dt)
 {
     if(m_gameOver)
     {

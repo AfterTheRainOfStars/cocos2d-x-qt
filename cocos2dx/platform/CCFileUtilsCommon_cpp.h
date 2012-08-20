@@ -27,21 +27,20 @@ THE SOFTWARE.
 
 #include "CCFileUtils.h"
 #include "CCDirector.h"
-#include "CCDictionary.h"
+#include "cocoa/CCDictionary.h"
 
 #if (CC_TARGET_PLATFORM != CC_PLATFORM_IOS)
 
-#include <stack>
+#include "cocoa/CCString.h"
+#include "CCSAXParser.h"
+#include "support/zip_support/unzip.h"
 
+#include <stack>
 #if (CC_TARGET_PLATFORM != CC_PLATFORM_QT)
 #include <libxml/parser.h>
 #include <libxml/tree.h>
 #include <libxml/xmlmemory.h>
-#endif
-
-#include "CCString.h"
-#include "CCSAXParser.h"
-#include "support/zip_support/unzip.h"
+#endif /* (CC_TARGET_PLATFORM != CC_PLATFORM_QT) */
 
 NS_CC_BEGIN
 
@@ -446,12 +445,12 @@ bool CCFileUtils::iPhoneRetinaDisplayFileExistsAtPath(const char *filename)
 //////////////////////////////////////////////////////////////////////////
 static bool s_bPopupNotify = true;
 
-void CCFileUtils::setIsPopupNotify(bool bNotify)
+void CCFileUtils::setPopupNotify(bool bNotify)
 {
     s_bPopupNotify = bNotify;
 }
 
-bool CCFileUtils::getIsPopupNotify()
+bool CCFileUtils::isPopupNotify()
 {
     return s_bPopupNotify;
 }

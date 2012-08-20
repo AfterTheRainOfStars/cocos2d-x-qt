@@ -60,6 +60,7 @@ cp "$file" $TEST_JS_ROOT/assets
 fi
 done
 
+
 if [[ $buildexternalsfromsource ]]; then
 echo "Building external dependencies from source"
 $NDK_ROOT_LOCAL/ndk-build -C $TEST_JS_ROOT $* \

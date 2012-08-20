@@ -22,7 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ****************************************************************************/
 #include "CCUserDefault.h"
-#include "CCCommon.h"
+#include "platform/CCCommon.h"
 #include "platform/CCFileUtils.h"
 
 #if (CC_TARGET_PLATFORM != CC_PLATFORM_QT)
@@ -57,7 +57,7 @@ static xmlNodePtr getXMLNodeForKey(const char* pKey, xmlNodePtr *rootNode)
         return NULL;
     }
 
-    do
+    do 
     {
         // get root node
         *rootNode = xmlDocGetRootElement(g_sharedDoc);
@@ -127,7 +127,7 @@ static void setValueForKey(const char* pKey, const char* pValue)
             xmlNodePtr content = xmlNewText(BAD_CAST pValue);
             xmlAddChild(rootNode, tmpNode);
             xmlAddChild(tmpNode, content);
-        }
+        }    
     }
 }
 #endif
@@ -224,7 +224,7 @@ float CCUserDefault::getFloatForKey(const char* pKey, float defaultValue)
 {
 #if (CC_TARGET_PLATFORM != CC_PLATFORM_QT)
     float ret = (float)getDoubleForKey(pKey, (double)defaultValue);
-
+ 
     return ret;
 #else
     return m_settings->value(pKey, defaultValue).toFloat();
@@ -392,9 +392,9 @@ void CCUserDefault::initXMLFilePath()
 {
     if (! m_sbIsFilePathInitialized)
     {
-        m_sFilePath += CCFileUtils::getWriteablePath() + XML_FILE_NAME;
+        m_sFilePath += CCFileUtils::sharedFileUtils()->getWriteablePath() + XML_FILE_NAME;
         m_sbIsFilePathInitialized = true;
-    }
+    }    
 }
 
 // create new xml file
@@ -403,7 +403,7 @@ bool CCUserDefault::createXMLFile()
     bool bRet = false;
     xmlDocPtr doc = NULL;
 
-    do
+    do 
     {
         // new doc
         doc = xmlNewDoc(BAD_CAST"1.0");

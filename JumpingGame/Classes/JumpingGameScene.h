@@ -32,7 +32,7 @@ public:
     virtual void ccTouchEnded(CCTouch* touch, CCEvent* event);
 
     virtual void onExit();
-    virtual void update(ccTime dt);
+    virtual void update(float dt);
 
     void initBackground();
     void initBlocks();

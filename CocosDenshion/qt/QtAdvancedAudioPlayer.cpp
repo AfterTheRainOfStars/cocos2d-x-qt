@@ -47,7 +47,7 @@ static QString fullPathFromRelativePath(const char *pszRelativePath)
     }
     else
     {
-        strRet = CCFileUtils::fullPathFromRelativePath(pszRelativePath);
+        strRet = CCFileUtils::sharedFileUtils()->fullPathFromRelativePath(pszRelativePath);
     }
     return strRet;
 }

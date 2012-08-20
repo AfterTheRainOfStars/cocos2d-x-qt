@@ -1,10 +1,10 @@
 #include "CCEGLViewProtocol.h"
-#include "CCTouchDispatcher.h"
+#include "touch_dispatcher/CCTouchDispatcher.h"
+#include "touch_dispatcher/CCTouch.h"
 #include "CCDirector.h"
-#include "CCSet.h"
-#include "CCTouch.h"
-#include "CCDictionary.h"
-#include "CCInteger.h"
+#include "cocoa/CCSet.h"
+#include "cocoa/CCDictionary.h"
+#include "cocoa/CCInteger.h"
 
 NS_CC_BEGIN
 
@@ -55,11 +55,6 @@ CCEGLViewProtocol::~CCEGLViewProtocol()
 
 }
 
-bool CCEGLViewProtocol::isIpad()
-{
-    return false;
-}
-
 void CCEGLViewProtocol::setFrameSize(float width, float height)
 {
     m_sSizeInPixel.setSize(width, height);
@@ -97,6 +92,8 @@ CCSize CCEGLViewProtocol::getSize()
     CCSize size;
     if (m_bNeedScale)
     {
+        // retina and scale mode can't be opened at the same time
+        CCAssert(CC_CONTENT_SCALE_FACTOR() == 1.0f, "retina and scale mode can't be opened at the same time!");
         size.setSize(m_sSizeInPoint.width, m_sSizeInPoint.height);      
     }
     else
@@ -135,6 +132,7 @@ void CCEGLViewProtocol::setViewPortInPoints(float x , float y , float w , float 
 {
     if (m_bNeedScale)
     {
+        CCAssert(CC_CONTENT_SCALE_FACTOR() == 1.0f, "retina and scale mode can't be opened at the same time!");
         float factor = m_fScreenScaleFactor / CC_CONTENT_SCALE_FACTOR();
         glViewport((GLint)(x * factor + m_rcViewPort.origin.x),
             (GLint)(y * factor + m_rcViewPort.origin.y),
@@ -143,10 +141,11 @@ void CCEGLViewProtocol::setViewPortInPoints(float x , float y , float w , float 
     }
     else
     {
-        glViewport((GLint)x,
-            (GLint)y,
-            (GLsizei)w,
-            (GLsizei)h);
+        glViewport(
+            (GLint)(x*CC_CONTENT_SCALE_FACTOR()),
+            (GLint)(y*CC_CONTENT_SCALE_FACTOR()),
+            (GLsizei)(w*CC_CONTENT_SCALE_FACTOR()),
+            (GLsizei)(h*CC_CONTENT_SCALE_FACTOR()));
     }
 }
 
@@ -154,6 +153,7 @@ void CCEGLViewProtocol::setScissorInPoints(float x , float y , float w , float h
 {
     if (m_bNeedScale)
     {
+        CCAssert(CC_CONTENT_SCALE_FACTOR() == 1.0f, "retina and scale mode can't be opened at the same time!");
         float factor = m_fScreenScaleFactor / CC_CONTENT_SCALE_FACTOR();
         glScissor((GLint)(x * factor + m_rcViewPort.origin.x),
             (GLint)(y * factor + m_rcViewPort.origin.y),
@@ -162,10 +162,11 @@ void CCEGLViewProtocol::setScissorInPoints(float x , float y , float w , float h
     }
     else
     {
-        glScissor((GLint)x,
-            (GLint)y,
-            (GLsizei)w,
-            (GLsizei)h);
+        glScissor(
+            (GLint)(x * CC_CONTENT_SCALE_FACTOR()), 
+            (GLint)(y * CC_CONTENT_SCALE_FACTOR()),
+            (GLsizei)(w * CC_CONTENT_SCALE_FACTOR()),
+            (GLsizei)(h * CC_CONTENT_SCALE_FACTOR()));
     }
 }
 

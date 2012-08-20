@@ -27,6 +27,33 @@ using namespace std;
 
 static string s_strResourcePath = "";
 
+    
+static CCFileUtils* s_pFileUtils = NULL;
+
+CCFileUtils* CCFileUtils::sharedFileUtils()
+{
+    if (s_pFileUtils == NULL)
+    {
+        s_pFileUtils = new CCFileUtils();
+    }
+    return s_pFileUtils;
+}
+
+void CCFileUtils::purgeFileUtils()
+{
+    if (s_pFileUtils != NULL)
+    {
+        s_pFileUtils->purgeCachedEntries();
+    }
+
+    CC_SAFE_DELETE(s_pFileUtils);
+}
+
+void CCFileUtils::purgeCachedEntries()
+{
+
+}
+
 void CCFileUtils::setResourcePath(const char* pszResourcePath)
 {
     CCAssert(pszResourcePath != NULL,
@@ -96,22 +123,6 @@ unsigned char* CCFileUtils::getFileData(const char *pszFileName,
     file.close();
 
     return pData;
-}
-
-/*
-void CCFileUtils::setResource(const char *pszZipFileName)
-{
-    Q_UNUSED(pszZipFileName);
-    CCAssert(0, "Have not implement!");
-}
-*/
-
-int CCFileUtils::ccLoadFileIntoMemory(const char *filename, unsigned char **out)
-{
-    Q_UNUSED(filename);
-    Q_UNUSED(out);
-    CCAssert(0, "Have not implement!");
-    return 0;
 }
 
 string CCFileUtils::getWriteablePath()

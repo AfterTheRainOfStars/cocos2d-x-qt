@@ -27,7 +27,6 @@
 #include "Box2DTest/Box2dTest.h"
 #include "Box2DTestBed/Box2dView.h"
 #include "EffectsAdvancedTest/EffectsAdvancedTest.h"
-#include "HiResTest/HiResTest.h"
 #include "AccelerometerTest/AccelerometerTest.h"
 #include "KeypadTest/KeypadTest.h"
 #include "PerformanceTest/PerformanceTest.h"
@@ -35,7 +34,6 @@
 #include "CocosDenshionTest/CocosDenshionTest.h"
 #include "CurlTest/CurlTest.h"
 #include "UserDefaultTest/UserDefaultTest.h"
-#include "DirectorTest/DirectorTest.h"
 #include "BugsTest/BugsTest.h"
 #include "Texture2dTest/Texture2dTest.h"
 #include "FontTest/FontTest.h"
@@ -53,10 +51,6 @@
 #endif
 #endif
 #endif // (CC_TARGET_PLATFORM != CC_PLATFORM_MARMALADE)
-
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_QT)
-    #include "AdvCocosDenshionTest/AdvCocosDenshionTest.h"
-#endif
 
 #include "ExtensionsTest/ExtensionsTest.h"
 #include "MutiTouchTest/MutiTouchTest.h"
@@ -92,18 +86,13 @@ enum
     TEST_BOX2D,
     TEST_BOX2DBED,
     TEST_EFFECT_ADVANCE,
-    TEST_HIRES,
     TEST_ACCELEROMRTER,
     TEST_KEYPAD,
     TEST_COCOSDENSHION,
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_QT)
-    TEST_ADVCOCOSDENSHION,
-#endif
     TEST_PERFORMANCE,
     TEST_ZWOPTEX,
     TEST_CURL,
     TEST_USERDEFAULT,
-    TEST_DIRECTOR,
     TEST_BUGS,
     TEST_FONTS,
     TEST_CURRENT_LANGUAGE,
@@ -144,18 +133,13 @@ const std::string g_aTestNames[TESTS_COUNT] = {
     "Box2dTest",
     "Box2dTestBed",
     "EffectAdvancedTest",
-    "HiResTest",
     "Accelerometer",
     "KeypadTest",
     "CocosDenshionTest",
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_QT)
-    "AdvCocosDenshionTest",
-#endif
     "PerformanceTest",
     "ZwoptexTest",
     "CurlTest",
     "UserDefaultTest",
-    "DirectorTest",
     "BugsTest",
     "FontTest",
     "CurrentLanguageTest",

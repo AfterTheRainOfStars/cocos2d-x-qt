@@ -25,9 +25,14 @@ THE SOFTWARE.
 #ifndef __CC_IMAGE_H__
 #define __CC_IMAGE_H__
 
-#include "CCObject.h"
+#include "cocoa/CCObject.h"
 
 NS_CC_BEGIN
+
+/**
+ * @addtogroup platform
+ * @{
+ */
 
 class CC_DLL CCImage : public CCObject
 {
@@ -143,6 +148,9 @@ private:
     CCImage(const CCImage&    rImg);
     CCImage & operator=(const CCImage&);
 };
+
+// end of platform group
+/// @}
 
 NS_CC_END
 

@@ -56,6 +56,7 @@ contains(DEFINES,COCOS2DXQT_LIBRARY) {
         $$PWD/../support/image_support/TGAlib.cpp \
         $$PWD/../support/CCUserDefault.cpp \
         $$PWD/../support/TransformUtils.cpp \
+        $$PWD/../support/data_support/ccCArray.cpp \
         $$PWD/../tileMap_parallax_nodes/CCTMXObjectGroup.cpp \
         $$PWD/../tileMap_parallax_nodes/CCTMXTiledMap.cpp \
         $$PWD/../tileMap_parallax_nodes/CCParallaxNode.cpp \
@@ -77,6 +78,7 @@ contains(DEFINES,COCOS2DXQT_LIBRARY) {
         $$PWD/../actions/CCActionProgressTimer.cpp \
         $$PWD/../actions/CCActionGrid.cpp \
         $$PWD/../actions/CCActionInstant.cpp \
+        $$PWD/../actions/CCActionCatmullRom.cpp \
         $$PWD/../label_nodes/CCLabelBMFont.cpp \
         $$PWD/../label_nodes/CCLabelTTF.cpp \
         $$PWD/../label_nodes/CCLabelAtlas.cpp \
@@ -87,9 +89,23 @@ contains(DEFINES,COCOS2DXQT_LIBRARY) {
         $$PWD/../layers_scenes_transitions_nodes/CCTransitionPageTurn.cpp \
         $$PWD/../base_nodes/CCNode.cpp \
         $$PWD/../base_nodes/CCAtlasNode.cpp \
-        $$PWD/../extensions/CCBReader/CCBCustomClass.cpp \
-        $$PWD/../extensions/CCBReader/CCBReader_v1.cpp \
-        $$PWD/../extensions/CCBReader/CCBReader_v2.cpp \
+        $$PWD/../extensions/CCBReader/CCBFileLoader.cpp \
+        $$PWD/../extensions/CCBReader/CCBReader.cpp \
+        $$PWD/../extensions/CCBReader/CCControlButtonLoader.cpp \
+        $$PWD/../extensions/CCBReader/CCControlLoader.cpp \
+        $$PWD/../extensions/CCBReader/CCLabelBMFontLoader.cpp \
+        $$PWD/../extensions/CCBReader/CCLabelTTFLoader.cpp \
+        $$PWD/../extensions/CCBReader/CCLayerColorLoader.cpp \
+        $$PWD/../extensions/CCBReader/CCLayerGradientLoader.cpp \
+        $$PWD/../extensions/CCBReader/CCLayerLoader.cpp \
+        $$PWD/../extensions/CCBReader/CCMenuItemImageLoader.cpp \
+        $$PWD/../extensions/CCBReader/CCMenuItemLoader.cpp \
+        $$PWD/../extensions/CCBReader/CCNodeLoader.cpp \
+        $$PWD/../extensions/CCBReader/CCNodeLoaderLibrary.cpp \
+        $$PWD/../extensions/CCBReader/CCParticleSystemQuadLoader.cpp \
+        $$PWD/../extensions/CCBReader/CCScale9SpriteLoader.cpp \
+        $$PWD/../extensions/CCBReader/CCScrollViewLoader.cpp \
+        $$PWD/../extensions/CCBReader/CCSpriteLoader.cpp \
         $$PWD/../extensions/CCControlExtension/CCControl.cpp \
         $$PWD/../extensions/CCControlExtension/CCControlButton.cpp \
         $$PWD/../extensions/CCControlExtension/CCControlColourPicker.cpp \
@@ -106,6 +122,7 @@ contains(DEFINES,COCOS2DXQT_LIBRARY) {
         $$PWD/../extensions/CCListView/CCListViewCell.cpp \
         $$PWD/../extensions/CCNotificationCenter/CCNotificationCenter.cpp \
         $$PWD/../extensions/CCTextureWatcher/CCTextureWatcher.cpp \
+        $$PWD/../extensions/CCScrollView/CCScrollView.cpp \
         $$PWD/../cocos2d.cpp \
         $$PWD/../script_support/CCScriptSupport.cpp \
         $$PWD/../kazmath/src/plane.c \
@@ -139,7 +156,6 @@ contains(DEFINES,COCOS2DXQT_LIBRARY) {
         $$PWD/../misc_nodes/CCMotionStreak.cpp \
         $$PWD/../misc_nodes/CCRenderTexture.cpp \
         $$PWD/../cocoa/CCGeometry.cpp \
-        $$PWD/../cocoa/CCData.cpp \
         $$PWD/../cocoa/CCAutoreleasePool.cpp \
         $$PWD/../cocoa/CCAffineTransform.cpp \
         $$PWD/../cocoa/CCString.cpp \
@@ -225,6 +241,7 @@ contains(DEFINES,COCOS2DXQT_LIBRARY) {
         $$PWD/../actions/CCActionTiledGrid.h \
         $$PWD/../actions/CCActionTween.h \
         $$PWD/../actions/CCActionManager.h \
+        $$PWD/../actions/CCActionCatmullRom.h \
         $$PWD/../label_nodes/CCLabelBMFont.h \
         $$PWD/../label_nodes/CCLabelAtlas.h \
         $$PWD/../label_nodes/CCLabelTTF.h \
@@ -235,8 +252,26 @@ contains(DEFINES,COCOS2DXQT_LIBRARY) {
         $$PWD/../layers_scenes_transitions_nodes/CCTransitionPageTurn.h \
         $$PWD/../base_nodes/CCAtlasNode.h \
         $$PWD/../base_nodes/CCNode.h \
-        $$PWD/../extensions/CCBReader/CCBCustomClass.h \
-        $$PWD/../extensions/CCBReader/CCBReader.h \
+        $$PWD/../extensions/CCBReader/CCBFileLoader.h \
+        $$PWD/../extensions/CCBReader/CCBMemberVariableAssigner.h \
+        $$PWD/../extensions/CCBReader/CCBSelectorResolver.h \
+        $$PWD/../extensions/CCBReader/CCControlButtonLoader.h \
+        $$PWD/../extensions/CCBReader/CCControlLoader.h \
+        $$PWD/../extensions/CCBReader/CCLabelBMFontLoader.h \
+        $$PWD/../extensions/CCBReader/CCLabelTTFLoader.h \
+        $$PWD/../extensions/CCBReader/CCLayerColorLoader.h \
+        $$PWD/../extensions/CCBReader/CCLayerGradientLoader.h \
+        $$PWD/../extensions/CCBReader/CCMenuItemImageLoader.h \
+        $$PWD/../extensions/CCBReader/CCMenuItemLoader.h \
+        $$PWD/../extensions/CCBReader/CCMenuLoader.h \
+        $$PWD/../extensions/CCBReader/CCLayerLoader.h \
+        $$PWD/../extensions/CCBReader/CCNodeLoader.h \
+        $$PWD/../extensions/CCBReader/CCNodeLoaderLibrary.h \
+        $$PWD/../extensions/CCBReader/CCNodeLoaderListener.h \
+        $$PWD/../extensions/CCBReader/CCParticleSystemQuadLoader.h \
+        $$PWD/../extensions/CCBReader/CCScale9SpriteLoader.h \
+        $$PWD/../extensions/CCBReader/CCScrollViewLoader.h \
+        $$PWD/../extensions/CCBReader/CCSpriteLoader.h \
         $$PWD/../extensions/CCControlExtension/CCControl.h \
         $$PWD/../extensions/CCControlExtension/CCControlButton.h \
         $$PWD/../extensions/CCControlExtension/CCControlColourPicker.h \
@@ -255,6 +290,7 @@ contains(DEFINES,COCOS2DXQT_LIBRARY) {
         $$PWD/../extensions/CCListView/CCListViewCell.h \
         $$PWD/../extensions/CCNotificationCenter/CCNotificationCenter.h \
         $$PWD/../extensions/CCTextureWatcher/CCTextureWatcher.h \
+        $$PWD/../extensions/CCScrollView/CCScrollView.h \
         $$PWD/../script_support/CCScriptSupport.h \
         $$PWD/../kazmath/include/kazmath/plane.h \
         $$PWD/../kazmath/include/kazmath/mat3.h \
@@ -319,7 +355,6 @@ contains(DEFINES,COCOS2DXQT_LIBRARY) {
         $$PWD/../cocoa/CCArray.h \
         $$PWD/../cocoa/CCNS.h \
         $$PWD/../cocoa/CCString.h \
-        $$PWD/../cocoa/CCData.h \
         $$PWD/../cocoa/CCGeometry.h \
         $$PWD/../cocoa/CCZone.h \
         $$PWD/../textures/CCTextureCache.h \
