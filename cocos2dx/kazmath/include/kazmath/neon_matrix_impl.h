@@ -29,6 +29,8 @@
 // android don't have arm/arch.h but it defines __arm__
 #elif defined(Q_OS_SYMBIAN)
 // no arch.h for symbian
+#elif defined(MEEGO_EDITION_HARMATTAN)
+// no arch.h for harmattan
 #else
 #include "arm/arch.h"
 #endif //ANDROID

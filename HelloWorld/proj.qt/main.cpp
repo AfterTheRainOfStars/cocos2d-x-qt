@@ -15,7 +15,7 @@ int main(int argc, char **argv)
 #ifdef Q_OS_SYMBIAN
         CCFileUtils::sharedFileUtils()->setResourcePath("/private/E8AA3F79/resources");
 #else
-        CCFileUtils::sharedFileUtils()->setResourcePath("/opt/helloworld/resources");
+        CCFileUtils::sharedFileUtils()->setResourcePath("/opt/helloworld/Resources");
 #endif
 
     // create the application instance

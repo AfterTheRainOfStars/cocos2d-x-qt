@@ -9,7 +9,7 @@
 TARGET = cocos2dxtests
 TEMPLATE = app
 
-VERSION = 0.9
+VERSION = 1.0
 
 INCLUDEPATH += ../
 

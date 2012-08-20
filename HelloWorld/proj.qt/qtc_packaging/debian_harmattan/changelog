@@ -1,5 +1,5 @@
-helloworld (0.9.0) unstable; urgency=low
+helloworld (1.0.0) unstable; urgency=low
 
   * Compiled with latest cocos2dx-qt
 
- -- Kimmo Myllyvirta <ktmyllyv@unknown>  Thu, 28 Jun 2012 07:20:00 +0300
+ -- Kimmo Myllyvirta <ktmyllyv@unknown>  Mon, 20 Aug 2012 14:23:50 +0300
