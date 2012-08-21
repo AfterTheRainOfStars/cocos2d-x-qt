@@ -35,7 +35,6 @@ CCRESOURCES += \
     ../Resources/button_exit_down.png \
     ../Resources/logo.png \
     ../Resources/gameover.png \
-    ../Resources/fps_images.fnt \
     ../Resources/fps_images.png
 
 HEADERS += \
