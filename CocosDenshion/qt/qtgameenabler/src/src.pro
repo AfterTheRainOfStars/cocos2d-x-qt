@@ -1,4 +1,4 @@
-# Copyright (c) 2011-2012 Nokia Corporation.
+# Copyright (c) 2011-2014 Microsoft Mobile.
 
 TEMPLATE = lib
 TARGET = QtGameEnabler$${QT_LIBINFIX}

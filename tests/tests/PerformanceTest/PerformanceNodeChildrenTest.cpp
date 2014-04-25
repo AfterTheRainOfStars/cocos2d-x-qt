@@ -277,12 +277,14 @@ void IterateSpriteSheetCArray::update(ccTime dt)
     CCARRAY_FOREACH(pChildren, pObject)
     {
         CCSprite* pSprite = (CCSprite*)pObject;
-        pSprite->setIsVisible(false);    }
+        pSprite->setIsVisible(false);
+    }
 
 #if CC_ENABLE_PROFILERS
     CCProfilingEndTimingBlock(_profilingTimer);
 #endif
-}
+}
+
 
 std::string IterateSpriteSheetCArray::title()
 {
